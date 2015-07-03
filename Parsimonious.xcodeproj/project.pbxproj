@@ -20,6 +20,14 @@
 		F39407B81B4706E5001B6844 /* ParseOptionsStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */; };
 		F39407B91B4706E5001B6844 /* ParseOptionsStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */; };
 		F39407BA1B4706E5001B6844 /* ParseOptionsStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */; };
+		F39407BC1B470C83001B6844 /* ParseStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407BB1B470C83001B6844 /* ParseStream.swift */; };
+		F39407BD1B470C83001B6844 /* ParseStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407BB1B470C83001B6844 /* ParseStream.swift */; };
+		F39407BE1B470C83001B6844 /* ParseStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407BB1B470C83001B6844 /* ParseStream.swift */; };
+		F39407BF1B470C83001B6844 /* ParseStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407BB1B470C83001B6844 /* ParseStream.swift */; };
+		F39407C11B470DE0001B6844 /* ParseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C01B470DE0001B6844 /* ParseResult.swift */; };
+		F39407C21B470DE0001B6844 /* ParseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C01B470DE0001B6844 /* ParseResult.swift */; };
+		F39407C31B470DE0001B6844 /* ParseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C01B470DE0001B6844 /* ParseResult.swift */; };
+		F39407C41B470DE0001B6844 /* ParseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C01B470DE0001B6844 /* ParseResult.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +58,8 @@
 		F394079D1B4705B5001B6844 /* ParsimoniousTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParsimoniousTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F39407AC1B470671001B6844 /* ParseContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseContext.swift; sourceTree = "<group>"; };
 		F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseOptionsStack.swift; sourceTree = "<group>"; };
+		F39407BB1B470C83001B6844 /* ParseStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseStream.swift; sourceTree = "<group>"; };
+		F39407C01B470DE0001B6844 /* ParseResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseResult.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +123,8 @@
 				F329B71D1B47048200368510 /* Info.plist */,
 				F39407AC1B470671001B6844 /* ParseContext.swift */,
 				F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */,
+				F39407BB1B470C83001B6844 /* ParseStream.swift */,
+				F39407C01B470DE0001B6844 /* ParseResult.swift */,
 			);
 			path = Parsimonious;
 			sourceTree = "<group>";
@@ -302,6 +314,8 @@
 			files = (
 				F39407B71B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407AD1B470671001B6844 /* ParseContext.swift in Sources */,
+				F39407C11B470DE0001B6844 /* ParseResult.swift in Sources */,
+				F39407BC1B470C83001B6844 /* ParseStream.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -311,7 +325,9 @@
 			files = (
 				F329B7281B47048200368510 /* ParsimoniousTests.swift in Sources */,
 				F39407AE1B470671001B6844 /* ParseContext.swift in Sources */,
+				F39407C21B470DE0001B6844 /* ParseResult.swift in Sources */,
 				F39407B81B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
+				F39407BD1B470C83001B6844 /* ParseStream.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +337,8 @@
 			files = (
 				F39407B91B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407AF1B470671001B6844 /* ParseContext.swift in Sources */,
+				F39407C31B470DE0001B6844 /* ParseResult.swift in Sources */,
+				F39407BE1B470C83001B6844 /* ParseStream.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,6 +348,8 @@
 			files = (
 				F39407BA1B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407B01B470671001B6844 /* ParseContext.swift in Sources */,
+				F39407C41B470DE0001B6844 /* ParseResult.swift in Sources */,
+				F39407BF1B470C83001B6844 /* ParseStream.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
