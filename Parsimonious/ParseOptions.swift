@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+
+
+public struct ParseOptions {
+    
+}

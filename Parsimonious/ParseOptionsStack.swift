@@ -7,3 +7,13 @@
 //
 
 import Foundation
+
+class ParseOptionsStack {
+    
+    private struct RealParseOptions {
+        
+    }
+    
+    
+    
+}
