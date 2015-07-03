@@ -10,6 +10,20 @@
 		F329B71C1B47048200368510 /* Parsimonious.h in Headers */ = {isa = PBXBuildFile; fileRef = F329B71B1B47048200368510 /* Parsimonious.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F329B7231B47048200368510 /* Parsimonious.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F329B7181B47048200368510 /* Parsimonious.framework */; };
 		F329B7281B47048200368510 /* ParsimoniousTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F329B7271B47048200368510 /* ParsimoniousTests.swift */; };
+		F394079E1B4705B5001B6844 /* Parsimonious.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F39407941B4705B5001B6844 /* Parsimonious.framework */; };
+		F39407AB1B4705C6001B6844 /* Parsimonious.h in Headers */ = {isa = PBXBuildFile; fileRef = F329B71B1B47048200368510 /* Parsimonious.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F39407AD1B470671001B6844 /* ParseContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407AC1B470671001B6844 /* ParseContext.swift */; };
+		F39407AE1B470671001B6844 /* ParseContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407AC1B470671001B6844 /* ParseContext.swift */; };
+		F39407AF1B470671001B6844 /* ParseContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407AC1B470671001B6844 /* ParseContext.swift */; };
+		F39407B01B470671001B6844 /* ParseContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407AC1B470671001B6844 /* ParseContext.swift */; };
+		F39407B21B4706C0001B6844 /* ParseOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B11B4706C0001B6844 /* ParseOptions.swift */; };
+		F39407B31B4706C0001B6844 /* ParseOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B11B4706C0001B6844 /* ParseOptions.swift */; };
+		F39407B41B4706C0001B6844 /* ParseOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B11B4706C0001B6844 /* ParseOptions.swift */; };
+		F39407B51B4706C0001B6844 /* ParseOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B11B4706C0001B6844 /* ParseOptions.swift */; };
+		F39407B71B4706E5001B6844 /* ParseOptionsStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */; };
+		F39407B81B4706E5001B6844 /* ParseOptionsStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */; };
+		F39407B91B4706E5001B6844 /* ParseOptionsStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */; };
+		F39407BA1B4706E5001B6844 /* ParseOptionsStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -18,6 +32,13 @@
 			containerPortal = F329B70F1B47048200368510 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = F329B7171B47048200368510;
+			remoteInfo = Parsimonious;
+		};
+		F394079F1B4705B5001B6844 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F329B70F1B47048200368510 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F39407931B4705B5001B6844;
 			remoteInfo = Parsimonious;
 		};
 /* End PBXContainerItemProxy section */
@@ -29,6 +50,11 @@
 		F329B7221B47048200368510 /* ParsimoniousTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParsimoniousTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F329B7271B47048200368510 /* ParsimoniousTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsimoniousTests.swift; sourceTree = "<group>"; };
 		F329B7291B47048200368510 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F39407941B4705B5001B6844 /* Parsimonious.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parsimonious.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F394079D1B4705B5001B6844 /* ParsimoniousTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParsimoniousTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F39407AC1B470671001B6844 /* ParseContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseContext.swift; sourceTree = "<group>"; };
+		F39407B11B4706C0001B6844 /* ParseOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseOptions.swift; sourceTree = "<group>"; };
+		F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseOptionsStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +70,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				F329B7231B47048200368510 /* Parsimonious.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F39407901B4705B5001B6844 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F394079A1B4705B5001B6844 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F394079E1B4705B5001B6844 /* Parsimonious.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +105,8 @@
 			children = (
 				F329B7181B47048200368510 /* Parsimonious.framework */,
 				F329B7221B47048200368510 /* ParsimoniousTests.xctest */,
+				F39407941B4705B5001B6844 /* Parsimonious.framework */,
+				F394079D1B4705B5001B6844 /* ParsimoniousTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,6 +116,9 @@
 			children = (
 				F329B71B1B47048200368510 /* Parsimonious.h */,
 				F329B71D1B47048200368510 /* Info.plist */,
+				F39407AC1B470671001B6844 /* ParseContext.swift */,
+				F39407B11B4706C0001B6844 /* ParseOptions.swift */,
+				F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */,
 			);
 			path = Parsimonious;
 			sourceTree = "<group>";
@@ -94,6 +140,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F329B71C1B47048200368510 /* Parsimonious.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F39407911B4705B5001B6844 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F39407AB1B4705C6001B6844 /* Parsimonious.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,12 +190,49 @@
 			productReference = F329B7221B47048200368510 /* ParsimoniousTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		F39407931B4705B5001B6844 /* ParsimoniousOSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F39407A51B4705B5001B6844 /* Build configuration list for PBXNativeTarget "ParsimoniousOSX" */;
+			buildPhases = (
+				F394078F1B4705B5001B6844 /* Sources */,
+				F39407901B4705B5001B6844 /* Frameworks */,
+				F39407911B4705B5001B6844 /* Headers */,
+				F39407921B4705B5001B6844 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ParsimoniousOSX;
+			productName = Parsimonious;
+			productReference = F39407941B4705B5001B6844 /* Parsimonious.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		F394079C1B4705B5001B6844 /* ParsimoniousOSXTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F39407A81B4705B5001B6844 /* Build configuration list for PBXNativeTarget "ParsimoniousOSXTests" */;
+			buildPhases = (
+				F39407991B4705B5001B6844 /* Sources */,
+				F394079A1B4705B5001B6844 /* Frameworks */,
+				F394079B1B4705B5001B6844 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F39407A01B4705B5001B6844 /* PBXTargetDependency */,
+			);
+			name = ParsimoniousOSXTests;
+			productName = ParsimoniousTests;
+			productReference = F394079D1B4705B5001B6844 /* ParsimoniousTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		F329B70F1B47048200368510 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Prosumma LLC";
 				TargetAttributes = {
@@ -149,6 +240,12 @@
 						CreatedOnToolsVersion = 7.0;
 					};
 					F329B7211B47048200368510 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					F39407931B4705B5001B6844 = {
+						CreatedOnToolsVersion = 7.0;
+					};
+					F394079C1B4705B5001B6844 = {
 						CreatedOnToolsVersion = 7.0;
 					};
 				};
@@ -167,6 +264,8 @@
 			targets = (
 				F329B7171B47048200368510 /* ParsimoniousiOS */,
 				F329B7211B47048200368510 /* ParsimoniousiOSTests */,
+				F39407931B4705B5001B6844 /* ParsimoniousOSX */,
+				F394079C1B4705B5001B6844 /* ParsimoniousOSXTests */,
 			);
 		};
 /* End PBXProject section */
@@ -186,6 +285,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F39407921B4705B5001B6844 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F394079B1B4705B5001B6844 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -193,6 +306,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F39407B71B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
+				F39407B21B4706C0001B6844 /* ParseOptions.swift in Sources */,
+				F39407AD1B470671001B6844 /* ParseContext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +316,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F39407B31B4706C0001B6844 /* ParseOptions.swift in Sources */,
 				F329B7281B47048200368510 /* ParsimoniousTests.swift in Sources */,
+				F39407AE1B470671001B6844 /* ParseContext.swift in Sources */,
+				F39407B81B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F394078F1B4705B5001B6844 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F39407B91B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
+				F39407B41B4706C0001B6844 /* ParseOptions.swift in Sources */,
+				F39407AF1B470671001B6844 /* ParseContext.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F39407991B4705B5001B6844 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F39407BA1B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
+				F39407B51B4706C0001B6844 /* ParseOptions.swift in Sources */,
+				F39407B01B470671001B6844 /* ParseContext.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,6 +350,11 @@
 			isa = PBXTargetDependency;
 			target = F329B7171B47048200368510 /* ParsimoniousiOS */;
 			targetProxy = F329B7241B47048200368510 /* PBXContainerItemProxy */;
+		};
+		F39407A01B4705B5001B6844 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F39407931B4705B5001B6844 /* ParsimoniousOSX */;
+			targetProxy = F394079F1B4705B5001B6844 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -307,6 +451,7 @@
 		F329B72D1B47048200368510 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -317,12 +462,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.Parsimonious;
 				PRODUCT_NAME = Parsimonious;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		F329B72E1B47048200368510 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -356,6 +503,78 @@
 			};
 			name = Release;
 		};
+		F39407A61B4705B5001B6844 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = Parsimonious/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.Parsimonious;
+				PRODUCT_NAME = Parsimonious;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F39407A71B4705B5001B6844 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = Parsimonious/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.Parsimonious;
+				PRODUCT_NAME = Parsimonious;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		F39407A91B4705B5001B6844 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ParsimoniousTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.ParsimoniousTests;
+				PRODUCT_NAME = ParsimoniousTests;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F39407AA1B4705B5001B6844 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = ParsimoniousTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.ParsimoniousTests;
+				PRODUCT_NAME = ParsimoniousTests;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -385,6 +604,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		F39407A51B4705B5001B6844 /* Build configuration list for PBXNativeTarget "ParsimoniousOSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F39407A61B4705B5001B6844 /* Debug */,
+				F39407A71B4705B5001B6844 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F39407A81B4705B5001B6844 /* Build configuration list for PBXNativeTarget "ParsimoniousOSXTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F39407A91B4705B5001B6844 /* Debug */,
+				F39407AA1B4705B5001B6844 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
