@@ -24,6 +24,10 @@
 		F39407C21B470DE0001B6844 /* ParseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C01B470DE0001B6844 /* ParseResult.swift */; };
 		F39407C31B470DE0001B6844 /* ParseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C01B470DE0001B6844 /* ParseResult.swift */; };
 		F39407C41B470DE0001B6844 /* ParseResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C01B470DE0001B6844 /* ParseResult.swift */; };
+		F39407C61B4735C3001B6844 /* Primitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C51B4735C3001B6844 /* Primitives.swift */; };
+		F39407C71B4735C3001B6844 /* Primitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C51B4735C3001B6844 /* Primitives.swift */; };
+		F39407C81B4735C3001B6844 /* Primitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C51B4735C3001B6844 /* Primitives.swift */; };
+		F39407C91B4735C3001B6844 /* Primitives.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407C51B4735C3001B6844 /* Primitives.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,7 @@
 		F39407AC1B470671001B6844 /* ParseContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseContext.swift; sourceTree = "<group>"; };
 		F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseOptionsStack.swift; sourceTree = "<group>"; };
 		F39407C01B470DE0001B6844 /* ParseResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseResult.swift; sourceTree = "<group>"; };
+		F39407C51B4735C3001B6844 /* Primitives.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Primitives.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +124,7 @@
 				F39407AC1B470671001B6844 /* ParseContext.swift */,
 				F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */,
 				F39407C01B470DE0001B6844 /* ParseResult.swift */,
+				F39407C51B4735C3001B6844 /* Primitives.swift */,
 			);
 			path = Parsimonious;
 			sourceTree = "<group>";
@@ -309,6 +315,7 @@
 				F39407B71B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407AD1B470671001B6844 /* ParseContext.swift in Sources */,
 				F39407C11B470DE0001B6844 /* ParseResult.swift in Sources */,
+				F39407C61B4735C3001B6844 /* Primitives.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +325,7 @@
 			files = (
 				F329B7281B47048200368510 /* ParsimoniousTests.swift in Sources */,
 				F39407AE1B470671001B6844 /* ParseContext.swift in Sources */,
+				F39407C71B4735C3001B6844 /* Primitives.swift in Sources */,
 				F39407C21B470DE0001B6844 /* ParseResult.swift in Sources */,
 				F39407B81B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 			);
@@ -330,6 +338,7 @@
 				F39407B91B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407AF1B470671001B6844 /* ParseContext.swift in Sources */,
 				F39407C31B470DE0001B6844 /* ParseResult.swift in Sources */,
+				F39407C81B4735C3001B6844 /* Primitives.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,6 +349,7 @@
 				F39407BA1B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407B01B470671001B6844 /* ParseContext.swift in Sources */,
 				F39407C41B470DE0001B6844 /* ParseResult.swift in Sources */,
+				F39407C91B4735C3001B6844 /* Primitives.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

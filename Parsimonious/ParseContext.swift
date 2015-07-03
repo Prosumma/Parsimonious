@@ -70,6 +70,7 @@ public class ParseContext {
     }
     
     public class func parse<T>(string: String, parser: ParseContext -> ParseResult<T>) -> ParseResult<T> {
-        return parser(ParseContext(string: string))
+        let context = ParseContext(string: string)
+        return parser(context)
     }
 }

@@ -9,7 +9,8 @@
 import Foundation
 
 public enum ParseResult<T> {
-    case Matched([T])
+    public typealias Match = (T, String.Index)
+    case Matched([Match])
     case NotMatched
     case Error(ErrorType)
 }
