@@ -100,9 +100,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		F329B7171B47048200368510 /* Parsimonious */ = {
+		F329B7171B47048200368510 /* ParsimoniousiOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F329B72C1B47048200368510 /* Build configuration list for PBXNativeTarget "Parsimonious" */;
+			buildConfigurationList = F329B72C1B47048200368510 /* Build configuration list for PBXNativeTarget "ParsimoniousiOS" */;
 			buildPhases = (
 				F329B7131B47048200368510 /* Sources */,
 				F329B7141B47048200368510 /* Frameworks */,
@@ -113,14 +113,14 @@
 			);
 			dependencies = (
 			);
-			name = Parsimonious;
+			name = ParsimoniousiOS;
 			productName = Parsimonious;
 			productReference = F329B7181B47048200368510 /* Parsimonious.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		F329B7211B47048200368510 /* ParsimoniousTests */ = {
+		F329B7211B47048200368510 /* ParsimoniousiOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F329B72F1B47048200368510 /* Build configuration list for PBXNativeTarget "ParsimoniousTests" */;
+			buildConfigurationList = F329B72F1B47048200368510 /* Build configuration list for PBXNativeTarget "ParsimoniousiOSTests" */;
 			buildPhases = (
 				F329B71E1B47048200368510 /* Sources */,
 				F329B71F1B47048200368510 /* Frameworks */,
@@ -131,7 +131,7 @@
 			dependencies = (
 				F329B7251B47048200368510 /* PBXTargetDependency */,
 			);
-			name = ParsimoniousTests;
+			name = ParsimoniousiOSTests;
 			productName = ParsimoniousTests;
 			productReference = F329B7221B47048200368510 /* ParsimoniousTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -165,8 +165,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F329B7171B47048200368510 /* Parsimonious */,
-				F329B7211B47048200368510 /* ParsimoniousTests */,
+				F329B7171B47048200368510 /* ParsimoniousiOS */,
+				F329B7211B47048200368510 /* ParsimoniousiOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -209,7 +209,7 @@
 /* Begin PBXTargetDependency section */
 		F329B7251B47048200368510 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F329B7171B47048200368510 /* Parsimonious */;
+			target = F329B7171B47048200368510 /* ParsimoniousiOS */;
 			targetProxy = F329B7241B47048200368510 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -315,7 +315,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.Parsimonious;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Parsimonious;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -331,7 +331,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.Parsimonious;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Parsimonious;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -342,7 +342,7 @@
 				INFOPLIST_FILE = ParsimoniousTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.ParsimoniousTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ParsimoniousTests;
 			};
 			name = Debug;
 		};
@@ -352,7 +352,7 @@
 				INFOPLIST_FILE = ParsimoniousTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.prosumma.ParsimoniousTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ParsimoniousTests;
 			};
 			name = Release;
 		};
@@ -368,21 +368,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F329B72C1B47048200368510 /* Build configuration list for PBXNativeTarget "Parsimonious" */ = {
+		F329B72C1B47048200368510 /* Build configuration list for PBXNativeTarget "ParsimoniousiOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F329B72D1B47048200368510 /* Debug */,
 				F329B72E1B47048200368510 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-		F329B72F1B47048200368510 /* Build configuration list for PBXNativeTarget "ParsimoniousTests" */ = {
+		F329B72F1B47048200368510 /* Build configuration list for PBXNativeTarget "ParsimoniousiOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F329B7301B47048200368510 /* Debug */,
 				F329B7311B47048200368510 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
