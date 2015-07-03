@@ -12,8 +12,9 @@ public class ParseContext {
     
     // MARK: - Object Lifecycle
     
-    public init(stream: ParseStream) {
-        self.stream = stream
+    public init(string: String) {
+        self.string = string
+        self.position = string.startIndex
     }
     
     // MARK: - Options
@@ -22,28 +23,53 @@ public class ParseContext {
     
     public func pushOptions(options: ParseOptions) {
         optionsStack.push(options)
-        guard let skipCharacters = self.options.skipCharacters else {
-            return
-        }
-        stream.skipCharacters(skipCharacters)
+        skipCharactersIfNeeded()
     }
     
     public func popOptions() {
         optionsStack.pop()
-        guard let skipCharacters = options.skipCharacters else {
-            return
-        }
-        stream.skipCharacters(skipCharacters)
+        skipCharactersIfNeeded()
     }
     
     public var options: RealizedParseOptions {
         return optionsStack.current
     }
     
-    // MARK: - ParseStream
+    // MARK: - Parsing
     
-    public let stream: ParseStream
+    public let string: String
     
+    public var position: String.Index {
+        didSet {
+            skipCharactersIfNeeded()
+        }
+    }
     
-
+    private var skippingCharacters = false
+    
+    private func skipCharactersIfNeeded() {
+        guard !skippingCharacters else {
+            return
+        }
+        guard let skipCharacters = options.skipCharacters else {
+            return
+        }
+        skippingCharacters = true
+        defer {
+            skippingCharacters = false
+        }
+        var p = position
+        while p < string.endIndex && skipCharacters.longCharacterIsMember(string[p...p].unicodeScalars.first!.value) {
+            p = Swift.advance(p, 1, string.endIndex)
+        }
+        position = p
+    }
+    
+    public var remainder: String {
+        return string[position..<string.endIndex]
+    }
+    
+    public class func parse<T>(string: String, parser: ParseContext -> ParseResult<T>) -> ParseResult<T> {
+        return parser(ParseContext(string: string))
+    }
 }

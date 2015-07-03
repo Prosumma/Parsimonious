@@ -9,6 +9,10 @@
 import Foundation
 
 public struct ParseOptions {
+    // Yes, it's an optional optional.
+    // Passing nil means that the prior value on the stack should be used.
+    // Passing Optional.None means that no characters should be skipped.
+    // Passing Optional.Some(characterSet) means that the given characters should be skipped
     let skipCharacters: Optional<NSCharacterSet>?
     let caseInsensitive: Bool?
 }
