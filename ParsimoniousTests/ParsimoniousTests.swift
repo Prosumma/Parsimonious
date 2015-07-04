@@ -21,11 +21,11 @@ class ParsimoniousTests: XCTestCase {
     }
     
     func testExample() {
-        let yes = skipNothing <* match <* "yes" & opt <* (matchOneOf <* "!?." | regex <* "\\d+") *> concat
+        let yes = skipNothing <* match <* "yes" & opt <* (matchOneOf <* "!?." | regex <* "\\d")+ *> concat
         let no = skip <* match <* "no"
         let yesOrNo = yes | no
         let grammar = skipWhitespace <* (yesOrNo+ & end) // ! NSError(domain: "Foo", code: 0, userInfo: nil)
-        print(ParseContext.parse("yes!  no yes.no yes23   no", parser: grammar))
+        print(ParseContext.parse("yes!  no yes.no yes23! yes yes   no", parser: grammar))
     }
     
     func testPerformanceExample() {
