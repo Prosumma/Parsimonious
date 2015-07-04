@@ -94,7 +94,8 @@ public func some<T>(range: Range<UInt>)(_ parser: ParseContext -> ParseResult<T>
     let parseResult = parser(context)
     switch parseResult {
     case .Matched(let matches):
-        if range.contains(UInt(matches.count)) {
+        let count = UInt(matches.count)
+        if count >= range.startIndex && count < range.endIndex {
             return parseResult
         } else {
             context.position = position
