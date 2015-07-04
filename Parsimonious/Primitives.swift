@@ -105,11 +105,27 @@ public func some<T>(range: Range<UInt>)(_ parser: ParseContext -> ParseResult<T>
     }
 }
 
-public func some<T>(count: UInt) -> (ParseContext -> ParseResult<T>) -> (ParseContext -> ParseResult<T>) {
+public func some<T>(count: UInt) -> (ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
     return some(count...count)
 }
 
-public func some<T>(parser: ParseContext -> ParseResult<T>) -> (ParseContext -> ParseResult<T>) {
+public func some<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
     return some(1..<UInt.max)(parser)
+}
+
+public func lift<T1, T2>(parser: ParseContext -> ParseResult<T1>, transform: [(T1, String.Index)] -> [(T2, String.Index)])(_ context: ParseContext) -> ParseResult<T2> {
+    switch parser(context) {
+    case .Matched(let matches): return .Matched(transform(matches))
+    case .NotMatched: return .NotMatched
+    case let .Error(error, position): return .Error(error, position)
+    }
+}
+
+public func lift<T1, T2>(parser: ParseContext -> ParseResult<T1>, transform: T1 -> T2)(_ context: ParseContext) -> ParseResult<T2> {
+    switch parser(context) {
+    case .Matched(let matches): return .Matched(matches.map() { (transform($0.0), $0.1) })
+    case .NotMatched: return .NotMatched
+    case let .Error(error, position): return .Error(error, position)
+    }
 }
 

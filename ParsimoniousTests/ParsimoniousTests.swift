@@ -21,8 +21,8 @@ class ParsimoniousTests: XCTestCase {
     }
     
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        let grammar = match <* "yes" & match <* "no"
+        print(ParseContext.parse("yesno", parser: grammar))
     }
     
     func testPerformanceExample() {
