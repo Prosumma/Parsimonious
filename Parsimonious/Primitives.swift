@@ -138,3 +138,6 @@ public func lift<T1, T2>(parser: ParseContext -> ParseResult<T1>, transform: T1 
     }
 }
 
+public func end<T>(context: ParseContext) -> ParseResult<T> {
+    return context.position == context.string.endIndex ? .Matched([]) : .NotMatched
+}

@@ -23,6 +23,9 @@ infix operator ! {
     precedence 50
 }
 
+postfix operator * {}
+postfix operator + {}
+
 public func &<T>(lhs: ParseContext -> ParseResult<T>, rhs: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
     return and(lhs, rhs)
 }
@@ -46,3 +49,16 @@ public func *><T1, T2>(lhs: ParseContext -> ParseResult<T1>, rhs: T1 -> T2) -> P
 public func !<T>(lhs: ParseContext -> ParseResult<T>, rhs: ErrorType) -> ParseContext -> ParseResult<T> {
     return expect(lhs, error: rhs)
 }
+
+public prefix func !<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
+    return not <* parser
+}
+
+public postfix func *<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
+    return many <* parser
+}
+
+public postfix func +<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
+    return some <* many <* parser
+}
+

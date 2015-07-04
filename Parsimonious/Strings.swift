@@ -30,3 +30,14 @@ public func regex(expression: String) -> ParseContext -> ParseResult<String> {
     return match(expression, options: NSStringCompareOptions.RegularExpressionSearch)
 }
 
+public func matchOneOf(string: String) -> ParseContext -> ParseResult<String> {
+    return or(string.characters.map() { match(String($0)) })
+}
+
+public func concat(matches: [(String, String.Index)]) -> [(String, String.Index)] {
+    guard matches.count > 0 else {
+        return []
+    }
+    let position = matches[0].1
+    return [("".join(matches.map({$0.0})), position)]
+}
