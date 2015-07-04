@@ -76,6 +76,7 @@
 		F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseOptionsStack.swift; sourceTree = "<group>"; };
 		F39407C01B470DE0001B6844 /* ParseResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseResult.swift; sourceTree = "<group>"; };
 		F39407C51B4735C3001B6844 /* Primitives.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Primitives.swift; sourceTree = "<group>"; };
+		F3C6C5DA1B47B81500BD61C3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +116,7 @@
 		F329B70E1B47048200368510 = {
 			isa = PBXGroup;
 			children = (
+				F3C6C5DA1B47B81500BD61C3 /* README.md */,
 				F329B71A1B47048200368510 /* Parsimonious */,
 				F329B7261B47048200368510 /* ParsimoniousTests */,
 				F329B7191B47048200368510 /* Products */,
