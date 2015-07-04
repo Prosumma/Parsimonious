@@ -10,6 +10,14 @@
 		F329B71C1B47048200368510 /* Parsimonious.h in Headers */ = {isa = PBXBuildFile; fileRef = F329B71B1B47048200368510 /* Parsimonious.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F329B7231B47048200368510 /* Parsimonious.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F329B7181B47048200368510 /* Parsimonious.framework */; };
 		F329B7281B47048200368510 /* ParsimoniousTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F329B7271B47048200368510 /* ParsimoniousTests.swift */; };
+		F32C69021B4786A200114C04 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32C69011B4786A200114C04 /* Strings.swift */; };
+		F32C69031B4786A200114C04 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32C69011B4786A200114C04 /* Strings.swift */; };
+		F32C69041B4786A200114C04 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32C69011B4786A200114C04 /* Strings.swift */; };
+		F32C69051B4786A200114C04 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32C69011B4786A200114C04 /* Strings.swift */; };
+		F32C69071B4786AB00114C04 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32C69061B4786AB00114C04 /* Operators.swift */; };
+		F32C69081B4786AB00114C04 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32C69061B4786AB00114C04 /* Operators.swift */; };
+		F32C69091B4786AB00114C04 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32C69061B4786AB00114C04 /* Operators.swift */; };
+		F32C690A1B4786AB00114C04 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32C69061B4786AB00114C04 /* Operators.swift */; };
 		F394079E1B4705B5001B6844 /* Parsimonious.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F39407941B4705B5001B6844 /* Parsimonious.framework */; };
 		F39407AB1B4705C6001B6844 /* Parsimonious.h in Headers */ = {isa = PBXBuildFile; fileRef = F329B71B1B47048200368510 /* Parsimonious.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F39407AD1B470671001B6844 /* ParseContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F39407AC1B470671001B6844 /* ParseContext.swift */; };
@@ -54,6 +62,8 @@
 		F329B7221B47048200368510 /* ParsimoniousTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParsimoniousTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F329B7271B47048200368510 /* ParsimoniousTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsimoniousTests.swift; sourceTree = "<group>"; };
 		F329B7291B47048200368510 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F32C69011B4786A200114C04 /* Strings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
+		F32C69061B4786AB00114C04 /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 		F39407941B4705B5001B6844 /* Parsimonious.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parsimonious.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F394079D1B4705B5001B6844 /* ParsimoniousTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParsimoniousTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F39407AC1B470671001B6844 /* ParseContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseContext.swift; sourceTree = "<group>"; };
@@ -121,10 +131,12 @@
 			children = (
 				F329B71B1B47048200368510 /* Parsimonious.h */,
 				F329B71D1B47048200368510 /* Info.plist */,
+				F32C69061B4786AB00114C04 /* Operators.swift */,
 				F39407AC1B470671001B6844 /* ParseContext.swift */,
 				F39407B61B4706E5001B6844 /* ParseOptionsStack.swift */,
 				F39407C01B470DE0001B6844 /* ParseResult.swift */,
 				F39407C51B4735C3001B6844 /* Primitives.swift */,
+				F32C69011B4786A200114C04 /* Strings.swift */,
 			);
 			path = Parsimonious;
 			sourceTree = "<group>";
@@ -314,8 +326,10 @@
 			files = (
 				F39407B71B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407AD1B470671001B6844 /* ParseContext.swift in Sources */,
+				F32C69021B4786A200114C04 /* Strings.swift in Sources */,
 				F39407C11B470DE0001B6844 /* ParseResult.swift in Sources */,
 				F39407C61B4735C3001B6844 /* Primitives.swift in Sources */,
+				F32C69071B4786AB00114C04 /* Operators.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -325,8 +339,10 @@
 			files = (
 				F329B7281B47048200368510 /* ParsimoniousTests.swift in Sources */,
 				F39407AE1B470671001B6844 /* ParseContext.swift in Sources */,
+				F32C69081B4786AB00114C04 /* Operators.swift in Sources */,
 				F39407C71B4735C3001B6844 /* Primitives.swift in Sources */,
 				F39407C21B470DE0001B6844 /* ParseResult.swift in Sources */,
+				F32C69031B4786A200114C04 /* Strings.swift in Sources */,
 				F39407B81B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -337,8 +353,10 @@
 			files = (
 				F39407B91B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407AF1B470671001B6844 /* ParseContext.swift in Sources */,
+				F32C69041B4786A200114C04 /* Strings.swift in Sources */,
 				F39407C31B470DE0001B6844 /* ParseResult.swift in Sources */,
 				F39407C81B4735C3001B6844 /* Primitives.swift in Sources */,
+				F32C69091B4786AB00114C04 /* Operators.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,8 +366,10 @@
 			files = (
 				F39407BA1B4706E5001B6844 /* ParseOptionsStack.swift in Sources */,
 				F39407B01B470671001B6844 /* ParseContext.swift in Sources */,
+				F32C69051B4786A200114C04 /* Strings.swift in Sources */,
 				F39407C41B470DE0001B6844 /* ParseResult.swift in Sources */,
 				F39407C91B4735C3001B6844 /* Primitives.swift in Sources */,
+				F32C690A1B4786AB00114C04 /* Operators.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,6 +642,7 @@
 				F39407A71B4705B5001B6844 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F39407A81B4705B5001B6844 /* Build configuration list for PBXNativeTarget "ParsimoniousOSXTests" */ = {
 			isa = XCConfigurationList;
@@ -630,6 +651,7 @@
 				F39407AA1B4705B5001B6844 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

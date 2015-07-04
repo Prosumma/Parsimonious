@@ -12,5 +12,5 @@ public enum ParseResult<T> {
     public typealias Match = (T, String.Index)
     case Matched([Match])
     case NotMatched
-    case Error(ErrorType)
+    case Error(ErrorType, String.Index)
 }

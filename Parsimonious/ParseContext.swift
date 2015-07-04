@@ -45,6 +45,15 @@ public class ParseContext {
         }
     }
     
+    public func advance(by: String.Index.Distance) {
+        position = Swift.advance(position, by, string.endIndex)
+    }
+    
+    public func advance(by: Range<String.Index>) {
+        let distance = Swift.distance(by.startIndex, by.endIndex)
+        return advance(distance)
+    }
+    
     private var skippingCharacters = false
     
     private func skipCharactersIfNeeded() {
