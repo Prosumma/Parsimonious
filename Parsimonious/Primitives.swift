@@ -113,6 +113,14 @@ public func some<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> P
     return some(1..<UInt.max)(parser)
 }
 
+public func expect<T>(parser: ParseContext -> ParseResult<T>, error: ErrorType)(_ context: ParseContext) -> ParseResult<T> {
+    let parseResult = parser(context)
+    switch parseResult {
+    case .NotMatched: return .Error(error, context.position)
+    default: return parseResult
+    }
+}
+
 public func lift<T1, T2>(parser: ParseContext -> ParseResult<T1>, transform: [(T1, String.Index)] -> [(T2, String.Index)])(_ context: ParseContext) -> ParseResult<T2> {
     switch parser(context) {
     case .Matched(let matches): return .Matched(transform(matches))

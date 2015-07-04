@@ -11,7 +11,7 @@ import Foundation
 public struct ParseOptions {
     // Yes, it's an optional optional.
     // Passing nil means that the prior value on the stack should be used.
-    // Passing Optional.None means that no characters should be skipped.
+    // Passing Optional.Some(nil) means that no characters should be skipped.
     // Passing Optional.Some(characterSet) means that the given characters should be skipped
     let skipCharacters: Optional<NSCharacterSet>?
     let caseInsensitive: Bool?
@@ -27,7 +27,7 @@ class ParseOptionsStack {
     private var stack = [RealizedParseOptions]()
     
     var current: RealizedParseOptions {
-        guard let options = stack.first else {
+        guard let options = stack.last else {
             return RealizedParseOptions(skipCharacters: nil, caseInsensitive: false)
         }
         return options
@@ -35,11 +35,9 @@ class ParseOptionsStack {
     
     func push(options: ParseOptions) {
         var skipCharacters = current.skipCharacters
-        if let shouldSkipCharacters = options.skipCharacters {
-            switch shouldSkipCharacters {
-            case .Some(let characterSet): skipCharacters = characterSet
-            case .None: skipCharacters = nil
-            }
+        switch options.skipCharacters {
+        case .Some(let characterSet): skipCharacters = characterSet
+        case .None: break
         }
         let realizedOptions = RealizedParseOptions(skipCharacters: skipCharacters, caseInsensitive: options.caseInsensitive ?? current.caseInsensitive)
         stack.append(realizedOptions)

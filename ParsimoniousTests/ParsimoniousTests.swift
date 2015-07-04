@@ -21,8 +21,9 @@ class ParsimoniousTests: XCTestCase {
     }
     
     func testExample() {
-        let grammar = match <* "yes" & match <* "no"
-        print(ParseContext.parse("yesno", parser: grammar))
+        let yes = skipNothing <* (match <* "yes" & opt <* match <* "!")
+        let grammar = skipWhitespace <* some <* many <* (yes & match <* "no") ! NSError(domain: "Foo", code: 0, userInfo: nil)
+        print(ParseContext.parse("yes!  no yesno yes   no", parser: grammar))
     }
     
     func testPerformanceExample() {

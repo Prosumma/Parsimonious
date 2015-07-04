@@ -13,6 +13,16 @@ infix operator <* {
     precedence 255
 }
 
+infix operator *> {
+    associativity left
+    precedence 50
+}
+
+infix operator ! {
+    associativity left
+    precedence 50
+}
+
 public func &<T>(lhs: ParseContext -> ParseResult<T>, rhs: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
     return and(lhs, rhs)
 }
@@ -25,3 +35,14 @@ public func <*<A, R>(lhs: A -> R, rhs: A) -> R {
     return lhs(rhs)
 }
 
+public func *><T1, T2>(lhs: ParseContext -> ParseResult<T1>, rhs: [(T1, String.Index)] -> [(T2, String.Index)]) -> ParseContext -> ParseResult<T2> {
+    return lift(lhs, transform: rhs)
+}
+
+public func *><T1, T2>(lhs: ParseContext -> ParseResult<T1>, rhs: T1 -> T2) -> ParseContext -> ParseResult<T2> {
+    return lift(lhs, transform: rhs)
+}
+
+public func !<T>(lhs: ParseContext -> ParseResult<T>, rhs: ErrorType) -> ParseContext -> ParseResult<T> {
+    return expect(lhs, error: rhs)
+}
