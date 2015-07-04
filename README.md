@@ -12,4 +12,4 @@ print(ParseContext.parse("yes!  no yes.no yes23! YES yeS   no", parser: grammar)
 
 Since the "no" matches are skipped, this effectively returns the following matches: `["yes!", "yes.", "yes23!", "YES", "yeS"]`. (It actually returns them as tuples of the match and its position in the parsed string.)
 
-Clearly this explanation is not clear. :) Once things are firmed up and the unit tests are written, I will elaborate this README.
+Clearly this explanation is not clear. 😀 Once things are firmed up and the unit tests are written, I will elaborate this README.
