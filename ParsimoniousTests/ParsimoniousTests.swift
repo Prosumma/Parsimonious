@@ -20,19 +20,24 @@ class ParsimoniousTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        let yes = skipNothing <* match <* "yes" & opt <* (matchOneOf <* "!?." | regex <* "\\d")+ *> concat
-        let no = skip <* match <* "no"
-        let yesOrNo = yes | no
-        let grammar = skipWhitespace <* (yesOrNo+ & end) // ! NSError(domain: "Foo", code: 0, userInfo: nil)
-        print(ParseContext.parse("yes!  no yes.no yes23! yes yes   no", parser: grammar))
+    func testCSV() {
+        let quote = match <* "\""
+        let comma = match <* ","
+        let skipQuote: StringParser = skip <* quote
+        let skipComma: StringParser = skip <* comma
+        let emptyQuotes = match <* "\"\"" *> { _ in "" }
+        let unquoted = regex <* "[^\",]*" *> trim
+        let quoteChunk = regex <* "[^\"\\\\]*\\\\\""
+        let quotedText = quoteChunk | (regex <* "[^\"]+")
+        let quoted = emptyQuotes | (skipQuote & quotedText+ & skipQuote) *> concat *> replace("\\\"", withString: "\"")
+        let field = skipNothing <* (quoted | unquoted)
+        let csv = skipWhitespace <* (field & (skipComma & field)*) & end
+        print(ParseContext.parse("\"ass\\\"hat\"   ,  dickhead  ,\"\",,bob  ", parser: csv))
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
-        }
+
+    func testGlossa() {
+        let quote = match <* "\""
+        
     }
     
 }

@@ -23,7 +23,10 @@ public func not<T>(parser: ParseContext -> ParseResult<T>)(_ context: ParseConte
     case .Matched(_):
         context.position = position
         return .NotMatched
-    default: return parseResult
+    case .NotMatched:
+        return .Matched([])
+    default:
+        return parseResult
     }
 }
 
@@ -81,11 +84,11 @@ public func many<T>(parser: ParseContext -> ParseResult<T>)(_ context: ParseCont
     return .Matched(matches)
 }
 
-public func skip<T>(parser: ParseContext -> ParseResult<T>)(_ context: ParseContext) -> ParseResult<T> {
-    let parseResult = parser(context)
-    switch parseResult {
+public func skip<T1, T2>(parser: ParseContext -> ParseResult<T1>)(_ context: ParseContext) -> ParseResult<T2> {
+    switch parser(context) {
     case .Matched(_): return .Matched([])
-    default: return parseResult
+    case .NotMatched: return .NotMatched
+    case let .Error(error, position): return .Error(error, position)
     }
 }
 
