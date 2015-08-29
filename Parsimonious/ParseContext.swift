@@ -46,11 +46,11 @@ public class ParseContext {
     }
     
     public func advance(by: String.Index.Distance) {
-        position = Swift.advance(position, by, string.endIndex)
+        position = position.advancedBy(by, limit: string.endIndex)
     }
     
     public func advance(by: Range<String.Index>) {
-        let distance = Swift.distance(by.startIndex, by.endIndex)
+        let distance = by.startIndex.distanceTo(by.endIndex)
         return advance(distance)
     }
     
@@ -69,7 +69,7 @@ public class ParseContext {
         }
         var p = position
         while p < string.endIndex && skipCharacters.longCharacterIsMember(string[p...p].unicodeScalars.first!.value) {
-            p = Swift.advance(p, 1, string.endIndex)
+            p = p.advancedBy(1, limit: string.endIndex)
         }
         position = p
     }

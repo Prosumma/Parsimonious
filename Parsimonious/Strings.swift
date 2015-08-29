@@ -59,7 +59,7 @@ public func concat(matches: [(String, String.Index)]) -> [(String, String.Index)
         return []
     }
     let position = matches[0].1
-    return [("".join(matches.map({$0.0})), position)]
+    return [(matches.map({$0.0}).joinWithSeparator(""), position)]
 }
 
 public func trim(characterSet: NSCharacterSet)(_ string: String) -> String {
