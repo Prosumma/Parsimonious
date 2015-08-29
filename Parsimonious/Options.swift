@@ -16,8 +16,16 @@ public func withOptions<T>(parser: ParseContext -> ParseResult<T>, options: Pars
     return parser(context)
 }
 
+public func skip<T>(skipCharacters: NSCharacterSet)(_ parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
+    return withOptions(parser, options: ParseOptions(skipCharacters: Optional.Some(skipCharacters), caseInsensitive: nil))
+}
+
 public func skipWhitespace<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
-    return withOptions(parser, options: ParseOptions(skipCharacters: Optional.Some(NSCharacterSet.whitespaceCharacterSet()), caseInsensitive: nil))
+    return skip(NSCharacterSet.whitespaceCharacterSet())(parser)
+}
+
+public func skipWhitespaceAndNewlines<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
+    return skip(NSCharacterSet.whitespaceAndNewlineCharacterSet())(parser)
 }
 
 public func skipNothing<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
@@ -31,4 +39,3 @@ public func caseInsensitive<T>(parser: ParseContext -> ParseResult<T>) -> ParseC
 public func caseSensitive<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
     return withOptions(parser, options: ParseOptions(skipCharacters: nil, caseInsensitive: false))
 }
-
