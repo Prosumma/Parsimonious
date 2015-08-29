@@ -37,14 +37,14 @@ public func matchOneOf(string: String) -> StringParser {
 }
 
 public func match(characters: NSCharacterSet)(_ context: ParseContext) -> ParseResult<String> {
-    guard let character = context.remainder[context.position...context.position].unicodeScalars.first?.value else {
+    guard let character = context.remainder.unicodeScalars.first?.value else {
         return .NotMatched
     }
     if characters.longCharacterIsMember(character) {
         defer {
             context.advance(1)
         }
-        return .Matched([(context.remainder[context.position...context.position], context.position)])
+        return .Matched([(String(UnicodeScalar(character)), context.position)])
     } else {
         return .NotMatched
     }
