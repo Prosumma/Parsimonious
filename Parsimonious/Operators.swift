@@ -38,7 +38,7 @@ public func <*<A, R>(lhs: A -> R, rhs: A) -> R {
     return lhs(rhs)
 }
 
-public func *><T1, T2>(lhs: ParseContext -> ParseResult<T1>, rhs: [(T1, String.Index)] -> [(T2, String.Index)]) -> ParseContext -> ParseResult<T2> {
+public func *><T1, T2>(lhs: ParseContext -> ParseResult<T1>, rhs: [(T1, Range<String.Index>)] -> [(T2, Range<String.Index>)]) -> ParseContext -> ParseResult<T2> {
     return lift(lhs, transform: rhs)
 }
 

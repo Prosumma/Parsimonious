@@ -9,7 +9,7 @@
 import Foundation
 
 public enum ParseResult<T>: CustomDebugStringConvertible {
-    public typealias Match = (T, String.Index)
+    public typealias Match = (T, Range<String.Index>)
     case Matched([Match])
     case NotMatched
     case Error(ErrorType, String.Index)

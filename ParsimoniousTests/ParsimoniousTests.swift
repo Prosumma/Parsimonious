@@ -33,11 +33,5 @@ class ParsimoniousTests: XCTestCase {
         let field = skipNothing <* (quoted | unquoted)
         let csv = skipWhitespace <* (field & (skipComma & field)*) & end
         print(ParseContext.parse("\"ass\\\"hat\"   ,  dickhead  ,\"\",,bob  ", parser: csv))
-    }
-
-    func testGlossa() {
-        let quote = match <* "\""
-        
-    }
-    
+    }    
 }

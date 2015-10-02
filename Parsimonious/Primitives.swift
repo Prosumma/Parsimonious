@@ -125,7 +125,7 @@ public func expect<T>(parser: ParseContext -> ParseResult<T>, error: ErrorType)(
     }
 }
 
-public func lift<T1, T2>(parser: ParseContext -> ParseResult<T1>, transform: [(T1, String.Index)] -> [(T2, String.Index)])(_ context: ParseContext) -> ParseResult<T2> {
+public func lift<T1, T2>(parser: ParseContext -> ParseResult<T1>, transform: [(T1, Range<String.Index>)] -> [(T2, Range<String.Index>)])(_ context: ParseContext) -> ParseResult<T2> {
     switch parser(context) {
     case .Matched(let matches): return .Matched(transform(matches))
     case .NotMatched: return .NotMatched

@@ -21,7 +21,7 @@ public func match(with: String, var options: NSStringCompareOptions)(_ context: 
     defer {
         context.advance(range)
     }
-    return .Matched([(context.remainder[range], context.position)])
+    return .Matched([(context.remainder[range], context.position..<context.position.advancedBy(range.startIndex.distanceTo(range.endIndex)))])
 }
 
 public func match(with: String) -> StringParser {
@@ -37,14 +37,15 @@ public func matchOneOf(string: String) -> StringParser {
 }
 
 public func match(characters: NSCharacterSet)(_ context: ParseContext) -> ParseResult<String> {
-    guard let character = context.remainder.unicodeScalars.first?.value else {
+    guard let character = context.remainder.characters.first else {
         return .NotMatched
     }
-    if characters.longCharacterIsMember(character) {
+    let s = String(character)
+    if let range = s.rangeOfCharacterFromSet(characters) {
         defer {
             context.advance(1)
         }
-        return .Matched([(String(UnicodeScalar(character)), context.position)])
+        return .Matched([(s, context.position..<context.position.advancedBy(1))])
     } else {
         return .NotMatched
     }
@@ -54,12 +55,13 @@ public func whitespace(context: ParseContext) -> ParseResult<String> {
     return match(NSCharacterSet.whitespaceCharacterSet())(context)
 }
 
-public func concat(matches: [(String, String.Index)]) -> [(String, String.Index)] {
+public func concat(matches: [(String, Range<String.Index>)]) -> [(String, Range<String.Index>)] {
     guard matches.count > 0 else {
         return []
     }
-    let position = matches[0].1
-    return [(matches.map({$0.0}).joinWithSeparator(""), position)]
+    let start = matches[0].1.startIndex
+    let end = matches.last!.1.endIndex
+    return [(matches.map({$0.0}).joinWithSeparator(""), start..<end)]
 }
 
 public func trim(characterSet: NSCharacterSet)(_ string: String) -> String {
