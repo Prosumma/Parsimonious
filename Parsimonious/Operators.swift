@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Swift
 
 infix operator <* {
     associativity right
@@ -15,12 +16,12 @@ infix operator <* {
 
 infix operator *> {
     associativity left
-    precedence 50
+    precedence 100
 }
 
 infix operator ! {
     associativity left
-    precedence 50
+    precedence 100
 }
 
 postfix operator * {}
