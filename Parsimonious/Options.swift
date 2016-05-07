@@ -8,16 +8,20 @@
 
 import Foundation
 
-public func withOptions<T>(parser: ParseContext -> ParseResult<T>, options: ParseOptions)(_ context: ParseContext) -> ParseResult<T> {
-    context.pushOptions(options)
-    defer {
-        context.popOptions()
+public func withOptions<T>(parser: ParseContext -> ParseResult<T>, options: ParseOptions) -> (ParseContext -> ParseResult<T>) {
+    return { context in
+        context.pushOptions(options)
+        defer {
+            context.popOptions()
+        }
+        return parser(context)
     }
-    return parser(context)
 }
 
-public func skip<T>(skipCharacters: NSCharacterSet)(_ parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {
-    return withOptions(parser, options: ParseOptions(skipCharacters: Optional.Some(skipCharacters), caseInsensitive: nil))
+public func skip<T>(skipCharacters: NSCharacterSet) -> ((ParseContext -> ParseResult<T>) -> (ParseContext -> ParseResult<T>)) {
+    return { parser in
+        return withOptions(parser, options: ParseOptions(skipCharacters: Optional.Some(skipCharacters), caseInsensitive: nil))
+    }
 }
 
 public func skipWhitespace<T>(parser: ParseContext -> ParseResult<T>) -> ParseContext -> ParseResult<T> {

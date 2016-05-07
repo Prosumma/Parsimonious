@@ -10,18 +10,21 @@ import Foundation
 
 public typealias StringParser = ParseContext -> ParseResult<String>
 
-public func match(with: String, var options: NSStringCompareOptions)(_ context: ParseContext) -> ParseResult<String> {
-    options = options.union(NSStringCompareOptions.AnchoredSearch)
-    if context.options.caseInsensitive {
-        options = options.union(NSStringCompareOptions.CaseInsensitiveSearch)
+public func match(with: String, options: NSStringCompareOptions) -> (ParseContext -> ParseResult<String>) {
+    return { context in
+        var options = options
+        options = options.union(NSStringCompareOptions.AnchoredSearch)
+        if context.options.caseInsensitive {
+            options = options.union(NSStringCompareOptions.CaseInsensitiveSearch)
+        }
+        guard let range = context.remainder.rangeOfString(with, options: options, range: nil, locale: nil) else {
+            return .NotMatched
+        }
+        defer {
+            context.advance(range)
+        }
+        return .Matched([(context.remainder[range], context.position..<context.position.advancedBy(range.startIndex.distanceTo(range.endIndex)))])
     }
-    guard let range = context.remainder.rangeOfString(with, options: options, range: nil, locale: nil) else {
-        return .NotMatched
-    }
-    defer {
-        context.advance(range)
-    }
-    return .Matched([(context.remainder[range], context.position..<context.position.advancedBy(range.startIndex.distanceTo(range.endIndex)))])
 }
 
 public func match(with: String) -> StringParser {
@@ -36,18 +39,20 @@ public func matchOneOf(string: String) -> StringParser {
     return or(string.characters.map() { match(String($0)) })
 }
 
-public func match(characters: NSCharacterSet)(_ context: ParseContext) -> ParseResult<String> {
-    guard let character = context.remainder.characters.first else {
-        return .NotMatched
-    }
-    let s = String(character)
-    if let range = s.rangeOfCharacterFromSet(characters) {
-        defer {
-            context.advance(1)
+public func match(characters: NSCharacterSet) -> (ParseContext -> ParseResult<String>) {
+    return { context in
+        guard let character = context.remainder.characters.first else {
+            return .NotMatched
         }
-        return .Matched([(s, context.position..<context.position.advancedBy(1))])
-    } else {
-        return .NotMatched
+        let s = String(character)
+        if let range = s.rangeOfCharacterFromSet(characters) {
+            defer {
+                context.advance(1)
+            }
+            return .Matched([(s, context.position..<context.position.advancedBy(1))])
+        } else {
+            return .NotMatched
+        }
     }
 }
 
@@ -64,19 +69,19 @@ public func concat(matches: [(String, Range<String.Index>)]) -> [(String, Range<
     return [(matches.map({$0.0}).joinWithSeparator(""), start..<end)]
 }
 
-public func trim(characterSet: NSCharacterSet)(_ string: String) -> String {
-    return string.stringByTrimmingCharactersInSet(characterSet)
+public func trim(characterSet: NSCharacterSet) -> (String -> String) {
+    return { string in string.stringByTrimmingCharactersInSet(characterSet) }
 }
 
 public func trim(string: String) -> String {
     return trim(NSCharacterSet.whitespaceCharacterSet())(string)
 }
 
-public func replace(target: String, withString with: String, options: NSStringCompareOptions)(_ string: String) -> String {
-    return string.stringByReplacingOccurrencesOfString(target, withString: with, options: options, range: nil)
+public func replace(target: String, withString with: String, options: NSStringCompareOptions) -> (String -> String) {
+    return { string in string.stringByReplacingOccurrencesOfString(target, withString: with, options: options, range: nil) }
 }
 
-public func replace(target: String, withString with: String)(_ string: String) -> String {
-    return string.stringByReplacingOccurrencesOfString(target, withString: with, options: [], range: nil)
+public func replace(target: String, withString with: String) -> (String -> String) {
+    return { string in string.stringByReplacingOccurrencesOfString(target, withString: with, options: [], range: nil) }
 }
 
