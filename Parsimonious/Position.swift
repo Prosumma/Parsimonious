@@ -8,13 +8,13 @@
 
 import Foundation
 
-public struct Position<T> {
-    let startIndex: String.Index
-    let endIndex: String.Index
+public struct Position<C: Collection, T> {
+    let startIndex: C.Index
+    let endIndex: C.Index
     let value: T
 }
 
-public func position<T>(_ parser: @escaping Parser<T>) -> Parser<Position<T>> {
+public func position<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Position<C, T>> {
     return transact { context in
         let startIndex = context.index
         let value = try context <- parser

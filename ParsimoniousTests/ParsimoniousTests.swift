@@ -18,7 +18,7 @@ class ParsimoniousTests: XCTestCase {
 
     func testParser() {
         let s = "\"ok\",\"yes\" \"crazy\"  "
-        let quotes = try! parse(string: s, with: ows *> many(quoted, sepBy: sep) <* ows <* eof)
+        let quotes = try! parse(s, with: ows *> many(quoted, sepBy: sep) <* ows <* eof)
         print(quotes)
     }
 

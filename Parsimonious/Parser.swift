@@ -8,4 +8,4 @@
 
 import Foundation
 
-public typealias Parser<T> = (Context) throws -> T
+public typealias Parser<C: Collection, T> = (Context<C>) throws -> T

@@ -8,14 +8,14 @@
 
 import Foundation
 
-public struct ParseError: Error {
+public struct ParseError<Contents: Collection>: Error {
     public let message: String
-    public let string: String
-    public let index: String.Index
+    public let contents: Contents
+    public let index: Contents.Index
     
-    public init(message: String, string: String, index: String.Index) {
+    public init(message: String, contents: Contents, index: Contents.Index) {
         self.message = message
-        self.string = string
+        self.contents = contents
         self.index = index
     }
 }

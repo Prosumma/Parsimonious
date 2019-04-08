@@ -8,37 +8,41 @@
 
 import Foundation
 
-public class Context {
-    fileprivate let string: String
-    public private(set) var index: String.Index
-    private var savedIndices: [String.Index] = []
-    
-    init<S: StringProtocol>(string: S) {
-        self.string = String(string)
-        self.index = self.string.startIndex
+public class Context<Contents: Collection> {
+    fileprivate let contents: Contents
+    public private(set) var index: Contents.Index
+    private var savedIndices: [Contents.Index] = []
+
+    init(contents: Contents) {
+        self.contents = contents
+        self.index = self.contents.startIndex
     }
     
-    public var substring: Substring? {
-        if index == string.endIndex {
+    public var subcontents: Contents.SubSequence? {
+        if index == contents.endIndex {
             return nil
         }
-        return string[index...]
+        return contents[index...]
     }
     
     public var atStart: Bool {
-        return index == string.startIndex
+        return index == contents.startIndex
     }
     
     public var atEnd: Bool {
-        return index == string.endIndex
+        return index == contents.endIndex
     }
     
     public func offset(by offset: Int) {
-        self.index = string.index(self.index, offsetBy: offset, limitedBy: self.string.endIndex) ?? self.string.endIndex
+        self.index = contents.index(self.index, offsetBy: offset, limitedBy: self.contents.endIndex) ?? self.contents.endIndex
     }
 
-    public func offset<S: StringProtocol>(by string: S) {
-        offset(by: string.count)
+    public func offset(by contents: Contents) {
+        offset(by: contents.count)
+    }
+    
+    public func offset(by contents: Contents.SubSequence) {
+        offset(by: contents.count)
     }
     
     public func saveIndex() {
@@ -76,21 +80,22 @@ public class Context {
     }
 }
 
-public func transact<T>(_ parser: @escaping Parser<T>) -> Parser<T> {
+public func transact<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, T> {
     return { context in try context.transact{ try parser(context) } }
 }
 
 @discardableResult
-public func <-<T>(_ context: Context, _ parser: Parser<T>) throws -> T {
+public func <-<C: Collection, T>(_ context: Context<C>, _ parser: Parser<C, T>) throws -> T {
     return try parser(context)
 }
 
 public extension ParseError {
-    init(message: String, context: Context) {
-        self.init(message: message, string: context.string, index: context.index)
+    init(message: String, context: Context<Contents>) {
+        self.init(message: message, contents: context.contents, index: context.index)
     }
 }
 
+/*
 public struct Debug: OptionSet, ExpressibleByIntegerLiteral {
     public var rawValue: UInt
     
@@ -126,6 +131,7 @@ func debugFormat(_ context: Context, error: Error? = nil) -> String {
         return "OFFSET \(offset) EOF"
     }
 }
+*/
 
 /*
 public func debug<T>(_ parser: @escaping Parser<T>, _ debug: Debug = .all, _ log: DebugLogger? = nil) -> Parser<T> {
