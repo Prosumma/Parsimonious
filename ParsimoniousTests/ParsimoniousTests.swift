@@ -14,6 +14,14 @@ let ws = many1S(whitespace | newline)
 let sep = ws | (ows + char(",") + ows)
 let quoted = string(delimitedBy: "\"")
 
+enum Token {
+    case openParens
+    case closeParens
+    case string
+}
+
+
+
 class ParsimoniousTests: XCTestCase {
 
     func testParser() {

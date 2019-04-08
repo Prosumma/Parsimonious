@@ -18,7 +18,7 @@ public class Context<Contents: Collection> {
         self.index = self.contents.startIndex
     }
     
-    public var subcontents: Contents.SubSequence? {
+    public var rest: Contents.SubSequence? {
         if index == contents.endIndex {
             return nil
         }

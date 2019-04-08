@@ -142,7 +142,7 @@ public func noneOf(_ chars: String) -> Parser<String, String> {
 
 public func match(_ m: String, options: String.CompareOptions = []) -> Parser<String, String> {
     return { context in
-        guard let substring = context.subcontents else {
+        guard let substring = context.rest else {
             throw ParseError(message: "Unexpected end of input, expected to match \(m).", context: context)
         }
         var options = options

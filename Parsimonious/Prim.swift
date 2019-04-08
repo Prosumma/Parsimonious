@@ -13,9 +13,9 @@ public func parse<C: Collection, T>(_ contents: C, with parser: Parser<C, T>) th
     return try parser(context)
 }
 
-public func satisfy<C: Collection>(_ test: @escaping (C.Element) -> Bool) -> Parser<C, C.Element> {
+public func satisfy<C: Collection>(type: C.Type = C.self, _ test: @escaping (C.Element) -> Bool) -> Parser<C, C.Element> {
     return { context in
-        if let c = context.subcontents?.first {
+        if let c = context.rest?.first {
             if test(c) {
                 context.offset(by: 1)
                 return c
@@ -366,20 +366,9 @@ public func <*><C: Collection, T1, T2>(transform: @escaping (T1) throws -> T2, p
     return lift(transform, parser)
 }
 
-public func ifError<C: Collection, T>(_ parser: @escaping Parser<C, T>, error: String) -> Parser<C, T> {
-    return transact { context in
-        do {
-            return try context <- parser
-        } catch _ {
-            throw ParseError(message: error, context: context)
-        }
-    }
-}
-
 public func <?><C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: String) -> Parser<C, T> {
-    return ifError(lhs, error: rhs)
+    return lhs | fail(message: rhs)
 }
-
 
 public func sof<C: Collection>(_ context: Context<C>) throws {
     if context.atStart {
@@ -392,5 +381,5 @@ public func eof<C: Collection>(_ context: Context<C>) throws {
     if context.atEnd {
         return
     }
-    throw ParseError(message: "Unexpected \(context.subcontents!.first!), expected end of input.", context: context)
+    throw ParseError(message: "Unexpected \(context.rest!.first!), expected end of input.", context: context)
 }
