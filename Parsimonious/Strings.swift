@@ -90,21 +90,12 @@ extension KeyPath: CharacterTest where Root == Character, Value == Bool {
     }
 }
 
-public func satisfy(_ test: @escaping (Character) -> Bool) -> Parser<String, String> {
-    return { context in
-        if let c = context.subcontents?.first {
-            if test(c) {
-                context.offset(by: 1)
-                return String(c)
-            }
-            throw ParseError(message: "Unexpected \(c).", context: context)
-        }
-        throw ParseError(message: "Unexpected end of input.", context: context)
-    }
+public func satisfyS(_ test: @escaping (Character) -> Bool) -> Parser<String, String> {
+    return { c in String(c) } <*> satisfy(test)
 }
 
-public func satisfy<KeyPaths: Sequence>(any keyPaths: KeyPaths) -> Parser<String, String> where KeyPaths.Element == CharacterTest {
-    return satisfy{ c in
+public func satisfyS<KeyPaths: Sequence>(any keyPaths: KeyPaths) -> Parser<String, String> where KeyPaths.Element == CharacterTest {
+    return satisfyS{ c in
         for keyPath in keyPaths {
             if keyPath.test(c) {
                 return true
@@ -114,12 +105,12 @@ public func satisfy<KeyPaths: Sequence>(any keyPaths: KeyPaths) -> Parser<String
     }
 }
 
-public func satisfy(any keyPaths: CharacterTest...) -> Parser<String, String> {
-    return satisfy(any: keyPaths)
+public func satisfyS(any keyPaths: CharacterTest...) -> Parser<String, String> {
+    return satisfyS(any: keyPaths)
 }
 
-public func satisfy<KeyPaths: Sequence>(all keyPaths: KeyPaths) -> Parser<String, String> where KeyPaths.Element == CharacterTest {
-    return satisfy { c in
+public func satisfyS<KeyPaths: Sequence>(all keyPaths: KeyPaths) -> Parser<String, String> where KeyPaths.Element == CharacterTest {
+    return satisfyS { c in
         for keyPath in keyPaths {
             if !keyPath.test(c) {
                 return false
@@ -129,24 +120,24 @@ public func satisfy<KeyPaths: Sequence>(all keyPaths: KeyPaths) -> Parser<String
     }
 }
 
-public func satisfy(all keyPaths: CharacterTest...) -> Parser<String, String> {
-    return satisfy(all: keyPaths)
+public func satisfyS(all keyPaths: CharacterTest...) -> Parser<String, String> {
+    return satisfyS(all: keyPaths)
 }
 
-public func satisfy(_ keyPath: CharacterTest) -> Parser<String, String> {
-    return satisfy(any: keyPath)
+public func satisfyS(_ keyPath: CharacterTest) -> Parser<String, String> {
+    return satisfyS(any: keyPath)
 }
 
 public func char(_ c: Character) -> Parser<String, String> {
-    return satisfy(c) <?> "Expected '\(c)'."
+    return satisfyS(c) <?> "Expected '\(c)'."
 }
 
 public func oneOf(_ chars: String) -> Parser<String, String> {
-    return satisfy{ chars.contains($0) }
+    return satisfyS{ chars.contains($0) }
 }
 
 public func noneOf(_ chars: String) -> Parser<String, String> {
-    return satisfy{ !chars.contains($0) }
+    return satisfyS{ !chars.contains($0) }
 }
 
 public func match(_ m: String, options: String.CompareOptions = []) -> Parser<String, String> {
@@ -179,23 +170,23 @@ public func regex(_ r: String, options: String.CompareOptions = []) -> Parser<St
     return match(r, options: options)
 }
 
-public let newline = satisfy(\Character.isNewline)
-public let whitespace = satisfy(all: \Character.isWhitespace, !\Character.isNewline)
+public let newline = satisfyS(\Character.isNewline)
+public let whitespace = satisfyS(all: \Character.isWhitespace, !\Character.isNewline)
 public let whitespaces = many1S(whitespace)
 
-public let whitespaceOrNewline = satisfy(any: \Character.isWhitespace, \Character.isNewline)
+public let whitespaceOrNewline = satisfyS(any: \Character.isWhitespace, \Character.isNewline)
 public let whitespacesOrNewlines = many1S(whitespaceOrNewline)
 
-public let punctuation = satisfy(\Character.isPunctuation)
+public let punctuation = satisfyS(\Character.isPunctuation)
 public let punctuations = many1S(punctuation)
 
-public let number = satisfy(\Character.isNumber)
+public let number = satisfyS(\Character.isNumber)
 public let numbers = many1S(number)
 
 public let digit = oneOf("0123456789")
 public let digits = many1S(digit)
 
-public let letter = satisfy(\Character.isLetter)
+public let letter = satisfyS(\Character.isLetter)
 public let letters = many1S(letter)
 
 public let alpha = regex("[a-z]", options: .caseInsensitive)

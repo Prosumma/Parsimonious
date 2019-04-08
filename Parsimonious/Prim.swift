@@ -13,6 +13,19 @@ public func parse<C: Collection, T>(_ contents: C, with parser: Parser<C, T>) th
     return try parser(context)
 }
 
+public func satisfy<C: Collection>(_ test: @escaping (C.Element) -> Bool) -> Parser<C, C.Element> {
+    return { context in
+        if let c = context.subcontents?.first {
+            if test(c) {
+                context.offset(by: 1)
+                return c
+            }
+            throw ParseError(message: "Unexpected \(c).", context: context)
+        }
+        throw ParseError(message: "Unexpected end of input.", context: context)
+    }
+}
+
 public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, T?> {
     return { context in
         return try? parser(context)
