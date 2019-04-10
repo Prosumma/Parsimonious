@@ -8,6 +8,10 @@
 
 import Foundation
 
+public protocol CharacterTest {
+    func test(_ c: Character) -> Bool
+}
+
 public struct ExplicitCharacterTest: CharacterTest {
     private let _test: (Character) -> Bool
     
@@ -24,64 +28,6 @@ extension Character: CharacterTest {
     public func test(_ c: Character) -> Bool {
         return c == self
     }
-}
-
-public prefix func !(keyPath: KeyPath<Character, Bool>) -> CharacterTest {
-    return ExplicitCharacterTest{ c in !c[keyPath: keyPath] }
-}
-
-public prefix func !(character: Character) -> CharacterTest {
-    return ExplicitCharacterTest{ c in c != character }
-}
-
-public func optionalS(_ parser: @escaping Parser<String, String>, default defaultValue: String = "") -> Parser<String, String> {
-    return { context in
-        return (try? parser(context)) ?? defaultValue
-    }
-}
-
-public func joined<S: StringProtocol>(_ strings: [S]) -> String {
-    return strings.joined()
-}
-
-public func manyS(_ parser: @escaping Parser<String, String>) -> Parser<String, String> {
-    return joined <*> parser*
-}
-
-public postfix func *+(parser: @escaping Parser<String, String>) -> Parser<String, String> {
-    return manyS(parser)
-}
-
-public func many1S(_ parser: @escaping Parser<String, String>) -> Parser<String, String> {
-    return joined <*> parser+
-}
-
-public postfix func ++(parser: @escaping Parser<String, String>) -> Parser<String, String> {
-    return many1S(parser)
-}
-
-public func countS(_ range: Range<Int>, _ parser: @escaping Parser<String, String>) -> Parser<String, String> {
-    return joined <*> count(range, parser)
-}
-
-public func countS(_ number: Int, _ parser: @escaping Parser<String, String>) -> Parser<String, String> {
-    return joined <*> count(number, parser)
-}
-
-public func join<Parsers: Sequence>(_ parsers: Parsers) -> Parser<String, String> where Parsers.Element == Parser<String, String> {
-    return joined <*> concat(parsers)
-}
-
-public func join(_ parsers: Parser<String, String>...) -> Parser<String, String> {
-    return join(parsers)
-}
-
-public func +(lhs: @escaping Parser<String, String>, rhs: @escaping Parser<String, String>) -> Parser<String, String> {
-    return join(lhs, rhs)
-}
-
-public protocol CharacterTest {
-    func test(_ c: Character) -> Bool
 }
 
 extension KeyPath: CharacterTest where Root == Character, Value == Bool {
@@ -126,6 +72,84 @@ public func satisfyS(all keyPaths: CharacterTest...) -> Parser<String, String> {
 
 public func satisfyS(_ keyPath: CharacterTest) -> Parser<String, String> {
     return satisfyS(any: keyPath)
+}
+
+public prefix func !(keyPath: KeyPath<Character, Bool>) -> CharacterTest {
+    return ExplicitCharacterTest{ c in !c[keyPath: keyPath] }
+}
+
+public prefix func !(character: Character) -> CharacterTest {
+    return ExplicitCharacterTest{ c in c != character }
+}
+
+public func optionalS(_ parser: @escaping Parser<String, String>, default defaultValue: String = "") -> Parser<String, String> {
+    return { context in
+        return (try? parser(context)) ?? defaultValue
+    }
+}
+
+public func joined<S: StringProtocol>(_ strings: [S]) -> String {
+    return strings.joined()
+}
+
+public func manyS(_ parser: @escaping Parser<String, String>) -> Parser<String, String> {
+    return joined <*> parser*
+}
+
+public func manyS(_ test: @escaping (Character) -> Bool) -> Parser<String, String> {
+    return manyS(satisfyS(test))
+}
+
+public func manyS<KeyPaths: Sequence>(any keyPaths: KeyPaths) -> Parser<String, String> where KeyPaths.Element == CharacterTest {
+    return manyS(satisfyS(any: keyPaths))
+}
+
+public func manyS(any keyPaths: CharacterTest...) -> Parser<String, String> {
+    return manyS(satisfyS(any: keyPaths))
+}
+
+public func manyS<KeyPaths: Sequence>(all keyPaths: KeyPaths) -> Parser<String, String> where KeyPaths.Element == CharacterTest {
+    return manyS(satisfyS(all: keyPaths))
+}
+
+public func manyS(all keyPaths: CharacterTest...) -> Parser<String, String> {
+    return manyS(satisfyS(all: keyPaths))
+}
+
+public func manyS(_ keyPath: CharacterTest) -> Parser<String, String> {
+    return manyS(satisfyS(keyPath))
+}
+
+public postfix func *+(parser: @escaping Parser<String, String>) -> Parser<String, String> {
+    return manyS(parser)
+}
+
+public func many1S(_ parser: @escaping Parser<String, String>) -> Parser<String, String> {
+    return joined <*> parser+
+}
+
+public postfix func ++(parser: @escaping Parser<String, String>) -> Parser<String, String> {
+    return many1S(parser)
+}
+
+public func countS(_ range: Range<Int>, _ parser: @escaping Parser<String, String>) -> Parser<String, String> {
+    return joined <*> count(range, parser)
+}
+
+public func countS(_ number: Int, _ parser: @escaping Parser<String, String>) -> Parser<String, String> {
+    return joined <*> count(number, parser)
+}
+
+public func join<Parsers: Sequence>(_ parsers: Parsers) -> Parser<String, String> where Parsers.Element == Parser<String, String> {
+    return joined <*> concat(parsers)
+}
+
+public func join(_ parsers: Parser<String, String>...) -> Parser<String, String> {
+    return join(parsers)
+}
+
+public func +(lhs: @escaping Parser<String, String>, rhs: @escaping Parser<String, String>) -> Parser<String, String> {
+    return join(lhs, rhs)
 }
 
 public func char(_ c: Character) -> Parser<String, String> {

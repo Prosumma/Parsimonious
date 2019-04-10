@@ -9,53 +9,96 @@
 import XCTest
 @testable import Parsimonious
 
-enum Token {
+indirect enum Comment {
     case string(String)
-    case quoted(String, Bool)
-    case comment(String, Bool)
-    case empty // _
-    case refer // &
-    case select // ?
-    case concat // +
-    case merge // ?+
-    case assign // =
-    case openParens // (
-    case closeParens // )
-}
-
-func tokenize(_ token: Token) -> (String) -> Token {
-    return { _ in token }
-}
-
-func tokenize(_ s: String, _ token: Token) -> Parser<String, Token> {
-    return tokenize(token) <*> string(s)
+    case comments([Comment], Bool)
+    
+    var comment: String {
+        switch self {
+        case .string(let s): return s
+        case let .comments(comments, terminated): return "{" + comments.map{ $0.comment }.joined() + (terminated ? "}" : "")
+        }
+    }
 }
 
 let ows = many(whitespaceOrNewline) // optional white space
 let escapeChar = char("\\")
-let quoteChar = char("\"")
-let quotedString = (escapeChar *> (quoteChar | escapeChar)) | noneOf("\\\"")
-let quoted = manyS(quotedString)
-let commentChar = oneOf("{}")
-let commentString = (escapeChar *> commentChar) | noneOf("{}")
-let comment = manyS(commentString)
 
-let terminatedQuoteT = {q in Token.quoted(q, true) } <*> (quoteChar *> quoted <* quoteChar)
-let unterminatedQuoteT = {q in Token.quoted(q, false) } <*> (quoteChar *> quoted <* eof)
-let quoteT = terminatedQuoteT | unterminatedQuoteT
+func comment(_ context: Context<String>) throws -> Comment {
+    let commentChar = (escapeChar *> oneOf("{}\\")) | noneOf("{}")
+    let commentString = Comment.string <*> many1S(commentChar)
+    return try context.transact {
+        try context <- char("{")
+        var comments: [Comment] = []
+        while true {
+            do {
+                try comments.append(context <- (comment | commentString))
+            } catch {
+                break
+            }
+        }
+        let term = try? context <- char("}")
+        return .comments(comments, term != nil)
+    }
+}
 
-let terminatedCommentT = {c in Token.comment(c, true) } <*> (char("{") *> comment <* char("}"))
-let unterminatedCommentT = {c in Token.comment(c, false) } <*> (char("{") *> comment <* eof)
-let commentT = terminatedCommentT | unterminatedCommentT
+enum Quoting {
+    case none
+    case terminated
+    case unterminated
+}
 
-let tokenT = quoteT | commentT
+let quote = char("\"")
+let quoteChar = (escapeChar *> quote) | noneOf("\"")
+let unterminatedQuotation = quote *> manyS(quoteChar) <* eof
+let terminatedQuotation = quote *> manyS(quoteChar) <* quote
+let unquotedChar = satisfyS(all: !\.isWhitespace, !"\"", !"{", !"}", !"\\", !"+", !"?", !"=", !"&", !"(", !")")
+let unquoted = many1S(unquotedChar)
+let garbage = many1S(satisfyS(!\.isWhitespace))
+
+enum Token {
+    case comment(Comment)
+    case string(String, Quoting)
+    case garbage(String)
+    case empty
+    case open // (
+    case close // )
+    case refer // &
+    case select // ?
+    case assign // =
+}
+
+typealias Tokenizer = (String) -> Token
+
+func tokenize(_ token: Token) -> Tokenizer {
+    return {_ in token}
+}
+
+func tokenize(_ character: Character, _ token: Token) -> Parser<String, Token> {
+    return tokenize(token) <*> char(character)
+}
+
+let commentT = Token.comment <*> comment
+let unterminatedQuotationT = {q in Token.string(q, .unterminated)} <*> unterminatedQuotation
+let terminatedQuotationT = {q in Token.string(q, .terminated)} <*> terminatedQuotation
+let unquotedT = {s in Token.string(s, .none)} <*> unquoted
+let stringT = terminatedQuotationT | unterminatedQuotationT | unquotedT
+let emptyT = tokenize(.empty) <*> (many1S(char("_")) <* peek(whitespaceOrNewline | oneOf("(){\"+?=&") | eofS))
+let garbageT = Token.garbage <*> garbage
+let openT = tokenize("(", .open)
+let closeT = tokenize(")", .close)
+let referT = tokenize("&", .refer)
+let selectT = tokenize("?", .select)
+let assignT = tokenize("=", .assign)
+
+let tokenT = or(emptyT, stringT, commentT, openT, closeT, selectT, referT, assignT, garbageT)
 
 class ParsimoniousTests: XCTestCase {
 
     func testParser() {
-        let s = "\"bob\\\"ok\" {This is a comment!} \"Seriously?\" {No!} {Yes"
-        let q = try! parse(s, with: ows *> many(tokenT <* ows) <* eof)
-        print(q)
+        let s = "_asshattery_ _11(crazy)=&\"What's \\\"this?\"  ging_   {This is a simple comment. {And this is a nested comment. {And this, too!}}} {What?}      "
+        let cs = try! parse(s, with: ows *> many(tokenT <* ows) <* eof)
+        print(cs)
     }
 
 }

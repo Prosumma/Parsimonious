@@ -78,17 +78,18 @@ public func |<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Pars
     return or(lhs, rhs)
 }
 
-public func count<C: Collection, T>(_ range: Range<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+public func count<C: Collection, T>(from: Int, to: Int, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return transact { context in
         var values: [T] = []
-        while values.count < range.lowerBound {
+        while values.count < from {
             do {
                 try values.append(parser(context))
             } catch {
-                throw ParseError(message: "Expected \(range.lowerBound) to \(range.upperBound - 1), but got \(values.count).", context: context)
+                // TODO: Improve this
+                throw ParseError(message: "Expected at least \(from) but got \(values.count).", context: context)
             }
         }
-        while values.count < range.upperBound - 1 {
+        while values.count < to {
             guard let value = try? parser(context) else {
                 break
             }
@@ -98,18 +99,20 @@ public func count<C: Collection, T>(_ range: Range<Int>, _ parser: @escaping Par
     }
 }
 
+public func count<C: Collection, T>(_ range: Range<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+    return count(from: range.lowerBound, to: range.upperBound - 1, parser)
+}
+
+public func count<C: Collection, T>(_ range: ClosedRange<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+    return count(from: range.lowerBound, to: range.upperBound, parser)
+}
+
+public func count<C: Collection, T>(_ range: PartialRangeFrom<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+    
+}
+
 public func count<C: Collection, T>(_ number: Int, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return transact { context in
-        var values: [T] = []
-        while values.count < number {
-            do {
-                try values.append(parser(context))
-            } catch {
-                throw ParseError(message: "Expected \(number), but got \(values.count).", context: context)
-            }
-        }
-        return values
-    }
+    return count(number...number, parser)
 }
 
 public func many<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
@@ -368,6 +371,16 @@ public func <*><C: Collection, T1, T2>(transform: @escaping (T1) throws -> T2, p
 
 public func <?><C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: String) -> Parser<C, T> {
     return lhs | fail(message: rhs)
+}
+
+public func not<C, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Void> {
+    return transact { context in
+        if let _ = try? context <- peek(parser) {
+            let c = context.rest!.first!
+            throw ParseError(message: "Unexpected \(c).", context: context)
+        }
+        return
+    }
 }
 
 public func sof<C: Collection>(_ context: Context<C>) throws {
