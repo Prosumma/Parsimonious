@@ -41,7 +41,7 @@ public func noneOf(_ characters: Character...) -> ParserS {
 }
 
 public func eofS(_ context: Context<String>) throws -> String {
-    return try context <- ("" <=> eof)
+    return try context <- "" <=> eof
 }
 
 public func acceptChar(_ context: Context<String>) throws -> String {

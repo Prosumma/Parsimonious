@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol CharacterTest {
-    func test(_ c: Character) -> Bool
+    func testCharacter(_ c: Character) -> Bool
 }
 
 public struct ExplicitCharacterTest: CharacterTest {
@@ -19,21 +19,57 @@ public struct ExplicitCharacterTest: CharacterTest {
         _test = test
     }
     
-    public func test(_ c: Character) -> Bool {
+    public func testCharacter(_ c: Character) -> Bool {
         return _test(c)
     }
 }
 
+public func test(all tests: [CharacterTest]) -> CharacterTest {
+    return ExplicitCharacterTest { c in
+        for test in tests {
+            if !test.testCharacter(c) { return false }
+        }
+        return true
+    }
+}
+
+public func test(all tests: CharacterTest...) -> CharacterTest {
+    return test(all: tests)
+}
+
+public func test(any tests: [CharacterTest]) -> CharacterTest {
+    return ExplicitCharacterTest { c in
+        for test in tests {
+            if test.testCharacter(c) { return true }
+        }
+        return false
+    }
+}
+
+public func test(any tests: CharacterTest...) -> CharacterTest {
+    return test(any: tests)
+}
+
 extension Character: CharacterTest {
-    public func test(_ c: Character) -> Bool {
+    public func testCharacter(_ c: Character) -> Bool {
         return c == self
     }
 }
 
+extension String: CharacterTest {
+    public func testCharacter(_ c: Character) -> Bool {
+        return self.contains(c)
+    }
+}
+
 extension KeyPath: CharacterTest where Root == Character, Value == Bool {
-    public func test(_ c: Character) -> Bool {
+    public func testCharacter(_ c: Character) -> Bool {
         return c[keyPath: self]
     }
+}
+
+public prefix func !(test: CharacterTest) -> CharacterTest {
+    return ExplicitCharacterTest{ !test.testCharacter($0) }
 }
 
 public prefix func !(character: Character) -> CharacterTest {
@@ -43,3 +79,4 @@ public prefix func !(character: Character) -> CharacterTest {
 public prefix func !(keyPath: KeyPath<Character, Bool>) -> CharacterTest {
     return ExplicitCharacterTest{ !$0[keyPath: keyPath] }
 }
+

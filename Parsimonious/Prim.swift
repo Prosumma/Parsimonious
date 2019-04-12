@@ -8,6 +8,11 @@
 
 import Foundation
 
+/**
+ The fundamental combinator. Tests the current element in the underlying collection and returns it if it passes `test`.
+ 
+ `sastify` is used as the basis for a great many other combinators.
+ */
 public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (E) -> Bool) -> Parser<C, E> where E == C.Element {
     return { context in
         if context.atEnd {

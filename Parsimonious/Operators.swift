@@ -8,26 +8,8 @@
 
 import Foundation
 
-precedencegroup RunPrecedence {
-    associativity: right
-    higherThan: AssignmentPrecedence
-    lowerThan: AdditionPrecedence
-}
-
-precedencegroup DiscardPrecedence {
-    associativity: left
-    higherThan: RunPrecedence
-    lowerThan: AdditionPrecedence
-}
-
-precedencegroup LiftPrecedence {
-    associativity: right
-    lowerThan: TernaryPrecedence
-}
-
-infix operator  <?>: DefaultPrecedence
-infix operator  <*>: LiftPrecedence
-infix operator  <=>: LiftPrecedence
-infix operator   *>: DiscardPrecedence
-infix operator   <*: DiscardPrecedence
-infix operator   <-: RunPrecedence
+infix operator  <*>: ComparisonPrecedence
+infix operator  <=>: ComparisonPrecedence
+infix operator   *>: AdditionPrecedence
+infix operator   <*: AdditionPrecedence
+infix operator   <-: FunctionArrowPrecedence

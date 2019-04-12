@@ -13,11 +13,11 @@ public func satisfyChar(_ test: @escaping (Character) -> Bool) -> ParserS {
 }
 
 public func satisfyChar(_ test: CharacterTest) -> ParserS {
-    return satisfyChar{ test.test($0) }
+    return satisfyChar{ test.testCharacter($0) }
 }
 
 public func satisfyChar(any tests: [CharacterTest]) -> ParserS {
-    return satisfyChar { c in tests.first(where: { $0.test(c) }) != nil }
+    return satisfyChar { c in tests.first(where: { $0.testCharacter(c) }) != nil }
 }
 
 public func satisfyChar(any tests: CharacterTest...) -> ParserS {
@@ -25,7 +25,7 @@ public func satisfyChar(any tests: CharacterTest...) -> ParserS {
 }
 
 public func satisfyChar(all tests: [CharacterTest]) -> ParserS {
-    return satisfyChar { c in tests.allSatisfy{ $0.test(c) } }
+    return satisfyChar { c in tests.allSatisfy{ $0.testCharacter(c) } }
 }
 
 public func satisfyChar(all tests: CharacterTest...) -> ParserS {
