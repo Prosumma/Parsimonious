@@ -31,9 +31,3 @@ infix operator  <=>: LiftPrecedence
 infix operator   *>: DiscardPrecedence
 infix operator   <*: DiscardPrecedence
 infix operator   <-: RunPrecedence
-
-postfix operator + // many1
-postfix operator ++ // many1S
-postfix operator * // many
-postfix operator *+ // manyS
-postfix operator *? // optional

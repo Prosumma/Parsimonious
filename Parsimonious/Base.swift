@@ -28,8 +28,16 @@ public func many<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C
     return count(0..., parser)
 }
 
+public func many<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
+    return sequence(optional(parser), many(separator *> parser))
+}
+
 public func many1<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(1..., parser)
+}
+
+public func many1<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
+    return sequence(parser, many(separator *> parser))
 }
 
 public func or<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, T> {
