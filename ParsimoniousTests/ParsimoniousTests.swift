@@ -9,98 +9,43 @@
 import XCTest
 @testable import Parsimonious
 
-indirect enum Comment {
-    case string(String)
-    case comments([Comment], Bool)
-    
-    var comment: String {
-        switch self {
-        case .string(let s): return s
-        case let .comments(comments, terminated): return "{" + comments.map{ $0.comment }.joined() + (terminated ? "}" : "")
-        }
-    }
-}
-
-let ows = many(whitespaceOrNewline) // optional white space
-let escapeChar = char("\\")
-
-func comment(_ context: Context<String>) throws -> Comment {
-    let commentChar = (escapeChar *> oneOf("{}\\")) | noneOf("{}")
-    let commentString = Comment.string <*> many1S(commentChar)
-    return try context.transact {
-        try context <- char("{")
-        var comments: [Comment] = []
-        while true {
-            do {
-                try comments.append(context <- (comment | commentString))
-            } catch {
-                break
-            }
-        }
-        let term = try? context <- char("}")
-        return .comments(comments, term != nil)
-    }
-}
-
-enum Quoting {
-    case none
-    case terminated
-    case unterminated
-}
-
-let quote = char("\"")
-let quoteChar = (escapeChar *> quote) | noneOf("\"")
-let unterminatedQuotation = quote *> manyS(quoteChar) <* eof
-let terminatedQuotation = quote *> manyS(quoteChar) <* quote
-let unquotedChar = satisfyS(all: !\.isWhitespace, !"\"", !"{", !"}", !"\\", !"+", !"?", !"=", !"&", !"(", !")")
-let unquoted = many1S(unquotedChar)
-let garbage = many1S(satisfyS(!\.isWhitespace))
-
 enum Token {
-    case comment(Comment)
-    case string(String, Quoting)
-    case garbage(String)
-    case empty
-    case open // (
-    case close // )
-    case refer // &
-    case select // ?
-    case assign // =
+    case quotation(String)
+    case garbage
 }
 
-typealias Tokenizer = (String) -> Token
+let escape: Character = "\\"
+let quote: Character = "\""
 
-func tokenize(_ token: Token) -> Tokenizer {
-    return {_ in token}
+let escapeChar = char(escape)
+let quoteChar = char(quote)
+
+let quotation = quoteChar *> manyS((escapeChar *> (quoteChar | escapeChar)) | noneOf(escape, quote)) <* quoteChar
+
+let wsnotab = satisfyChar(all: \Character.isWhitespace, !"\t")
+
+let ows = manyS(\Character.isWhitespace)
+let ws = many1S(\Character.isWhitespace)
+let wsnonl = many1S(all: \Character.isWhitespace, !\Character.isNewline)
+let wsnotabs = manyS(wsnotab)
+
+func delimit(_ parser: @escaping ParserS, between start: @escaping ParserS, and end: @escaping ParserS) -> ParserS {
+    return start *> ows *> parser <* ows <* end
 }
 
-func tokenize(_ character: Character, _ token: Token) -> Parser<String, Token> {
-    return tokenize(token) <*> char(character)
+func parens(_ parser: @escaping ParserS) -> ParserS {
+    return delimit(parser, between: char("("), and: char(")"))
 }
-
-let commentT = Token.comment <*> comment
-let unterminatedQuotationT = {q in Token.string(q, .unterminated)} <*> unterminatedQuotation
-let terminatedQuotationT = {q in Token.string(q, .terminated)} <*> terminatedQuotation
-let unquotedT = {s in Token.string(s, .none)} <*> unquoted
-let stringT = terminatedQuotationT | unterminatedQuotationT | unquotedT
-let emptyT = tokenize(.empty) <*> (many1S(char("_")) <* peek(whitespaceOrNewline | oneOf("(){\"+?=&") | eofS))
-let garbageT = Token.garbage <*> garbage
-let openT = tokenize("(", .open)
-let closeT = tokenize(")", .close)
-let referT = tokenize("&", .refer)
-let selectT = tokenize("?", .select)
-let assignT = tokenize("=", .assign)
-
-let tokenT = or(emptyT, stringT, commentT, openT, closeT, selectT, referT, assignT, garbageT)
 
 class ParsimoniousTests: XCTestCase {
 
     func testParser() {
-        let s = "_asshattery_ _11(crazy)=&\"What's \\\"this?\"  ging_   {This is a simple comment. {And this is a nested comment. {And this, too!}}} {What?}      "
-        let cs = try! parse(s, with: ows *> many(tokenT <* ows) <* eof)
-        print(cs)
+        let s = """
+( "what?" ) "That's CRAZY, man!"
+"""
+        let qs = try! parse(s, with: many(Token.quotation <*> ((quotation | parens(quotation)) <* (ws | eofS))) <* eof)
+        print(qs)
     }
 
 }
-
 

@@ -25,6 +25,10 @@ public class Context<Contents: Collection> {
         return contents[index...]
     }
     
+    public var next: Contents.Element? {
+        return rest?.first
+    }
+    
     public var atStart: Bool {
         return index == contents.startIndex
     }
@@ -90,8 +94,8 @@ public func <-<C: Collection, T>(_ context: Context<C>, _ parser: Parser<C, T>) 
 }
 
 public extension ParseError {
-    init(message: String, context: Context<Contents>) {
-        self.init(message: message, contents: context.contents, index: context.index)
+    init(message: String, context: Context<Contents>, inner: Error? = nil) {
+        self.init(message: message, contents: context.contents, index: context.index, inner: inner)
     }
 }
 

@@ -9,8 +9,9 @@
 import Foundation
 
 precedencegroup RunPrecedence {
-    associativity: left
+    associativity: right
     higherThan: AssignmentPrecedence
+    lowerThan: AdditionPrecedence
 }
 
 precedencegroup DiscardPrecedence {
@@ -20,12 +21,13 @@ precedencegroup DiscardPrecedence {
 }
 
 precedencegroup LiftPrecedence {
-    associativity: left
+    associativity: right
     lowerThan: TernaryPrecedence
 }
 
 infix operator  <?>: DefaultPrecedence
 infix operator  <*>: LiftPrecedence
+infix operator  <=>: LiftPrecedence
 infix operator   *>: DiscardPrecedence
 infix operator   <*: DiscardPrecedence
 infix operator   <-: RunPrecedence
