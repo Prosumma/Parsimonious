@@ -13,21 +13,21 @@ public func manyS(_ parser: @escaping ParserS) -> ParserS {
 }
 
 public func manyS(_ test: CharacterTest) -> ParserS {
-    return manyS(satisfyChar(test))
+    return manyS(char(test))
 }
 
 public func manyS(any tests: [CharacterTest]) -> ParserS {
-    return manyS(satisfyChar(any: tests))
+    return manyS(char(any: tests))
 }
 
 public func manyS(any tests: CharacterTest...) -> ParserS {
-    return manyS(satisfyChar(any: tests))
+    return manyS(char(any: tests))
 }
 
 public func manyS(all tests: [CharacterTest]) -> ParserS {
-    return manyS(satisfyChar(all: tests))
+    return manyS(char(all: tests))
 }
 
 public func manyS(all tests: CharacterTest...) -> ParserS {
-    return manyS(satisfyChar(all: tests))
+    return manyS(char(all: tests))
 }

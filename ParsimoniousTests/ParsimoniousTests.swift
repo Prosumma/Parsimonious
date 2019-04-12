@@ -20,7 +20,7 @@ func quotation(_ context: Context<String>) throws -> Token {
     let quote: Character = "\""
     let escapeChar = char(escape)
     let quoteChar = char(quote)
-    let q = quoteChar *> manyS((escapeChar *> (quoteChar | escapeChar)) | noneOf(escape, quote))
+    let q = quoteChar *> manyS((escapeChar *> (quoteChar | escapeChar)) | char(all: !escape, !quote))
     return try context.transact {
         let t = try q(context)
         do {
@@ -33,16 +33,16 @@ func quotation(_ context: Context<String>) throws -> Token {
 }
 
 func identifier(_ name: String) -> ParserS {
-    return string(name, ignoringCase: true) <* (ws | peek(satisfyChar(\Character.isPunctuation)))
+    return string(name, ignoringCase: true) <* (ws | peek(char(\Character.isPunctuation)))
 }
 
-let quoteName = Token.name <*> (satisfyChar(\Character.isLetter) + manyS(any: \Character.isLetter, \Character.isNumber) <* ws)
+let quoteName = Token.name <*> (char(\Character.isLetter) + manyS(any: \Character.isLetter, \Character.isNumber) <* ws)
 
 let ows = manyS(\Character.isWhitespace)
 let ws = many1S(\Character.isWhitespace)
 
-let whitespaceAndNotNewline = satisfyChar(all: \Character.isWhitespace, !\Character.isNewline)
-let alphaNum = satisfyChar(any: \Character.isLetter, \Character.isNumber)
+let whitespaceAndNotNewline = char(all: \Character.isWhitespace, !\Character.isNewline)
+let alphaNum = char(any: \Character.isLetter, \Character.isNumber)
 
 class ParsimoniousTests: XCTestCase {
 
