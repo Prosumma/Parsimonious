@@ -41,9 +41,9 @@ class ParsimoniousTests: XCTestCase {
 
     func testParser() {
         let s = """
-( "what?" ) "That's CRAZY, man!"
+"what?" "That's CRAZY, man!"
 """
-        let qs = try! parse(s, with: many(Token.quotation <*> ((quotation | parens(quotation)) <* (ws | eofS))) <* eof)
+        let qs = try! parse(s, with: many(position(Token.quotation <*> ((quotation | parens(quotation)) <* (ws | eofS)))) <* eof)
         print(qs)
     }
 

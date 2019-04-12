@@ -8,4 +8,5 @@
 
 import Foundation
 
+/// A `Parser` over a `String`, returning a `String`.
 public typealias ParserS = Parser<String, String>

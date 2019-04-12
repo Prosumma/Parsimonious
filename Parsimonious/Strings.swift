@@ -24,7 +24,7 @@ public func oneOf(_ characters: [Character]) -> ParserS {
     return oneOf(String(characters))
 }
 
-public func oneof(_ characters: Character...) -> ParserS {
+public func oneOf(_ characters: Character...) -> ParserS {
     return oneOf(characters)
 }
 
