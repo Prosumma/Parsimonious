@@ -32,7 +32,7 @@ In languages like Haskell, a `String` is simply an array of `Char` instances. In
 func manyS(_ parser: @escaping ParserS) -> ParserS
 ```
 
-This matches a single character, but for convenience returns a `String`. (If you really want a `Character` instead, you can use the lower-level `satisfy` combinator.)
+This is the same as `many`, but for convenience returns a `String` instead of an array of `T`.
 
 Parsimonious overloads the `+` operator to combine `ParserS` instances, concatenating the result rather than returning an array. For example, here we construct a parser that parses a name. The rule is that the name must not start with a number. 
 
