@@ -1,5 +1,5 @@
 //
-//  char.swift
+//  Char.swift
 //  Parsimonious
 //
 //  Created by Gregory Higley on 4/11/19.

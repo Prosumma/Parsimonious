@@ -72,11 +72,3 @@ public prefix func !(test: CharacterTest) -> CharacterTest {
     return ExplicitCharacterTest{ !test.testCharacter($0) }
 }
 
-public prefix func !(character: Character) -> CharacterTest {
-    return ExplicitCharacterTest{ $0 != character }
-}
-
-public prefix func !(keyPath: KeyPath<Character, Bool>) -> CharacterTest {
-    return ExplicitCharacterTest{ !$0[keyPath: keyPath] }
-}
-

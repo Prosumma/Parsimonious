@@ -29,7 +29,7 @@ public func many<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C
 }
 
 public func many<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
-    return sequence(optional(parser), many(separator *> parser))
+    return optional(parser) & many(separator *> parser)
 }
 
 public func many1<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
@@ -37,7 +37,7 @@ public func many1<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<
 }
 
 public func many1<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
-    return sequence(parser, many(separator *> parser))
+    return parser & many(separator *> parser)
 }
 
 public func or<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, T> {
@@ -53,6 +53,30 @@ public func sequence<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, 
 }
 
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
+    return sequence(lhs, rhs)
+}
+
+public func &<C: Collection, T>(lhs: @escaping Parser<C, [T]>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
+    return sequence(lhs, rhs)
+}
+
+public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
+    return sequence(lhs, rhs)
+}
+
+public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, T?>) -> Parser<C, [T]> {
+    return sequence(lhs, rhs)
+}
+
+public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
+    return sequence(lhs, rhs)
+}
+
+public func &<C: Collection, T>(lhs: @escaping Parser<C, [T]>, rhs: @escaping Parser<C, T?>) -> Parser<C, [T]> {
+    return sequence(lhs, rhs)
+}
+
+public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
     return sequence(lhs, rhs)
 }
 
@@ -100,3 +124,4 @@ public func eof<C: Collection>(_ context: Context<C>) throws {
 public func accept<C: Collection>(_ context: Context<C>) throws -> C.Element {
     return try context <- satisfy{ _ in true }
 }
+
