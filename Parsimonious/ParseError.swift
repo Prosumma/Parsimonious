@@ -21,3 +21,7 @@ public struct ParseError<Contents: Collection>: Error {
         self.inner = inner
     }
 }
+
+public func <?><C: Collection, T>(parser: @escaping Parser<C, T>, error: String) -> Parser<C, T> {
+    return parser | fail(error)
+}

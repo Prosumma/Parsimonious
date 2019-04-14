@@ -40,10 +40,43 @@ public func many1<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy s
     return parser & many(separator *> parser)
 }
 
+/**
+ Attempts to match at least one of the `parsers`. If none of the `parsers` succeeds,
+ rethrows the last error.
+ 
+ - note: It is usually more convenient to use the `|` combinator instead of this one. To have
+ control over the error message, pass the `fail` combinator as the last parser. For example:
+ 
+ ```
+ let p = or(string("good"),
+            string("bad"),
+            fail("Should have matched good or bad!")
+           )
+ ```
+ 
+ - parameter parsers: The array of parsers to match.
+ - returns: A parser which matches at least one of the `parsers` or dies trying.
+ */
 public func or<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, T> {
     return or(parsers)
 }
 
+/**
+ Attempts to match at least one of the `parsers`. If none of the `parsers` succeeds,
+ rethrows the last error.
+ 
+ - note: It is usually more convenient to use the `|` combinator instead of this one. To have
+ control over the error message, pass the `fail` combinator as the last parser. For example:
+ 
+ ```
+ let p = string("good") |
+         string("bad") |
+         fail("Shoud have matched good or bad!")
+ ```
+ 
+ - parameter parsers: The array of parsers to match.
+ - returns: A parser which matches at least one of the `parsers` or dies trying.
+ */
 public func |<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, T>) -> Parser<C, T> {
     return or(lhs, rhs)
 }
@@ -107,21 +140,21 @@ public prefix func !<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser
 }
 
 public func <*<C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @escaping Parser<C, R>) -> Parser<C, L> {
-    return left(lparser, rparser)
+    return first(lparser, rparser)
 }
 
 public func *><C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @escaping Parser<C, R>) -> Parser<C, R> {
-    return right(lparser, rparser)
+    return second(lparser, rparser)
 }
 
-public func eof<C: Collection>(_ context: Context<C>) throws {
-    if !context.atEnd {
-        let next = context.next!
-        throw ParseError(message: "Expected EOF, but got \(next).", context: context)
-    }
-}
-
+/**
+ Unconditionally consumes the next element in the underlying collection. Fails only
+ on EOF.
+ 
+ - throws: `ParseError` on EOF
+ - parameter context: The context wrapping the consumed collection.
+ - returns: The consumed element.
+ */
 public func accept<C: Collection>(_ context: Context<C>) throws -> C.Element {
     return try context <- satisfy{ _ in true }
 }
-

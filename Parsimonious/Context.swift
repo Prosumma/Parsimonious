@@ -99,3 +99,9 @@ public extension ParseError {
     }
 }
 
+extension Collection {
+    public subscript(upTo limit: Int) -> SubSequence {
+        let limitedIndex = index(startIndex, offsetBy: limit, limitedBy: endIndex)!
+        return self[startIndex..<limitedIndex]
+    }
+}
