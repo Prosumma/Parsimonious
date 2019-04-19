@@ -36,13 +36,16 @@ func jnumber(_ context: Context<String>) throws -> JSON {
     return JSON.number(n)
 }
 
-func jboolError(_ s: Substring?) -> String {
+func boolError(_ s: Substring?) -> String {
     guard let s = s else {
         return "Expected to match 'true' or 'false' but got EOF."
     }
     return "Expected to match 'true' or 'false', but got '\(s[upTo: 5])'."
 }
-let jbool = {s in JSON.boolean(s == "true")} <*> string("true") | string("false") | fail(jboolError)
+func toBool(_ s: String) -> JSON {
+    return .boolean(s == "true")
+}
+let jbool = toBool <*> string("true") | string("false") | fail(boolError)
 
 let ws = manyS(\Character.isWhitespace)
 
@@ -72,7 +75,13 @@ func jobject(_ context: Context<String>) throws -> JSON {
     }
 }
 
-let json = jstring | jnumber | jbool | jarray | jobject
+func jsonError(_ rest: Substring?) -> String {
+    guard let rest = rest else {
+        return "Expected to match some JSON, but reached EOF."
+    }
+    return "Expected to match some JSON, but got garbage starting with \(rest[upTo: 20])."
+}
+let json = jstring | jnumber | jbool | jarray | jobject | fail(jsonError)
 
 class ParsimoniousTests: XCTestCase {
     
@@ -90,6 +99,13 @@ class ParsimoniousTests: XCTestCase {
 
     func testParser() {
         try XCTAssertNoThrow(parse(ParsimoniousTests.rawJSON, with: ws *> json <* ws))
+    }
+    
+    func testParserFailure() {
+        let s = """
+{"ok":
+"""
+        try XCTAssertThrowsError(parse(s, with: ws *> json <* ws))
     }
     
     func testParserPerformance() {

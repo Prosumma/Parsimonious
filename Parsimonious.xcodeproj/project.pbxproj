@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		F31B461B2251C36100DAE707 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31B461A2251C36100DAE707 /* Position.swift */; };
 		F33A15782227A37E000C33C1 /* Parsimonious.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F33A156E2227A37E000C33C1 /* Parsimonious.framework */; };
-		F33A157D2227A37E000C33C1 /* ParsimoniousTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33A157C2227A37E000C33C1 /* ParsimoniousTests.swift */; };
+		F33A157D2227A37E000C33C1 /* ParsimoniousJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F33A157C2227A37E000C33C1 /* ParsimoniousJSONTests.swift */; };
 		F33A157F2227A37E000C33C1 /* Parsimonious.h in Headers */ = {isa = PBXBuildFile; fileRef = F33A15712227A37E000C33C1 /* Parsimonious.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F36D6C04226017AB009CA0C7 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36D6C03226017AB009CA0C7 /* Strings.swift */; };
 		F36D6C0622601820009CA0C7 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36D6C0522601820009CA0C7 /* Util.swift */; };
@@ -48,7 +48,7 @@
 		F33A15712227A37E000C33C1 /* Parsimonious.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Parsimonious.h; sourceTree = "<group>"; };
 		F33A15722227A37E000C33C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F33A15772227A37E000C33C1 /* ParsimoniousTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParsimoniousTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F33A157C2227A37E000C33C1 /* ParsimoniousTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsimoniousTests.swift; sourceTree = "<group>"; };
+		F33A157C2227A37E000C33C1 /* ParsimoniousJSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsimoniousJSONTests.swift; sourceTree = "<group>"; };
 		F33A157E2227A37E000C33C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F36D6C03226017AB009CA0C7 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		F36D6C0522601820009CA0C7 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
@@ -121,7 +121,7 @@
 		F33A157B2227A37E000C33C1 /* ParsimoniousTests */ = {
 			isa = PBXGroup;
 			children = (
-				F33A157C2227A37E000C33C1 /* ParsimoniousTests.swift */,
+				F33A157C2227A37E000C33C1 /* ParsimoniousJSONTests.swift */,
 				F33A157E2227A37E000C33C1 /* Info.plist */,
 				F3A83B5E2261E52000F977E4 /* Random.json */,
 			);
@@ -308,7 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F33A157D2227A37E000C33C1 /* ParsimoniousTests.swift in Sources */,
+				F33A157D2227A37E000C33C1 /* ParsimoniousJSONTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

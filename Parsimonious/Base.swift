@@ -8,10 +8,28 @@
 
 import Foundation
 
+/**
+ Expects `parser` to succeed `range` times. In other words, if `range` is `1...7`, then `parser` must match
+ at least one and at most seven times.
+ 
+ - parameter range: A closed range giving an inclusive range of times `parser` must match.
+ - parameter parser: The parser to match.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public func count<C: Collection, T>(_ range: ClosedRange<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(from: range.lowerBound, to: range.upperBound, parser)
 }
 
+/**
+ Expects `parser` to match `range` times. In other words, if `range` is `1..<8`, then `parser` must match
+ at least one and at most seven times.
+ 
+ - parameter range: An open range (excluding the upper bound) of times `parser` must match.
+ - parameter parser: The parser to match.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public func count<C: Collection, T>(_ range: Range<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(from: range.lowerBound, to: range.upperBound - 1, parser)
 }

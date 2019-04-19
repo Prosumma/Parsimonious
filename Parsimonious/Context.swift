@@ -101,7 +101,7 @@ public extension ParseError {
 
 extension Collection {
     public subscript(upTo limit: Int) -> SubSequence {
-        let limitedIndex = index(startIndex, offsetBy: limit, limitedBy: endIndex)!
+        let limitedIndex = index(startIndex, offsetBy: limit, limitedBy: endIndex) ?? endIndex
         return self[startIndex..<limitedIndex]
     }
 }
