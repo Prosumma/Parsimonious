@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F3EF49652269762C00023CB3"
-               BuildableName = "Parsimonious_macOS.framework"
+               BuildableName = "Parsimonious.framework"
                BlueprintName = "Parsimonious macOS"
                ReferencedContainer = "container:Parsimonious.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F3EF496D2269762C00023CB3"
-               BuildableName = "ParsimoniousTests macOS.xctest"
+               BuildableName = "ParsimoniousTests.xctest"
                BlueprintName = "ParsimoniousTests macOS"
                ReferencedContainer = "container:Parsimonious.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F3EF49652269762C00023CB3"
-            BuildableName = "Parsimonious_macOS.framework"
+            BuildableName = "Parsimonious.framework"
             BlueprintName = "Parsimonious macOS"
             ReferencedContainer = "container:Parsimonious.xcodeproj">
          </BuildableReference>
@@ -65,7 +65,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F3EF49652269762C00023CB3"
-            BuildableName = "Parsimonious_macOS.framework"
+            BuildableName = "Parsimonious.framework"
             BlueprintName = "Parsimonious macOS"
             ReferencedContainer = "container:Parsimonious.xcodeproj">
          </BuildableReference>
@@ -83,7 +83,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F3EF49652269762C00023CB3"
-            BuildableName = "Parsimonious_macOS.framework"
+            BuildableName = "Parsimonious.framework"
             BlueprintName = "Parsimonious macOS"
             ReferencedContainer = "container:Parsimonious.xcodeproj">
          </BuildableReference>
