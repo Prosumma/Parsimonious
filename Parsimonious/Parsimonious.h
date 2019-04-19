@@ -2,11 +2,11 @@
 //  Parsimonious.h
 //  Parsimonious
 //
-//  Created by Gregory Higley on 2/28/19.
+//  Created by Gregory Higley on 4/18/19.
 //  Copyright © 2019 Prosumma LLC. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for Parsimonious.
 FOUNDATION_EXPORT double ParsimoniousVersionNumber;
