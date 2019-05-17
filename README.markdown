@@ -1,65 +1,57 @@
-## Parsimonious
+## Parsers And Parser Combinators? What?
 
-Parsimonious is a simple parser combinator library written in Swift with the goals of simplicity and Swiftiness.
+I can&rsquo;t do justice to this topic here. [Wikipedia](https://en.wikipedia.org/wiki/Parser_combinator) has the canonical article and your favorite search engine will have lots more information. 
 
-It differs from traditional parser combinator libraries in a few ways:
-
-#### Swiftiness 
-
-The fundamental type of a Parsimonious `Parser` is:
+For those that already know a bit, a Parsimonious parser is a function with the following type signature:
 
 ```swift
-typealias Parser<C: Collection, T> = (Context<C>) throws -> T
+public typealias Parser<C: Collection, T> = (Context<C>) throws -> T
 ```
 
-There are two things to note here. First, instead of returning some `Result` type, Parsimonious uses `throw`. As you&rsquo;ll see, this makes parsers _much_ easier and more natural to write, particularly in a language like Swift which lacks monads. 
+You&rsquo;ll notice that the type signature includes `Collection`. Parsimonious is not a stream parser. This allows easier backtracking at the expense of not being able to parse extremely large amounts of data. For the vast majority of uses, this will not be a problem.
 
-#### Backtracking
+## Why Parsimonious?
 
-Parsimonious parsers always backtrack on failure. That is, they consume input only on success. This sacrifices a bit of efficiency in favor of simplicity. This is because Parsimonious is a _collection_-parser, not a stream parser. 
+### Reason 1: Character Tests
 
-#### Strings
+Parsimonious takes a slightly novel approach to parsing text. Most parser combinator frameworks have built-ins like `whitespace` or `newline`. Instead of this, Parsimonious has the concept of _character tests_.
 
-Parsimonious can parse any `Collection`, but by far the most commonly parsed `Collection` is `String`. Because of this, Parsimonious has special parsers and combinators for parsing strings built on top of the string parser, `ParserS`:
+This is easier to demonstrate than to explain, but it&rsquo;s quite easy to use. Let&rsquo;s match a sequence of at least one character which may not include whitespace or punctuation characters.
 
 ```swift
-typealias ParserS = Parser<String, String>
+many1S(all: !\Character.isWhitespace, !\Character.isPunctuation)
 ```
 
-In languages like Haskell, a `String` is simply an array of `Char` instances. In Swift, a `String` is a _collection_ of `Character` instances, but it is not an array. Because of this, many parsers that you might expect would return an array of characters instead automatically concatenate these into a `String`. Where these parsers are variants of existing type-agnostic "primitive" parsers, they bear the suffix `S`, e.g.,
+Let&rsquo;s parse this parser for a moment. The `S` suffix tells us that this parser parses a string and returns a string. (More on that later.) The `all:` tells us that all of the tests must return `true` for the parser to match. Inside the parentheses, we have two "negated" keypaths. Using the `!` operator with the keypaths reverses the test implied by the keypath.
+
+So what is a character test? 
+
+- Any `KeyPath<Character, Bool>`
+- Any `Character`
+- Any `String` (which automatically implies "one of")
+- An instance of `ExplicitCharacterTest` 
+- Any type which implements the `CharacterTest` protocol
+
+In addition, the `test(any:)` and `test(all:)` functions, which themselves return a character test, can be used to combine tests to dizzying heights:
 
 ```swift
-func manyS(_ parser: @escaping ParserS) -> ParserS
+char(all: !\Character.isWhitespace, !"07", test(any: \Character.isLetter, \Character.isDigit))
 ```
 
-This is the same as `many`, but for convenience returns a `String` instead of an array of `T`.
+The above parser matches a single character, which must not be whitespace and must not be one of "0" or "7". In addition, it must either be a letter or digit. So it will match "9" but not "0". It will match "x" but not " ".
 
-Parsimonious overloads the `+` operator to combine `ParserS` instances, concatenating the result rather than returning an array. For example, here we construct a parser that parses a name. The rule is that the name must not start with a number. 
+Using this methodology, extremely sophisticated parsers can be created.
+
+### Reason 2: Backtracking
+
+Because Parsimonious is a collection parser rather than a stream parser, backtracking is easy. In fact, _any parser that fails to match *automatically* backtracks_. This makes parsers easier to write and reason about:
 
 ```swift
-let name: ParserS = char(\Character.isLetter) + manyS(any: \Character.isLetter, \Character.isNumber)
+let escape: Character = "\\"
+let quote: Character = "\""
+
+let quotation = char(quote) *> manyS(char(all: !escape, !quote) | (char(escape) *> char(any: escape, quote))) <* char(quote)
 ```
 
-This will match `xabc1` but not `1cbax`.
+The `quotation` parser matches quoted strings. Quotes themselves can be escaped with a backslash and a backslash must also be escaped with a backslash. Only the text _within_ the quotes is "returned" by the parser.
 
-#### Character Tests 
-
-Parsimonious introduces the concept of _character tests_ for `ParserS` parsers. A character test is a simple declarative test that can be used in overloads of many `ParserS` combinators to test the properties of characters.
-
-```swift
-let whitespaceButNotNewline = char(all: \Character.isWhitespace, !\Character.isNewline)
-```
-
-In Parsimonious, every `KeyPath<Character, Bool>` is automatically a character test. This means we can use the properties added to the `Character` type in Swift 5. A `Character` itself is also automatically a character test, as is a `String`. Character tests can be negated using the `!` operator. Here are some more examples:
-
-```swift
-// Match a contiguous series of at least one letter, excepting q and Q 
-let lettersExceptQ = many1S(all: \Character.isLetter, !"qQ")
-
-// Match a contiguous series of at least one letter or number, but not q, Q, and 7
-let lettersAndNumbersExceptQAnd7 = many1S(all: test(any: \Character.isLetter, \Character.isNumber), !"qQ7")
-```
-
-The second example makes use of the `test(any:)` function, which can be used to combine `CharacterTest` instances into a single test.
-
-Using `!`, `test(any:)`, `test(all:)`, `char(any:)`, `char(all:)`, `manyS(all:)`, extremely sophisticated parsers can be created. This is why Parsimonious lacks built-in parsers such as `newline` or `whitespace` found in other frameworks. Just build your own!

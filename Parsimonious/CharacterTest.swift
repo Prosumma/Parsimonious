@@ -72,3 +72,13 @@ public prefix func !(test: CharacterTest) -> CharacterTest {
     return ExplicitCharacterTest{ !test.testCharacter($0) }
 }
 
+public func i(_ character: Character) -> CharacterTest {
+    if !character.isLowercase && !character.isUppercase { return character }
+    let lowercased = character.lowercased()
+    return ExplicitCharacterTest { $0.lowercased() == lowercased }
+}
+
+public func i(_ string: String) -> CharacterTest {
+    let lowercased = string.lowercased()
+    return ExplicitCharacterTest { lowercased.contains($0.lowercased()) }
+}

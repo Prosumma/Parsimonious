@@ -8,6 +8,17 @@
 
 import Foundation
 
+/**
+ Matches using the `range(of:options:range:locale:)` method of `String`.
+ 
+ - warning: This method is *very* slow. Exhaust all other reasonable
+ possibilities before using it.
+ 
+ - parameter test: The string to use for matching.
+ - parameter options: The match options.
+ 
+ - returns: A parser which performs matching according to the passed-in parameters.
+ */
 func match(_ test: String, options: String.CompareOptions = []) -> ParserS {
     var options = options
     options.insert(.anchored)
@@ -25,13 +36,11 @@ func match(_ test: String, options: String.CompareOptions = []) -> ParserS {
 }
 
 public func string(_ test: String, ignoringCase: Bool = false) -> ParserS {
-    let options: String.CompareOptions = ignoringCase ? .caseInsensitive : []
-    return match(test, options: options)
+    let parsers = ignoringCase ? test.map(char << i) : test.map(char)
+    return concat(parsers) | fail("Expected to match \"\(test)\".")
 }
 
 public func regex(_ test: String, ignoringCase: Bool = false) -> ParserS {
     let options: String.CompareOptions = ignoringCase ? [.caseInsensitive, .regularExpression] : .regularExpression
     return match(test, options: options)
 }
-
-

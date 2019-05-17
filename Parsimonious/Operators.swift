@@ -8,6 +8,10 @@
 
 import Foundation
 
+precedencegroup CompositionPrecedence {
+    associativity: right
+}
+
 infix operator  <*>: ComparisonPrecedence
 infix operator  <=>: ComparisonPrecedence
 infix operator   *>: AdditionPrecedence

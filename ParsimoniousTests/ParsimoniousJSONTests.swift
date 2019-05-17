@@ -17,16 +17,11 @@ indirect enum JSON {
     case array([JSON])
 }
 
-let escape: Character = "\\"
-let quote: Character = "\""
-
-let quotation = char(quote) *> manyS(char(all: !escape, !quote) | (char(escape) *> char(any: escape, quote))) <* char(quote)
 let jstring = JSON.string <*> quotation
 
 func jnumber(_ context: Context<String>) throws -> JSON {
     let digits = many1S("0123456789")
-    let dot: Character = "."
-    let num = digits + optionalS(char(dot) + digits)
+    let num = digits + optionalS(char(".") + digits)
     let formatter = NumberFormatter()
     formatter.numberStyle = .decimal
     let ns = try context <- num
@@ -97,24 +92,29 @@ class ParsimoniousTests: XCTestCase {
         rawJSON = String(data: rawData, encoding: .utf8)!
     }
 
-    func testParser() {
-        try XCTAssertNoThrow(parse(ParsimoniousTests.rawJSON, with: ws *> json <* ws))
+    func testJSONParser() {
+        let result = try! parse(ParsimoniousTests.rawJSON, with: ws *> json <* ws)
+        print(result)
     }
     
-    func testParserFailure() {
+    func testJSONParserFailure() {
         let s = """
-{"ok":
+{"ok":~[7,
 """
         try XCTAssertThrowsError(parse(s, with: ws *> json <* ws))
     }
     
-    func testParserPerformance() {
+    func testJSONSerializationPerformance() {
         measure {
-            // About 200 times slower than `JSONSerialization`!
-            // LESSON: Don't parse JSON with parser combinators if you care about speed!
+            _ = try! JSONSerialization.jsonObject(with: ParsimoniousTests.rawData, options: [])
+        }
+    }
+    
+    func testJSONParserPerformance() {
+        measure {
             _ = try! parse(ParsimoniousTests.rawJSON, with: ws *> json <* ws)
         }
     }
-        
+    
 }
 

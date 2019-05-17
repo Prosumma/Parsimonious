@@ -9,8 +9,8 @@
 import Foundation
 
 public class Context<Contents: Collection> {
-    fileprivate let contents: Contents
-    public private(set) var index: Contents.Index
+    public let contents: Contents
+    public var index: Contents.Index
     private var savedIndices: [Contents.Index] = []
 
     init(contents: Contents) {

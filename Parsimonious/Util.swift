@@ -8,11 +8,19 @@
 
 import Foundation
 
-func not<T>(_ test: @escaping (T) -> Bool) -> (T) -> Bool {
+infix operator <<: CompositionPrecedence
+
+public func not<T>(_ test: @escaping (T) -> Bool) -> (T) -> Bool {
     return { !test($0) }
 }
 
-prefix func !<T>(test: @escaping (T) -> Bool) -> (T) -> Bool {
+public prefix func !<T>(test: @escaping (T) -> Bool) -> (T) -> Bool {
     return not(test)
 }
 
+/**
+ Simple function composition.
+ */
+func <<<A, B, C>(lhs: @escaping (B) -> C, rhs: @escaping (A) -> B) -> (A) -> C {
+    return { lhs(rhs($0)) }
+}
