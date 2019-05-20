@@ -18,17 +18,16 @@ import Foundation
  
  In some contexts, it may be necessary to provide the `type` parameter in order to give type evidence.
  
- - parameter type: The type of the underlying collection.
+ - parameter type: The type of the underlying collection. Can usually be inferred and thus omitted.
  - parameter test: A predicate which takes a single element of the collection and tests it. If true, the element is matched.
  
  - returns: A parser of type `Parser<C, E>`.
  */
 public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (E) -> Bool) -> Parser<C, E> where E == C.Element {
     return { context in
-        if context.atEnd {
+        guard let e = context.next else {
             throw ParseError(message: "Unexpected end of input.", context: context)
         }
-        let e = context.next!
         if test(e) {
             context.offset(by: 1)
             return e

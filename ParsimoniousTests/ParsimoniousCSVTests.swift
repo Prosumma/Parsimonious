@@ -27,6 +27,13 @@ func delimited<T>(_ parser: @escaping Parser<String, T>) -> Parser<String, T> {
     return surround(parser, with: ows) <* peek(char(sep) | eol | eofS)
 }
 
+func csvError(_ rest: Substring?) -> String {
+    guard let rest = rest else {
+        return "Expected to match a CSV value but got EOF."
+    }
+    return "Expected to match a CSV value but got garbage starting with \(rest[upTo: 10])"
+}
+
 let digits = "0123456789"
 let eol = (char("\r") *> char("\n")) | char(\Character.isNewline)
 let ows = manyS(all: \Character.isWhitespace, !\Character.isNewline)
@@ -34,9 +41,10 @@ let sep: Character = ","
 let dec = toDecimal <*> delimited(many1S(digits) + char(".") + many1S(digits))
 let int = toInteger <*> delimited(many1S(digits))
 let unquotation = manyS(all: !\Character.isNewline, !sep)
-let str = CSValue.string <*> (delimited(quotation) | unquotation)
-let item = delimited(dec) | delimited(int) | str
-let empty: Parser<String, [CSValue]> = [] <=> (ows <* peek(eol))
+let qstr = CSValue.string <*> quotation
+let ustr = CSValue.string <*> unquotation
+let item = delimited(dec | int | qstr) | ustr | fail(csvError)
+let empty = [CSValue]() <=> (ows <* peek(eol))
 let row = empty | many(item, sepBy: char(sep))
 let csv = many(row, sepBy: eol) <* eof
 

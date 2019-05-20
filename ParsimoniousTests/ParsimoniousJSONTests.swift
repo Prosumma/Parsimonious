@@ -31,16 +31,10 @@ func jnumber(_ context: Context<String>) throws -> JSON {
     return JSON.number(n)
 }
 
-func boolError(_ s: Substring?) -> String {
-    guard let s = s else {
-        return "Expected to match 'true' or 'false' but got EOF."
-    }
-    return "Expected to match 'true' or 'false', but got '\(s[upTo: 5])'."
-}
 func toBool(_ s: String) -> JSON {
     return .boolean(s == "true")
 }
-let jbool = toBool <*> string("true") | string("false") | fail(boolError)
+let jbool = toBool <*> string("true") | string("false")
 
 let ws = manyS(\Character.isWhitespace)
 
