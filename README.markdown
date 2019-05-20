@@ -42,9 +42,29 @@ The above parser matches a single character, which must not be whitespace and mu
 
 Using this methodology, extremely sophisticated parsers can be created.
 
-### Reason 2: Backtracking
+### Reason 2: Strings!
 
-Because Parsimonious is a collection parser rather than a stream parser, backtracking is easy. In fact, _any parser that fails to match *automatically* backtracks_. This makes parsers easier to write and reason about:
+In Swift, a `String` is not merely an array of `Character` instances. It is a much more sophisticated type that handles all the many intricacies of the Unicode standard.
+
+The primitive Parsimonious parsers and combinators don&rsquo;t know anything about strings or characters. They just parse a `Collection` of something or other and either return that something-or-other or an array of it. For example, the `many` combinator matches zero or more instances of a given parser:
+
+```swift
+let digits = many("0123456789")
+```
+
+Given the string "289", we'll get back an array of `Character` instances: `["2", "8", "9"]`. Because this is often inconvenient, Parsimonious has a suite of parsers and combinators that return strings instead of arrays of characters.
+
+The type of a parser which consumes a `String` and returns the same is `Parser<String, String>`. This type is so common that it has a `typealias`: `ParserS`. In addition to `ParserS`, there is `manyS`, `many1S`, and so on. The `S` suffix indicates that we&rsquo;re dealing with strings, not arrays of characters.
+
+```swift
+let digits = manyS("0123456789")
+```
+
+The above parser will give us "289" instead of `["2", "8", "9"]`, which is often much more convenient.
+
+### Reason 3: Backtracking
+
+Because Parsimonious is a collection parser rather than a stream parser, backtracking is easy. In fact, _any parser that fails to match **automatically** backtracks_. This makes parsers easier to write and reason about:
 
 ```swift
 let escape: Character = "\\"
@@ -53,5 +73,87 @@ let quote: Character = "\""
 let quotation = char(quote) *> manyS(char(all: !escape, !quote) | (char(escape) *> char(any: escape, quote))) <* char(quote)
 ```
 
-The `quotation` parser matches quoted strings. Quotes themselves can be escaped with a backslash and a backslash must also be escaped with a backslash. Only the text _within_ the quotes is "returned" by the parser.
+The `quotation` parser matches quoted strings. Quotes themselves can be escaped with a backslash and a backslash must also be escaped with a backslash. Only the text _within_ the quotes is returned as the result of this parser.
+
+### Reason 4: Write Complex Parsers Simply
+
+Let's look again at the type signature of a parser:
+
+```swift
+public typealias Parser<C: Collection, T> = (Context<C>) throws -> T
+```
+
+Notice the `throws` keyword? This makes Parsimonious "Swifty" and also simplifies the writing of complex parsers. Instead of the constant ceremony of checking return types, we can use a syntax that is more natural to Swift and easier to read.
+
+## Tips &amp; Tricks
+
+### Look At The Unit Tests!
+
+The unit tests implement a fully-functional JSON parser and a pretty good CSV parser. There&rsquo;s a lot to parse in them.
+
+### Not Just Strings!
+
+Parsimonious can parse anything which implements `Collection`. It doesn't have to be a string. This is useful if you want to split the parsing up into phases, where the first phase is simple tokenization. You can use Parsimonious to combine the tokens into larger structures.
+
+### Positions
+
+When tokenizing, it's often useful to know where in the original `Collection` the matched token appeared. The `position` combinator can be used to achieve this.
+
+```swift
+enum Token {
+    case openParens
+    case closeParens
+    case sep
+    case integer(Int)
+}
+
+let openParens = char("(")
+let closeParens = char(")")
+let sep = char(",")
+let integer = many1S("0123456789")
+
+let tokens = [openParens, closeParens, sep, integer].map(position)
+let token = or(tokens)
+```
+
+Notice how the individual token parsers were defined without `position`, which was added later using higher order functions. This makes the parsers more reusable.
+
+So what do you get when you do this? Instead of returning `Token`, the parsers in the above example now return `Position<String, Token>`, which has useful `startIndex`, `endIndex` and `value` properties.
+
+### Peeking
+
+The `peek` combinator matches a parser without consuming any of the underlying `Collection`. It allows one to look ahead at what's next. A good example of its use is in the CSV parser in the unit tests. Consider the parser which produces a `Decimal`:
+
+```swift
+let dec = toDecimal <*> many1S(digits) + char(".") + many1S(digits)
+```
+
+This is a perfectly good parser, but there are circumstances in a CSV file in which it can cause a false match. Consider:
+
+```
+bob,62.135.157.128,4.9
+```
+
+Look at `62.135.157.128`. `62.135` happily parses as a decimal, but the CSV parser has no idea what to do with the remaining `157.128`. It terminates with an error. So we need to teach our parser than in the case of a decimal value, it needs to be followed by the separator, the end of the line or the end of the file:
+
+```swift
+func delimited<T>(_ parser: @escaping Parser<String, T>) -> Parser<String, T> {
+    return surround(parser, with: ows) <* peek(char(sep) | eol | eofS)
+}
+
+let dec = toDecimal <*> delimited(many1S(digits) + char(".") + many1S(digits))
+```
+
+The `delimited` combinator returns a parser which says that our passed-in parser is expected to be surrounded by optional white space (`ows`) and followed either by the separator character, the end of the line or the end of the file.
+
+An individual "item" in our CSV file is matched as follows:
+
+```swift
+let str = CSValue.string <*> (delimited(quotation) | unquotation)
+let item = delimited(dec) | delimited(int) | str
+```
+
+With `peek`, the IP address fails to parse as a decimal, so the next possibility, an integer, is tried. It, too, fails, until eventually we get to a parser that succeeds: `unquotation`.
+
+The `peek` combinator is almost always used with the `<*` combinator, which must match its left-hand and right-hand parsers, but discards the value of the right-hand parser.
 
