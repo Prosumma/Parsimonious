@@ -59,7 +59,7 @@ public func count<C: Collection, T>(from: Int, to: Int, _ parser: @escaping Pars
         while values.count < from {
             do {
                 try values.append(parser(context))
-            } catch {
+            } catch let error as ParseError<C> {
                 if from == to {
                     throw ParseError(message: "Expected \(to) but got \(values.count).", context: context, inner: error)
                 } else if to == Int.max {
@@ -106,7 +106,7 @@ public func or<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, T> {
             for parser in parsers {
                 do {
                     return try parser(context)
-                } catch {
+                } catch let error as ParseError<C> {
                     lastError = error
                 }
             }

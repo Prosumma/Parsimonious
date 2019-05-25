@@ -19,7 +19,7 @@ public prefix func !<T>(test: @escaping (T) -> Bool) -> (T) -> Bool {
 }
 
 /**
- Simple function composition.
+ Simple function composition. Works identically to Haskell's . operator.
  */
 func <<<A, B, C>(lhs: @escaping (B) -> C, rhs: @escaping (A) -> B) -> (A) -> C {
     return { lhs(rhs($0)) }

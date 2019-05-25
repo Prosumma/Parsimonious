@@ -106,9 +106,6 @@
 		F3F11891225F00310062A2A1 /* ManyS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11890225F00310062A2A1 /* ManyS.swift */; };
 		F3F11893225F00390062A2A1 /* Many1S.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11892225F00390062A2A1 /* Many1S.swift */; };
 		F3F3E8912227B5A3007BC165 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3E8902227B5A3007BC165 /* Context.swift */; };
-		F3FF4BAB2287E55B000AE40C /* ParsimoniousFQNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FF4BAA2287E55B000AE40C /* ParsimoniousFQNameTests.swift */; };
-		F3FF4BAC2287E55B000AE40C /* ParsimoniousFQNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FF4BAA2287E55B000AE40C /* ParsimoniousFQNameTests.swift */; };
-		F3FF4BAD2287E55B000AE40C /* ParsimoniousFQNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FF4BAA2287E55B000AE40C /* ParsimoniousFQNameTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -170,7 +167,6 @@
 		F3F11890225F00310062A2A1 /* ManyS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyS.swift; sourceTree = "<group>"; };
 		F3F11892225F00390062A2A1 /* Many1S.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Many1S.swift; sourceTree = "<group>"; };
 		F3F3E8902227B5A3007BC165 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
-		F3FF4BAA2287E55B000AE40C /* ParsimoniousFQNameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsimoniousFQNameTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -267,7 +263,6 @@
 			children = (
 				F33A157E2227A37E000C33C1 /* Info.plist */,
 				F31709D32284A56700A83C05 /* ParsimoniousCSVTests.swift */,
-				F3FF4BAA2287E55B000AE40C /* ParsimoniousFQNameTests.swift */,
 				F33A157C2227A37E000C33C1 /* ParsimoniousJSONTests.swift */,
 				F31709E022850D4A00A83C05 /* Random.csv */,
 				F3A83B5E2261E52000F977E4 /* Random.json */,
@@ -632,7 +627,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F33A157D2227A37E000C33C1 /* ParsimoniousJSONTests.swift in Sources */,
-				F3FF4BAB2287E55B000AE40C /* ParsimoniousFQNameTests.swift in Sources */,
 				F31709D42284A56700A83C05 /* ParsimoniousCSVTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -669,7 +663,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3EF4990226976D500023CB3 /* ParsimoniousJSONTests.swift in Sources */,
-				F3FF4BAC2287E55B000AE40C /* ParsimoniousFQNameTests.swift in Sources */,
 				F31709D52284A56700A83C05 /* ParsimoniousCSVTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -706,7 +699,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3EF49C32269785E00023CB3 /* ParsimoniousJSONTests.swift in Sources */,
-				F3FF4BAD2287E55B000AE40C /* ParsimoniousFQNameTests.swift in Sources */,
 				F31709D62284A56700A83C05 /* ParsimoniousCSVTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

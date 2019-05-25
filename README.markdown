@@ -75,6 +75,14 @@ let quotation = char(quote) *> manyS(char(all: !escape, !quote) | (char(escape) 
 
 The `quotation` parser matches quoted strings. Quotes themselves can be escaped with a backslash and a backslash must also be escaped with a backslash. Only the text _within_ the quotes is returned as the result of this parser.
 
+If any portion of this parser fails, it will backtrack all the way to the beginning and `throw` a `ParseError`. Whether this `ParseError` terminates parsing depends upon the context in which this parser occurs:
+
+```swift
+let quoteOrInteger = quotation | many1S("0123456789") | fail("Expected a quotation or integer")
+```
+
+The `|` combinator tries the left-hand parser. If it fails, it swallows the error and tries the right-hand parser. If that fails, then `|` fails and the error propagates up. Since the last failure might not be terribly helpful, we use the `fail` combinator (which always fails) to produce a friendlier error.
+
 ### Reason 4: Write Complex Parsers Simply
 
 Let's look again at the type signature of a parser:
@@ -83,7 +91,29 @@ Let's look again at the type signature of a parser:
 public typealias Parser<C: Collection, T> = (Context<C>) throws -> T
 ```
 
-Notice the `throws` keyword? This makes Parsimonious "Swifty" and also simplifies the writing of complex parsers. Instead of the constant ceremony of checking return types, we can use a syntax that is more natural to Swift and easier to read.
+Notice the `throws` keyword? This makes Parsimonious "Swifty" and also simplifies the writing of complex parsers. Instead of the constant ceremony of checking return types, we can use a syntax that is more natural to Swift and easier to read:
+
+```swift
+func parseDeclaration(_ context: Context<String>) throws -> String {
+    return context.transact {
+        try context <- string("DECLARE")
+        try context <- many1S(\Character.isWhitespace)
+        let decl = try context <- many1S(\Character.isLetter)
+        try context <- many1S(\Character.isWhitespace)
+    }
+}
+```
+
+The `transact` method is a helper which returns the context's index back to where it started if any of the parsers fails. You should _always_ use this when writing your own parser.
+
+By using `try` instead of some kind of `Result` type, we don't have to continually check the `Result`. This makes parsers easier to write and easier to understand.
+
+Of course, it's much easier to write this particular parser using operators, and you should always do so when possible, as it handles all of these details for you:
+
+```swift
+let ws = many1S(\Character.isWhitespace)
+let parseDeclaration = string("DECLARE") *> ws *> many1S(\Character.isLetter) <* ws 
+```
 
 ## Tips &amp; Tricks
 
