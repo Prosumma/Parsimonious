@@ -8,10 +8,30 @@
 
 import Foundation
 
+/**
+ Attempts to match `parser` at least `from` and at most `to` times. Matches a string.
+ 
+ Direct use of this combinator should be avoided. Instead, use `manyS`, `many1S`, or one of the overloads that takes an `Int` or range type.
+ 
+ - precondition: `from >= 0 && from <= to && to > 0`
+ 
+ - parameter from: The minimum number of matches permitted.
+ - parameter to: The maximum number of matches permitted.
+ - parameter parser: The parser to match.
+ 
+ - returns: A parser of type `ParserS` which matches a string of the matched type.
+ */
 public func countS(from: Int, to: Int, _ parser: @escaping ParserS) -> ParserS {
     return joined <*> count(from: from, to: to, parser)
 }
 
+/**
+ Attempts to match `test` at least `from` and at most `to` times. Matches a string.
+ 
+ Direct use of this combinator should be avoided. Instead, use `manyS`, `many1S`, or one of the overloads that takes an `Int` or range type.
+ 
+ 
+ */
 public func countS(from: Int, to: Int, _ test: @escaping (Character) -> Bool) -> ParserS {
     return countS(from: from, to: to, char(test))
 }

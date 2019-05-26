@@ -176,3 +176,4 @@ public func *><C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @e
 public func accept<C: Collection>(_ context: Context<C>) throws -> C.Element {
     return try context <- satisfy{ _ in true }
 }
+
