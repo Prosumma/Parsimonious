@@ -15,6 +15,11 @@ public struct Position<C: Collection, T> {
     public var range: Range<C.Index> {
         return startIndex..<endIndex
     }
+    public init(value: T, startIndex: C.Index, endIndex: C.Index) {
+        self.value = value
+        self.startIndex = startIndex
+        self.endIndex = endIndex
+    }
 }
 
 public func position<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Position<C, T>> {
