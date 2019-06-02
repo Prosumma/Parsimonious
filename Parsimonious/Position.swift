@@ -27,7 +27,7 @@ public func position<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Pars
         let startIndex = context.index
         let value = try context <- parser
         let endIndex = context.index
-        return Position(startIndex: startIndex, endIndex: endIndex, value: value)
+        return Position(value: value, startIndex: startIndex, endIndex: endIndex)
     }
 }
 
