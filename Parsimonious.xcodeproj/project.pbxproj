@@ -28,23 +28,23 @@
 		F36D6C0C226047D2009CA0C7 /* ParserS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36D6C0B226047D2009CA0C7 /* ParserS.swift */; };
 		F37040D3225E8D0D00F2DCE4 /* Prim.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37040D2225E8D0D00F2DCE4 /* Prim.swift */; };
 		F37040D5225EC61800F2DCE4 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37040D4225EC61800F2DCE4 /* Base.swift */; };
-		F3873088223EEEB40079AB45 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3873087223EEEB40079AB45 /* Operators.swift */; };
+		F3873088223EEEB40079AB45 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3873087223EEEB40079AB45 /* Operator.swift */; };
 		F3A83B5F2261E52000F977E4 /* Random.json in Resources */ = {isa = PBXBuildFile; fileRef = F3A83B5E2261E52000F977E4 /* Random.json */; };
-		F3C547612260783100F0778B /* Joined.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C547602260783100F0778B /* Joined.swift */; };
+		F3C547612260783100F0778B /* Func.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C547602260783100F0778B /* Func.swift */; };
 		F3D9D3FC2241B01C00634103 /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9D3FB2241B01C00634103 /* ParseError.swift */; };
 		F3D9D3FE2241B05D00634103 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9D3FD2241B05D00634103 /* Parser.swift */; };
 		F3EF496F2269762C00023CB3 /* Parsimonious.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3EF49662269762C00023CB3 /* Parsimonious.framework */; };
 		F3EF497D2269769100023CB3 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37040D4225EC61800F2DCE4 /* Base.swift */; };
 		F3EF497E2269769100023CB3 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3E8902227B5A3007BC165 /* Context.swift */; };
-		F3EF497F2269769100023CB3 /* Joined.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C547602260783100F0778B /* Joined.swift */; };
-		F3EF49802269769100023CB3 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3873087223EEEB40079AB45 /* Operators.swift */; };
+		F3EF497F2269769100023CB3 /* Func.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C547602260783100F0778B /* Func.swift */; };
+		F3EF49802269769100023CB3 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3873087223EEEB40079AB45 /* Operator.swift */; };
 		F3EF49812269769100023CB3 /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9D3FB2241B01C00634103 /* ParseError.swift */; };
 		F3EF49822269769100023CB3 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9D3FD2241B05D00634103 /* Parser.swift */; };
 		F3EF49832269769100023CB3 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31B461A2251C36100DAE707 /* Position.swift */; };
 		F3EF49842269769100023CB3 /* Prim.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37040D2225E8D0D00F2DCE4 /* Prim.swift */; };
 		F3EF49852269769500023CB3 /* CharacterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11886225EFAD70062A2A1 /* CharacterTest.swift */; };
 		F3EF49862269769500023CB3 /* CountS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188C225EFF620062A2A1 /* CountS.swift */; };
-		F3EF49872269769500023CB3 /* JoinedS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188E225EFF770062A2A1 /* JoinedS.swift */; };
+		F3EF49872269769500023CB3 /* FuncS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188E225EFF770062A2A1 /* FuncS.swift */; };
 		F3EF49882269769500023CB3 /* Many1S.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11892225F00390062A2A1 /* Many1S.swift */; };
 		F3EF49892269769500023CB3 /* ManyS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11890225F00310062A2A1 /* ManyS.swift */; };
 		F3EF498A2269769500023CB3 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36D6C07226020BE009CA0C7 /* Match.swift */; };
@@ -58,15 +58,15 @@
 		F3EF49A0226977F600023CB3 /* Parsimonious.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3EF4997226977F500023CB3 /* Parsimonious.framework */; };
 		F3EF49AE2269783A00023CB3 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37040D4225EC61800F2DCE4 /* Base.swift */; };
 		F3EF49AF2269783A00023CB3 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3E8902227B5A3007BC165 /* Context.swift */; };
-		F3EF49B02269783A00023CB3 /* Joined.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C547602260783100F0778B /* Joined.swift */; };
-		F3EF49B12269783A00023CB3 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3873087223EEEB40079AB45 /* Operators.swift */; };
+		F3EF49B02269783A00023CB3 /* Func.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C547602260783100F0778B /* Func.swift */; };
+		F3EF49B12269783A00023CB3 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3873087223EEEB40079AB45 /* Operator.swift */; };
 		F3EF49B22269783A00023CB3 /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9D3FB2241B01C00634103 /* ParseError.swift */; };
 		F3EF49B32269783A00023CB3 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9D3FD2241B05D00634103 /* Parser.swift */; };
 		F3EF49B42269783A00023CB3 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31B461A2251C36100DAE707 /* Position.swift */; };
 		F3EF49B52269783A00023CB3 /* Prim.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37040D2225E8D0D00F2DCE4 /* Prim.swift */; };
 		F3EF49B62269783F00023CB3 /* CharacterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11886225EFAD70062A2A1 /* CharacterTest.swift */; };
 		F3EF49B72269783F00023CB3 /* CountS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188C225EFF620062A2A1 /* CountS.swift */; };
-		F3EF49B82269783F00023CB3 /* JoinedS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188E225EFF770062A2A1 /* JoinedS.swift */; };
+		F3EF49B82269783F00023CB3 /* FuncS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188E225EFF770062A2A1 /* FuncS.swift */; };
 		F3EF49B92269783F00023CB3 /* Many1S.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11892225F00390062A2A1 /* Many1S.swift */; };
 		F3EF49BA2269783F00023CB3 /* ManyS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11890225F00310062A2A1 /* ManyS.swift */; };
 		F3EF49BB2269783F00023CB3 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36D6C07226020BE009CA0C7 /* Match.swift */; };
@@ -81,15 +81,15 @@
 		F3EF49C42269787500023CB3 /* Random.json in Resources */ = {isa = PBXBuildFile; fileRef = F3A83B5E2261E52000F977E4 /* Random.json */; };
 		F3EF49D22269792400023CB3 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37040D4225EC61800F2DCE4 /* Base.swift */; };
 		F3EF49D32269792400023CB3 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3E8902227B5A3007BC165 /* Context.swift */; };
-		F3EF49D42269792400023CB3 /* Joined.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C547602260783100F0778B /* Joined.swift */; };
-		F3EF49D52269792400023CB3 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3873087223EEEB40079AB45 /* Operators.swift */; };
+		F3EF49D42269792400023CB3 /* Func.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C547602260783100F0778B /* Func.swift */; };
+		F3EF49D52269792400023CB3 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3873087223EEEB40079AB45 /* Operator.swift */; };
 		F3EF49D62269792400023CB3 /* ParseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9D3FB2241B01C00634103 /* ParseError.swift */; };
 		F3EF49D72269792400023CB3 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D9D3FD2241B05D00634103 /* Parser.swift */; };
 		F3EF49D82269792400023CB3 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31B461A2251C36100DAE707 /* Position.swift */; };
 		F3EF49D92269792400023CB3 /* Prim.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37040D2225E8D0D00F2DCE4 /* Prim.swift */; };
 		F3EF49DA2269792700023CB3 /* CharacterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11886225EFAD70062A2A1 /* CharacterTest.swift */; };
 		F3EF49DB2269792700023CB3 /* CountS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188C225EFF620062A2A1 /* CountS.swift */; };
-		F3EF49DC2269792700023CB3 /* JoinedS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188E225EFF770062A2A1 /* JoinedS.swift */; };
+		F3EF49DC2269792700023CB3 /* FuncS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188E225EFF770062A2A1 /* FuncS.swift */; };
 		F3EF49DD2269792700023CB3 /* Many1S.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11892225F00390062A2A1 /* Many1S.swift */; };
 		F3EF49DE2269792700023CB3 /* ManyS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11890225F00310062A2A1 /* ManyS.swift */; };
 		F3EF49DF2269792700023CB3 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36D6C07226020BE009CA0C7 /* Match.swift */; };
@@ -102,7 +102,7 @@
 		F3F11887225EFAD70062A2A1 /* CharacterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11886225EFAD70062A2A1 /* CharacterTest.swift */; };
 		F3F1188B225EFF470062A2A1 /* Char.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188A225EFF470062A2A1 /* Char.swift */; };
 		F3F1188D225EFF620062A2A1 /* CountS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188C225EFF620062A2A1 /* CountS.swift */; };
-		F3F1188F225EFF770062A2A1 /* JoinedS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188E225EFF770062A2A1 /* JoinedS.swift */; };
+		F3F1188F225EFF770062A2A1 /* FuncS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F1188E225EFF770062A2A1 /* FuncS.swift */; };
 		F3F11891225F00310062A2A1 /* ManyS.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11890225F00310062A2A1 /* ManyS.swift */; };
 		F3F11893225F00390062A2A1 /* Many1S.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F11892225F00390062A2A1 /* Many1S.swift */; };
 		F3F3E8912227B5A3007BC165 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3E8902227B5A3007BC165 /* Context.swift */; };
@@ -150,9 +150,9 @@
 		F36D6C0B226047D2009CA0C7 /* ParserS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParserS.swift; sourceTree = "<group>"; };
 		F37040D2225E8D0D00F2DCE4 /* Prim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prim.swift; sourceTree = "<group>"; };
 		F37040D4225EC61800F2DCE4 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
-		F3873087223EEEB40079AB45 /* Operators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
+		F3873087223EEEB40079AB45 /* Operator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
 		F3A83B5E2261E52000F977E4 /* Random.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Random.json; sourceTree = "<group>"; };
-		F3C547602260783100F0778B /* Joined.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joined.swift; sourceTree = "<group>"; };
+		F3C547602260783100F0778B /* Func.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Func.swift; sourceTree = "<group>"; };
 		F3D9D3FB2241B01C00634103 /* ParseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParseError.swift; sourceTree = "<group>"; };
 		F3D9D3FD2241B05D00634103 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		F3EF49662269762C00023CB3 /* Parsimonious.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Parsimonious.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,7 +163,7 @@
 		F3F11886225EFAD70062A2A1 /* CharacterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterTest.swift; sourceTree = "<group>"; };
 		F3F1188A225EFF470062A2A1 /* Char.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Char.swift; sourceTree = "<group>"; };
 		F3F1188C225EFF620062A2A1 /* CountS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountS.swift; sourceTree = "<group>"; };
-		F3F1188E225EFF770062A2A1 /* JoinedS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinedS.swift; sourceTree = "<group>"; };
+		F3F1188E225EFF770062A2A1 /* FuncS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuncS.swift; sourceTree = "<group>"; };
 		F3F11890225F00310062A2A1 /* ManyS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManyS.swift; sourceTree = "<group>"; };
 		F3F11892225F00390062A2A1 /* Many1S.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Many1S.swift; sourceTree = "<group>"; };
 		F3F3E8902227B5A3007BC165 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
@@ -275,7 +275,7 @@
 			children = (
 				F3F11886225EFAD70062A2A1 /* CharacterTest.swift */,
 				F3F1188C225EFF620062A2A1 /* CountS.swift */,
-				F3F1188E225EFF770062A2A1 /* JoinedS.swift */,
+				F3F1188E225EFF770062A2A1 /* FuncS.swift */,
 				F3F11892225F00390062A2A1 /* Many1S.swift */,
 				F3F11890225F00310062A2A1 /* ManyS.swift */,
 				F36D6C07226020BE009CA0C7 /* Match.swift */,
@@ -293,8 +293,8 @@
 				F37040D4225EC61800F2DCE4 /* Base.swift */,
 				F3F3E8902227B5A3007BC165 /* Context.swift */,
 				F31709DB2284FE4700A83C05 /* Extra.swift */,
-				F3C547602260783100F0778B /* Joined.swift */,
-				F3873087223EEEB40079AB45 /* Operators.swift */,
+				F3C547602260783100F0778B /* Func.swift */,
+				F3873087223EEEB40079AB45 /* Operator.swift */,
 				F3D9D3FB2241B01C00634103 /* ParseError.swift */,
 				F3D9D3FD2241B05D00634103 /* Parser.swift */,
 				F31B461A2251C36100DAE707 /* Position.swift */,
@@ -611,10 +611,10 @@
 				F36D6C04226017AB009CA0C7 /* Strings.swift in Sources */,
 				F36D6C0622601820009CA0C7 /* Util.swift in Sources */,
 				F3F1188D225EFF620062A2A1 /* CountS.swift in Sources */,
-				F3C547612260783100F0778B /* Joined.swift in Sources */,
-				F3873088223EEEB40079AB45 /* Operators.swift in Sources */,
+				F3C547612260783100F0778B /* Func.swift in Sources */,
+				F3873088223EEEB40079AB45 /* Operator.swift in Sources */,
 				F37040D5225EC61800F2DCE4 /* Base.swift in Sources */,
-				F3F1188F225EFF770062A2A1 /* JoinedS.swift in Sources */,
+				F3F1188F225EFF770062A2A1 /* FuncS.swift in Sources */,
 				F3D9D3FC2241B01C00634103 /* ParseError.swift in Sources */,
 				F3F11887225EFAD70062A2A1 /* CharacterTest.swift in Sources */,
 				F3F1188B225EFF470062A2A1 /* Char.swift in Sources */,
@@ -638,8 +638,8 @@
 				F3EF49832269769100023CB3 /* Position.swift in Sources */,
 				F3EF497D2269769100023CB3 /* Base.swift in Sources */,
 				F31709DD2284FE4700A83C05 /* Extra.swift in Sources */,
-				F3EF49802269769100023CB3 /* Operators.swift in Sources */,
-				F3EF49872269769500023CB3 /* JoinedS.swift in Sources */,
+				F3EF49802269769100023CB3 /* Operator.swift in Sources */,
+				F3EF49872269769500023CB3 /* FuncS.swift in Sources */,
 				F3EF498B2269769500023CB3 /* OptionalS.swift in Sources */,
 				F3EF49882269769500023CB3 /* Many1S.swift in Sources */,
 				F3EF49822269769100023CB3 /* Parser.swift in Sources */,
@@ -650,7 +650,7 @@
 				F3EF49862269769500023CB3 /* CountS.swift in Sources */,
 				F3EF498F2269769700023CB3 /* Util.swift in Sources */,
 				F3EF49842269769100023CB3 /* Prim.swift in Sources */,
-				F3EF497F2269769100023CB3 /* Joined.swift in Sources */,
+				F3EF497F2269769100023CB3 /* Func.swift in Sources */,
 				F3EF49812269769100023CB3 /* ParseError.swift in Sources */,
 				F3EF498D2269769500023CB3 /* Char.swift in Sources */,
 				F3EF49852269769500023CB3 /* CharacterTest.swift in Sources */,
@@ -674,8 +674,8 @@
 				F3EF49B42269783A00023CB3 /* Position.swift in Sources */,
 				F3EF49AE2269783A00023CB3 /* Base.swift in Sources */,
 				F31709DE2284FE4700A83C05 /* Extra.swift in Sources */,
-				F3EF49B12269783A00023CB3 /* Operators.swift in Sources */,
-				F3EF49B82269783F00023CB3 /* JoinedS.swift in Sources */,
+				F3EF49B12269783A00023CB3 /* Operator.swift in Sources */,
+				F3EF49B82269783F00023CB3 /* FuncS.swift in Sources */,
 				F3EF49BC2269783F00023CB3 /* OptionalS.swift in Sources */,
 				F3EF49B92269783F00023CB3 /* Many1S.swift in Sources */,
 				F3EF49B32269783A00023CB3 /* Parser.swift in Sources */,
@@ -686,7 +686,7 @@
 				F3EF49B72269783F00023CB3 /* CountS.swift in Sources */,
 				F3EF49C02269784300023CB3 /* Util.swift in Sources */,
 				F3EF49B52269783A00023CB3 /* Prim.swift in Sources */,
-				F3EF49B02269783A00023CB3 /* Joined.swift in Sources */,
+				F3EF49B02269783A00023CB3 /* Func.swift in Sources */,
 				F3EF49B22269783A00023CB3 /* ParseError.swift in Sources */,
 				F3EF49BE2269783F00023CB3 /* Char.swift in Sources */,
 				F3EF49B62269783F00023CB3 /* CharacterTest.swift in Sources */,
@@ -710,8 +710,8 @@
 				F3EF49D82269792400023CB3 /* Position.swift in Sources */,
 				F3EF49D22269792400023CB3 /* Base.swift in Sources */,
 				F31709DF2284FE4700A83C05 /* Extra.swift in Sources */,
-				F3EF49D52269792400023CB3 /* Operators.swift in Sources */,
-				F3EF49DC2269792700023CB3 /* JoinedS.swift in Sources */,
+				F3EF49D52269792400023CB3 /* Operator.swift in Sources */,
+				F3EF49DC2269792700023CB3 /* FuncS.swift in Sources */,
 				F3EF49E02269792700023CB3 /* OptionalS.swift in Sources */,
 				F3EF49DD2269792700023CB3 /* Many1S.swift in Sources */,
 				F3EF49D72269792400023CB3 /* Parser.swift in Sources */,
@@ -722,7 +722,7 @@
 				F3EF49DB2269792700023CB3 /* CountS.swift in Sources */,
 				F3EF49E42269792900023CB3 /* Util.swift in Sources */,
 				F3EF49D92269792400023CB3 /* Prim.swift in Sources */,
-				F3EF49D42269792400023CB3 /* Joined.swift in Sources */,
+				F3EF49D42269792400023CB3 /* Func.swift in Sources */,
 				F3EF49D62269792400023CB3 /* ParseError.swift in Sources */,
 				F3EF49E22269792700023CB3 /* Char.swift in Sources */,
 				F3EF49DA2269792700023CB3 /* CharacterTest.swift in Sources */,

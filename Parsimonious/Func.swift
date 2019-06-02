@@ -11,3 +11,7 @@ import Foundation
 public func joined<T>(_ arrays: [[T]]) -> [T] {
     return Array(arrays.joined())
 }
+
+public func arrayed<T>(_ value: T) -> [T] {
+    return [value]
+}

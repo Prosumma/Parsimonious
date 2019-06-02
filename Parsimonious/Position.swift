@@ -20,6 +20,9 @@ public struct Position<C: Collection, T> {
         self.startIndex = startIndex
         self.endIndex = endIndex
     }
+    public init<O>(value: T, at position: Position<C, O>) {
+        self.init(value: value, startIndex: position.startIndex, endIndex: position.endIndex)
+    }
 }
 
 public func position<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Position<C, T>> {
