@@ -9,6 +9,16 @@
 import Foundation
 
 /**
+ Succeeds if the current element in the parsed collection is `==` to `model`.
+ 
+ - parameter type: The type of the underlying collection. Can usually be inferred and thus omitted.
+ - parameter model: The model element with which to compare the current element in the parsed collection.
+ */
+public func satisfy<C: Collection, E: Equatable>(type: C.Type = C.self, _ model: E) -> Parser<C, E> where E == C.Element {
+    return satisfy(type: type, { $0 == model })
+}
+
+/**
  Expects `parser` to succeed `range` times. In other words, if `range` is `1...7`, then `parser` must match
  at least one and at most seven times.
  
