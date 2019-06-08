@@ -143,6 +143,7 @@
 		F33A15772227A37E000C33C1 /* ParsimoniousTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParsimoniousTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F33A157C2227A37E000C33C1 /* ParsimoniousJSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsimoniousJSONTests.swift; sourceTree = "<group>"; };
 		F33A157E2227A37E000C33C1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F369A11822AC6C7C00BC14C6 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		F36D6C03226017AB009CA0C7 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		F36D6C0522601820009CA0C7 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		F36D6C07226020BE009CA0C7 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
@@ -228,6 +229,7 @@
 		F33A15642227A37E000C33C1 = {
 			isa = PBXGroup;
 			children = (
+				F369A11822AC6C7C00BC14C6 /* Package.swift */,
 				F33A15702227A37E000C33C1 /* Parsimonious */,
 				F33A157B2227A37E000C33C1 /* ParsimoniousTests */,
 				F33A156F2227A37E000C33C1 /* Products */,
