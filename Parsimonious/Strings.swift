@@ -8,6 +8,11 @@
 
 import Foundation
 
+/**
+ Executes a sequence of string parsers (i.e., `ParserS`) and
+ concatenates the result into a single string. If any one of
+ the underlying parsers fails, `concat` fails.
+ */
 public func concat<Parsers: Sequence>(_ parsers: Parsers) -> ParserS where Parsers.Element == ParserS {
     return transact { context in
         var s = ""
@@ -18,6 +23,11 @@ public func concat<Parsers: Sequence>(_ parsers: Parsers) -> ParserS where Parse
     }
 }
 
+/**
+ Executes a sequence of string parsers (i.e., `ParserS`) and
+ concatenates the result into a single string. If any one of
+ the underlying parsers fails, `concat` fails.
+ */
 public func concat(_ parsers: ParserS...) -> ParserS {
     return concat(parsers)
 }
@@ -30,7 +40,7 @@ public func concat(_ parsers: ParserS...) -> ParserS {
  let identifier = char(\Character.isLetter) + manyS(any: \Character.isLetter, \Character.isNumber)
  ```
  
- This parser matches a letter followed by zero or more letters or numbers.
+ The above parser matches a letter followed by zero or more letters or numbers.
  */
 public func +(lparser: @escaping ParserS, rparser: @escaping ParserS) -> ParserS {
     return concat(lparser, rparser)
@@ -76,3 +86,4 @@ public func quote(_ delimiter: Character, _ escape: Character = "\\") -> ParserS
 public func quotation(_ context: Context<String>) throws -> String {
     return try context <- quote("\"")
 }
+

@@ -15,6 +15,7 @@ indirect enum JSON {
     case boolean(Bool)
     case object([String: JSON])
     case array([JSON])
+    case null
 }
 
 let jstring = JSON.string <*> quotation
@@ -71,6 +72,14 @@ func jsonError(_ rest: Substring?) -> String {
     return "Expected to match some JSON, but got garbage starting with \(rest[upTo: 20])."
 }
 let json = jstring | jnumber | jbool | jarray | jobject | fail(jsonError)
+
+func flattenStrings(_ json: JSON) -> JSON {
+    switch json {
+    case .array(let values): return .array(values.compactMap{ flattenStrings($0) })
+    case .string: return .array([json])
+    default: return .null
+    }
+}
 
 class ParsimoniousTests: XCTestCase {
     

@@ -8,6 +8,9 @@
 
 import Foundation
 
+/**
+ The type of a Parsimonious Parser.
+ */
 public typealias Parser<C: Collection, T> = (Context<C>) throws -> T
 
 public func parse<C: Collection, T>(_ collection: C, with parser: Parser<C, T>) throws -> T {

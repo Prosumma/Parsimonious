@@ -35,11 +35,23 @@ func match(_ test: String, options: String.CompareOptions = []) -> ParserS {
     }
 }
 
+/**
+ Attempts to match a specific string.
+ 
+ - note: This method does _not_ use `match` under the hood and
+ has reasonably good performance.
+ */
 public func string(_ test: String, ignoringCase: Bool = false) -> ParserS {
     let parsers = ignoringCase ? test.map(char << i) : test.map(char)
     return concat(parsers) | fail("Expected to match \"\(test)\".")
 }
 
+/**
+ Uses `match` to attempt a regular expression match.
+ 
+ - warning: Avoid if possible. Parser combinators obviate the need
+ for regular expressions and in most cases are faster.
+ */
 public func regex(_ test: String, ignoringCase: Bool = false) -> ParserS {
     let options: String.CompareOptions = ignoringCase ? [.caseInsensitive, .regularExpression] : .regularExpression
     return match(test, options: options)

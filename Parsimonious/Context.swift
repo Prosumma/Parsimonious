@@ -12,10 +12,16 @@ public class Context<Contents: Collection> {
     public let contents: Contents
     public var index: Contents.Index
     private var savedIndices: [Contents.Index] = []
+    private var state: [String: Any] = [:]
 
     init(contents: Contents) {
         self.contents = contents
         self.index = self.contents.startIndex
+    }
+    
+    public subscript(_ key: String) -> Any? {
+        get { return state[key] }
+        set { state[key] = newValue }
     }
     
     public var rest: Contents.SubSequence? {
