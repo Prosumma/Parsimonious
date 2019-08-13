@@ -70,10 +70,12 @@ public func count<C: Collection, T>(from: Int, to: Int, _ parser: @escaping Pars
             }
         }
         while values.count < to {
-            guard let value = try? parser(context) else {
+            do {
+                let value = try parser(context)
+                values.append(value)
+            } catch _ as ParseError<C> {
                 break
             }
-            values.append(value)
         }
         return values
     }
@@ -212,7 +214,12 @@ public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> 
  */
 public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, T?> {
     return { context in
-        return try? parser(context)
+        do {
+            let value = try parser(context)
+            return value
+        } catch _ as ParseError<C> {
+            return nil
+        }
     }
 }
 
@@ -224,7 +231,12 @@ public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Pars
  */
 public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>, default defaultValue: @escaping @autoclosure () -> T) -> Parser<C, T> {
     return { context in
-        return (try? parser(context)) ?? defaultValue()
+        do {
+            let value = try parser(context)
+            return value
+        } catch _ as ParseError<C> {
+            return defaultValue()
+        }
     }
 }
 

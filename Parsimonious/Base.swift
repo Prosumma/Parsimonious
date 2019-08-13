@@ -172,11 +172,8 @@ public func <=><C: Collection, I, O>(lhs: O, rhs: @escaping Parser<C, I>) -> Par
 
 public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Void> {
     return { context in
-        let value = try? context <- peek(parser)
-        if value != nil {
-            // Need a better error message for this, but what?
-            throw ParseError(message: "Negative lookahead failed.", context: context)
-        }
+        try context <- peek(parser)
+        throw ParseError(message: "Negative lookahead failed.", context: context)
     }
 }
 
