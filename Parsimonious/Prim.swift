@@ -215,8 +215,7 @@ public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> 
 public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, T?> {
     return { context in
         do {
-            let value = try parser(context)
-            return value
+            return try parser(context)
         } catch _ as ParseError<C> {
             return nil
         }
@@ -232,8 +231,7 @@ public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Pars
 public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>, default defaultValue: @escaping @autoclosure () -> T) -> Parser<C, T> {
     return { context in
         do {
-            let value = try parser(context)
-            return value
+            return try parser(context)
         } catch _ as ParseError<C> {
             return defaultValue()
         }
