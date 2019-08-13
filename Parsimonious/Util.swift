@@ -24,3 +24,4 @@ public prefix func !<T>(test: @escaping (T) -> Bool) -> (T) -> Bool {
 func <<<A, B, C>(lhs: @escaping (B) -> C, rhs: @escaping (A) -> B) -> (A) -> C {
     return { lhs(rhs($0)) }
 }
+

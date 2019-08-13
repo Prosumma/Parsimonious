@@ -205,7 +205,8 @@ public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> 
  Attempts to match using `parser`, but matches `nil` if `parser` fails.
  
  - note: If attempting to match zero or more times, it is best to use the `many`
- combinator instead, which returns a `Parser<C, [T]>`.
+ combinator instead, which returns a `Parser<C, [T]>`. If an array is more convenient,
+ use `count(0...1, parser)` instead, which returns an empty array if there is no match.
 
  - parameter parser: The parser to use for matching.
  */

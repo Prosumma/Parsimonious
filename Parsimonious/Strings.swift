@@ -70,7 +70,6 @@ public func eofS(_ context: Context<String>) throws -> String {
  
  Chiefly useful for matching a specific number of characters, e.g.,
  `countS(7, acceptChar)` matches any seven characters.
- 
  */
 public func acceptChar(_ context: Context<String>) throws -> String {
     return try context <- char{ _ in true }

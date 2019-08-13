@@ -44,10 +44,27 @@ public func count<C: Collection, T>(_ range: Range<Int>, _ parser: @escaping Par
     return count(from: range.lowerBound, to: range.upperBound - 1, parser)
 }
 
+/**
+ Uses a partial range to match `parser` a minimum number of times. In other words, if range is `4...`, then `parser`
+ must match at least 4 times.
+ 
+ - parameter range: A partial range of times `parser` must match.
+ - parameter parser: The parser to match.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public func count<C: Collection, T>(_ range: PartialRangeFrom<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(from: range.lowerBound, to: Int.max, parser)
 }
 
+/**
+ Matches `parser` exactly `number` of times. In other words, `count(7, char("a"))` matches the letter "a" exactly 7 times.
+ 
+ - parameter number: The exact number of times `parser` must match.
+ - parameter parser: The parser to match.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public func count<C: Collection, T>(_ number: Int, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(from: number, to: number, parser)
 }

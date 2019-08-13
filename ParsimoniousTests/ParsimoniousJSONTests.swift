@@ -65,21 +65,15 @@ func jobject(_ context: Context<String>) throws -> JSON {
     }
 }
 
+let jnull = JSON.null <=> string("null")
+
 func jsonError(_ rest: Substring?) -> String {
     guard let rest = rest else {
         return "Expected to match some JSON, but reached EOF."
     }
     return "Expected to match some JSON, but got garbage starting with \(rest[upTo: 20])."
 }
-let json = jstring | jnumber | jbool | jarray | jobject | fail(jsonError)
-
-func flattenStrings(_ json: JSON) -> JSON {
-    switch json {
-    case .array(let values): return .array(values.compactMap{ flattenStrings($0) })
-    case .string: return .array([json])
-    default: return .null
-    }
-}
+let json = jnull | jstring | jnumber | jbool | jarray | jobject | fail(jsonError)
 
 class ParsimoniousTests: XCTestCase {
     
