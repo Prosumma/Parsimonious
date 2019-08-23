@@ -119,7 +119,7 @@ public func or<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, T> {
 }
 
 /**
- The lookahead combinator. Attempts to match `parser` and throws an error if it fails. Either way,
+ The lookahead combinator. Attempts to match `parser` and throws a `ParseError` if it fails. Either way,
  `peek` backtracks as if the `parser` was never matched.
  
  For example, imagine we are parsing a list of whitespace-separated items. Each element in the list must
@@ -149,12 +149,12 @@ public func peek<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C
  
  This is often called `fmap` or `lift` in functional languages and makes `Parser` a functor.
  
- `lift` is represented by the `<*>` operator and in general this is what should be used. The use of `lift`
+ `lift` is represented by the `<%>` operator and in general this is what should be used. The use of `lift`
  is very common. For example, the `char` combinator is simply a lifted version of the `satisfy` combinator:
  
  ```
  func char(_ test: (Character) -> Bool) -> ParserS {
-    return String.init <*> satisfy(test)
+    return String.init <%> satisfy(test)
  }
  ```
  
@@ -324,6 +324,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rpa
     }
 }
 
+/// Matches first a `Parser<C, [T]>` and then a `Parser<C, T>`, combining this into a result of `[T]`.
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, [T]>, _ rparser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return transact { context in
         var values = try lparser(context)
@@ -332,6 +333,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, [T]>, _ rp
     }
 }
 
+/// Matches first a `Parser<C, T>` and then a `Parser<C, [T]>`, combining this into a result of `[T]`.
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T>, _ rparser: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
     return transact { context in
         let value = try lparser(context)
@@ -341,6 +343,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T>, _ rpar
     }
 }
 
+/// Matches first a `Parser<C, [T]>` and then a `Parser<C, T?>`, combining this into a result of `[T]`.
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, [T]>, _ rparser: @escaping Parser<C, T?>) -> Parser<C, [T]> {
     return transact { context in
         var values = try lparser(context)
@@ -351,6 +354,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, [T]>, _ rp
     }
 }
 
+/// Matches first a `Parser<C, T?>` and then a `Parser<C, [T]>`, combining this into a result of `[T]`.
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rparser: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
     return transact { context in
         let value = try lparser(context)
@@ -362,6 +366,18 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rpa
     }
 }
 
+/**
+ Matches the end of input.
+ 
+ This combinator always returns `Void`. The best way to use it is with the `<*` combinator:
+ 
+ ```
+ many(acceptChar) <* eof
+ ```
+ 
+ - warning: This is the only combinator that can be matched an unlimited number of times.
+ Never use `eof` in an expression such as `many(eof)` because it may never terminate.
+ */
 public func eof<C: Collection>(_ context: Context<C>) throws {
     if !context.atEnd {
         let next = context.next!

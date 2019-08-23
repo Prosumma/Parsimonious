@@ -12,9 +12,13 @@ precedencegroup CompositionPrecedence {
     associativity: right
 }
 
-infix operator  <*>: ComparisonPrecedence
+infix operator  <%>: ComparisonPrecedence
 infix operator  <=>: ComparisonPrecedence
 infix operator   *>: AdditionPrecedence
 infix operator   <*: AdditionPrecedence
 infix operator   <-: FunctionArrowPrecedence
 infix operator  <?>: DefaultPrecedence // TODO: Change this
+infix operator  <*>: MultiplicationPrecedence
+
+postfix operator *
+postfix operator +

@@ -70,17 +70,25 @@ public func eofS(_ context: Context<String>) throws -> String {
  
  Chiefly useful for matching a specific number of characters, e.g.,
  `countS(7, acceptChar)` matches any seven characters.
+ 
+ Does not match EOF.
  */
 public func acceptChar(_ context: Context<String>) throws -> String {
     return try context <- char{ _ in true }
 }
 
 public func quote(_ delimiter: Character, _ escape: Character = "\\") -> ParserS {
-    return surround(manyS(char(all: !escape, !delimiter) | (char(escape) *> char(any: escape, delimiter))), with: char(delimiter))
+    return manyS(char(all: !escape, !delimiter) | (char(escape) *> char(any: escape, delimiter))) <*> char(delimiter)
 }
 
 /**
  A typical quoted string with `"` and backslashes escaped by a backslash.
+ 
+ - warning: The escape character `\\` is used *only* to escape itself and
+ the quote character. It does not handle escaping of the sort used in programming
+ languages such as C. (This would not make sense, since different languages
+ escape things differently.) If you want to parse a C-style string, you
+ will have to roll your own parser, which is not very difficult algorithmically.
  */
 public func quotation(_ context: Context<String>) throws -> String {
     return try context <- quote("\"")

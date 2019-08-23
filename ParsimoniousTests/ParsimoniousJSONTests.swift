@@ -18,7 +18,7 @@ indirect enum JSON {
     case null
 }
 
-let jstring = JSON.string <*> quotation
+let jstring = JSON.string <%> quotation
 
 func jnumber(_ context: Context<String>) throws -> JSON {
     let digits = many1S("0123456789")
@@ -35,12 +35,12 @@ func jnumber(_ context: Context<String>) throws -> JSON {
 func toBool(_ s: String) -> JSON {
     return .boolean(s == "true")
 }
-let jbool = toBool <*> string("true") | string("false")
+let jbool = toBool <%> string("true") | string("false")
 
 let ws = manyS(\Character.isWhitespace)
 
 func jarray(_ context: Context<String>) throws -> JSON {
-    return try context <- JSON.array <*> char("[") *> ws *> many(json <* ws, sepBy: ws + char(",") + ws) <* char("]")
+    return try context <- JSON.array <%> char("[") *> ws *> many(json <* ws, sepBy: ws + char(",") + ws) <* char("]")
 }
 
 func jpair(_ context: Context<String>) throws -> (key: String, value: JSON) {

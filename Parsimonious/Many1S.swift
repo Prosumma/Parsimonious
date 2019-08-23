@@ -9,7 +9,7 @@
 import Foundation
 
 public func many1S(_ parser: @escaping ParserS) -> ParserS {
-    return joined <*> many1(parser)
+    return joined <%> many1(parser)
 }
 
 public func many1S(_ test: CharacterTest) -> ParserS {

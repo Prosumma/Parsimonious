@@ -38,11 +38,11 @@ let digits = "0123456789"
 let eol = (char("\r") *> char("\n")) | char(\Character.isNewline)
 let ows = manyS(all: \Character.isWhitespace, !\Character.isNewline)
 let sep: Character = ","
-let dec = toDecimal <*> delimited(many1S(digits) + char(".") + many1S(digits))
-let int = toInteger <*> delimited(many1S(digits))
+let dec = toDecimal <%> delimited(many1S(digits) + char(".") + many1S(digits))
+let int = toInteger <%> delimited(many1S(digits))
 let unquotation = manyS(all: !\Character.isNewline, !sep)
-let qstr = CSValue.string <*> quotation
-let ustr = CSValue.string <*> unquotation
+let qstr = CSValue.string <%> quotation
+let ustr = CSValue.string <%> unquotation
 let item = delimited(dec | int | qstr) | ustr | fail(csvError)
 let empty = [CSValue]() <=> (ows <* peek(eol))
 let row = empty | many(item, sepBy: char(sep))

@@ -22,38 +22,7 @@ import Foundation
  - returns: A parser of type `ParserS` which matches a string of the matched type.
  */
 public func countS(from: Int, to: Int, _ parser: @escaping ParserS) -> ParserS {
-    return joined <*> count(from: from, to: to, parser)
-}
-
-/**
- Attempts to match `test` at least `from` and at most `to` times. Matches a string.
- 
- Direct use of this combinator should be avoided. Instead, use `manyS`, `many1S`, or one of the overloads that takes an `Int` or range type.
- 
- 
- */
-public func countS(from: Int, to: Int, _ test: @escaping (Character) -> Bool) -> ParserS {
-    return countS(from: from, to: to, char(test))
-}
-
-public func countS(from: Int, to: Int, _ test: CharacterTest) -> ParserS {
-    return countS(from: from, to: to, char(test))
-}
-
-public func countS(from: Int, to: Int, any tests: [CharacterTest]) -> ParserS {
-    return countS(from: from, to: to, char(any: tests))
-}
-
-public func countS(from: Int, to: Int, any tests: CharacterTest...) -> ParserS {
-    return countS(from: from, to: to, char(any: tests))
-}
-
-public func countS(from: Int, to: Int, all tests: [CharacterTest]) -> ParserS {
-    return countS(from: from, to: to, char(all: tests))
-}
-
-public func countS(from: Int, to: Int, all tests: CharacterTest...) -> ParserS {
-    return countS(from: from, to: to, char(all: tests))
+    return joined <%> count(from: from, to: to, parser)
 }
 
 public func countS(_ range: ClosedRange<Int>, _ parser: @escaping ParserS) -> ParserS {

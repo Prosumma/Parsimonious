@@ -9,7 +9,7 @@
 import Foundation
 
 public func char(_ test: @escaping (Character) -> Bool) -> ParserS {
-    return String.init <*> satisfy(test)
+    return String.init <%> satisfy(test)
 }
 
 public func char(_ test: CharacterTest) -> ParserS {

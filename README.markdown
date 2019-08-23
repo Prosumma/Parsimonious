@@ -1,14 +1,36 @@
 ## Parsers And Parser Combinators? What?
 
+Parsers and parser combinators are means of parsing a stream of some type into some other type. For example, one might start with a string whose contents are a mathematical expression such as `2 + 3`. We want to get from this string to an array of tokens which can then be further processed to evaluate the expression itself or display it with syntax highlighting or for some other purpose.
+
 I can&rsquo;t do justice to this topic here. [Wikipedia](https://en.wikipedia.org/wiki/Parser_combinator) has the canonical article and your favorite search engine will have lots more information. 
 
 For those that already know a bit, a Parsimonious parser is a function with the following type signature:
 
 ```swift
-public typealias Parser<C: Collection, T> = (Context<C>) throws -> T
+typealias Parser<C: Collection, T> = (Context<C>) throws -> T
 ```
 
-You&rsquo;ll notice that the type signature includes `Collection`. Parsimonious is not a stream parser. This allows easier backtracking at the expense of not being able to parse extremely large amounts of data. For the vast majority of uses, this will not be a problem.
+You&rsquo;ll notice that the type signature includes `Collection`. Parsimonious is not a stream parser. This allows easier backtracking at the expense of not being able to parse _extremely_ large amounts of data. For the vast majority of uses, this will not be a problem.
+
+### Terminology
+
+Look again at the signature of a parser. Its only argument is a `Context<C: Collection>`. We speak of a parser _consuming_ a collection. If the elements of this collection are typed, we speak of the parser _consuming_ a collection of said type. The return type is `T`, but in the case of parsers we speak of a parser _matching_ `T`.
+
+A combinator is a higher-order function that returns a parser. Here's an example:
+
+```swift
+func combinator<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, [T]>
+```
+
+A combinator _consumes_ a collection. It _returns_ a parser. It _matches_ an array of `T`. (Technically it returns a parser which matches an array of `T`. But it's tedious to speak this way and obvious from the context what is meant if we elide a bit of it.)
+
+Parsing is begun using the `parse` function:
+
+```swift
+func parse<C: Collection, T>(_ input: C, with parser: Parser<C, T>) throws -> T
+```
+
+The collection consumed by parsing is known as the _parse input_ or just _input_. This terminology is also used with parsers themselves, but refers to the unconsumed remainder of the _original_ parse input at the time the given parser attempts to parse. 
 
 ## Why Parsimonious?
 
@@ -22,7 +44,7 @@ This is easier to demonstrate than to explain, but it&rsquo;s quite easy to use.
 many1S(all: !\Character.isWhitespace, !\Character.isPunctuation)
 ```
 
-Let&rsquo;s parse this parser for a moment. The `S` suffix tells us that this parser parses a string and returns a string. (More on that later.) The `all:` tells us that all of the tests must return `true` for the parser to match. Inside the parentheses, we have two "negated" keypaths. Using the `!` operator with the keypaths reverses the test implied by the keypath.
+Let&rsquo;s parse this parser for a moment. The `S` suffix tells us that this parser parses a string and matches a string. (More on that later.) The `all:` tells us that all of the tests must return `true` for the parser to match. Inside the parentheses, we have two "negated" keypaths. Using the `!` operator with the keypaths reverses the test implied by the keypath.
 
 So what is a character test? 
 
@@ -46,18 +68,18 @@ Using this methodology, extremely sophisticated parsers can be created.
 
 In Swift, a `String` is not merely an array of `Character` instances. It is a much more sophisticated type that handles all the many intricacies of the Unicode standard.
 
-The primitive Parsimonious parsers and combinators don&rsquo;t know anything about strings or characters. They just parse a `Collection` of something or other and either return that something-or-other or an array of it. For example, the `many` combinator matches zero or more instances of a given parser:
+The primitive Parsimonious parsers and combinators don&rsquo;t know anything about strings or characters. They just parse a `Collection` of something or other and either match that something-or-other or an array of it. For example, the `many1` combinator matches one or more instances of a given parser:
 
 ```swift
-let digits = many("0123456789")
+let digits = many1("0123456789")
 ```
 
-Given the string "289", we'll get back an array of `Character` instances: `["2", "8", "9"]`. Because this is often inconvenient, Parsimonious has a suite of parsers and combinators that return strings instead of arrays of characters.
+Given "289" as the parse input, `digits` matches an array of `Character` instances, so the match would be `["2", "8", "9"]`. Because this is often inconvenient, Parsimonious has a suite of parsers and combinators that match strings instead of arrays of characters.
 
-The type of a parser which consumes a `String` and returns the same is `Parser<String, String>`. This type is so common that it has a `typealias`: `ParserS`. In addition to `ParserS`, there is `manyS`, `many1S`, and so on. The `S` suffix indicates that we&rsquo;re dealing with strings, not arrays of characters.
+The type of a parser which consumes a `String` and matches the same is `Parser<String, String>`. This type is so common that it has a `typealias`: `ParserS`. In addition to `ParserS`, there is `manyS`, `many1S`, and so on. The `S` suffix indicates that we&rsquo;re dealing with strings, not arrays of characters.
 
 ```swift
-let digits = manyS("0123456789")
+let digits = many1S("0123456789")
 ```
 
 The above parser will give us "289" instead of `["2", "8", "9"]`, which is often much more convenient.
@@ -95,11 +117,12 @@ Notice the `throws` keyword? This makes Parsimonious "Swifty" and also simplifie
 
 ```swift
 func parseDeclaration(_ context: Context<String>) throws -> String {
-    return context.transact {
+    return try context.transact {
         try context <- string("DECLARE")
         try context <- many1S(\Character.isWhitespace)
         let decl = try context <- many1S(\Character.isLetter)
         try context <- many1S(\Character.isWhitespace)
+        return decl
     }
 }
 ```
@@ -112,7 +135,7 @@ Of course, it's much easier to write this particular parser using operators, and
 
 ```swift
 let ws = many1S(\Character.isWhitespace)
-let parseDeclaration = string("DECLARE") *> ws *> many1S(\Character.isLetter) <* ws 
+let parseDeclaration = string("DECLARE") *> (many1S(\Character.isLetter) <~> ws) 
 ```
 
 ## Tips &amp; Tricks
@@ -148,14 +171,14 @@ let token = or(tokens)
 
 Notice how the individual token parsers were defined without `position`, which was added later using higher order functions. This makes the parsers more reusable.
 
-So what do you get when you do this? Instead of returning `Token`, the parsers in the above example now return `Position<String, Token>`, which has useful `startIndex`, `endIndex` and `value` properties.
+So what do you get when you do this? Instead of matching `Token`, the parsers in the above example now match `Position<String, Token>`, which has useful `startIndex`, `endIndex` and `value` properties.
 
 ### Peeking
 
-The `peek` combinator matches a parser without consuming any of the underlying `Collection`. It allows one to look ahead at what's next. A good example of its use is in the CSV parser in the unit tests. Consider the parser which produces a `Decimal`:
+The `peek` combinator matches without consuming any of the underlying `Collection`. It allows one to look ahead at what's next. A good example of its use is in the CSV parser in the unit tests. Consider the parser which produces a `Decimal`:
 
 ```swift
-let dec = toDecimal <*> many1S(digits) + char(".") + many1S(digits)
+let dec = toDecimal <%> many1S(digits) + char(".") + many1S(digits)
 ```
 
 This is a perfectly good parser, but there are circumstances in a CSV file in which it can cause a false match. Consider:
@@ -164,14 +187,14 @@ This is a perfectly good parser, but there are circumstances in a CSV file in wh
 bob,62.135.157.128,4.9
 ```
 
-Look at `62.135.157.128`. `62.135` happily parses as a decimal, but the CSV parser has no idea what to do with the remaining `157.128`. It terminates with an error. So we need to teach our parser than in the case of a decimal value, it needs to be followed by the separator, the end of the line or the end of the file:
+Look at `62.135.157.128`. `62.135` happily parses as a decimal, but the CSV parser has no idea what to do with the remaining `.157.128`. It terminates with an error. So we need to teach our parser that in the case of a decimal value, it needs to be followed by the separator, the end of the line or the end of the file:
 
 ```swift
 func delimited<T>(_ parser: @escaping Parser<String, T>) -> Parser<String, T> {
     return surround(parser, with: ows) <* peek(char(sep) | eol | eofS)
 }
 
-let dec = toDecimal <*> delimited(many1S(digits) + char(".") + many1S(digits))
+let dec = toDecimal <%> delimited(many1S(digits) + char(".") + many1S(digits))
 ```
 
 The `delimited` combinator returns a parser which says that our passed-in parser is expected to be surrounded by optional white space (`ows`) and followed either by the separator character, the end of the line or the end of the file.
@@ -179,7 +202,7 @@ The `delimited` combinator returns a parser which says that our passed-in parser
 An individual "item" in our CSV file is matched as follows:
 
 ```swift
-let str = CSValue.string <*> (delimited(quotation) | unquotation)
+let str = CSValue.string <%> (delimited(quotation) | unquotation)
 let item = delimited(dec) | delimited(int) | str
 ```
 
@@ -187,3 +210,103 @@ With `peek`, the IP address fails to parse as a decimal, so the next possibility
 
 The `peek` combinator is almost always used with the `<*` combinator, which must match its left-hand and right-hand parsers, but discards the value of the right-hand parser.
 
+### Handy Operators
+
+Custom operators are essential to making a parser combinator framework usable and readable. Parsimonious overloads the built-in `|`, `&` and `+` operators. Because the arguments to these operators in Parsimonious are parsers, there is no possibility of conflict with the ordinary uses of these operators. The custom operators are `<*`, `*>`, `<*>`, `<%>`, `<=>`, `<?>`, and `<-`. All of the operators mentioned so far are infix operators. There are in addition two postfix operators, `+` and `*`.
+
+Use of the custom and overloaded operators is entirely optional. _Every Parsimonious operator has a corresponding ordinary function._
+
+Let's go over a few of the operators. For the rest, see the documentation and unit tests.
+
+Perhaps the most common operator is `|` (`or`). This operator attemps the parser on its left-hand side. If it does not match, it attempts the parser on its right-hand side. If both fail, the `ParseError` from the right-hand parser is thrown.
+
+```swift
+// Matches "foo" or "bar" or fails.
+string("foo") | string("bar")
+```
+
+The `<*` (`first`) operator succeeds when its left- and right-hand parsers both succeed, but it only matches the left-hand parser. One can think of it as meaning "followed by".
+
+```swift
+string("foo") <* many1S(\Character.isWhitespace)
+```
+
+This matches the string "foo" only when it is followed by at least one whitespace character. The whitespace match is discarded but must still succeed.
+
+The inverse of `<*` is of course `*>` (`second`), meaning "preceded by":
+
+```swift
+many1S(\Character.isWhitespace) *> string("foo")
+```
+
+There is also `<*>` (`surround`), whose meaning should by now be obvious:
+
+```swift
+string("foo") <*> many1S(\Character.isWhitespace)
+```
+
+The above parser matches the string "foo" but only if it is surrounded on both sides by at least one whitespace character.
+
+The `+` operator is used only on string parsers (i.e., `ParserS`). It takes the matches of its left- and right-hand sides and combines them.
+
+```swift
+string("foo") + string("bar")
+```
+
+This must first match the string "foo", followed by the string "bar". The matched string returned is "foobar". Contrast this with `string("foo") & string("bar")` which returns an array `["foo", "bar"]`.
+
+As a postfix operator, `+` is the same as `many1`, but its argument must always be a parser, not a character test.
+
+```swift
+let foobar = (string("foo") | string("bar")) <*> manyS(\Character.isWhitespace)
+foobar+
+```
+
+Given a parse input of "foofoo barfoo bar bar  " the match of `foobar+` would be `["foo", "foo", "bar", "foo", "bar", "bar"]`.
+
+### Arbitrary State
+
+The `Context` type used in parsing allows arbitrary state to be set and retrieved:
+
+```swift
+context["count"] = 1
+context["string"] = "ok"
+```
+
+Since the `parse` method through which parsing begins does not allow the `Context` object to be accessed directly, the easiest way to set initial state is by creating a "root" parser that does so:
+
+```swift
+enum Datum {
+    case integer(Int)
+    case string(String)
+}
+
+func datum(_ context: Context<String>) throws -> Datum {
+    func integer(_ context: Context<String>) throws -> Datum {
+        return try context.transact {
+            let s = try context <- many1S("0123456789")
+            guard let i = Int(s) else {
+                throw ParseError(message: "'\(s)' out of range for integer.", context: context)
+            }
+            context["integers"] = (context["integers"]! as! Int) + 1
+            return .integer(i)
+        }
+    }
+    let string = Datum.string <%> quotation
+    let datum = try context <- integer | string | fail("Expected to match an integer or a quoted string.")
+    return datum
+}
+
+// Here is our root parser.
+func data(_ context: Context<String>) throws -> ([Datum], Int) {
+    let ws = manyS(\Character.isWhitespace)
+    context["integers"] = 0
+    let data = try context <- (many(datum, sepBy: char(",") <*> ws) <*> ws) <* eof
+    return (data, context["integers"]! as! Int)
+}
+
+let s = "\"ok\", 79, 44, \"never\", 8   "
+let (result, integerCount) = try! parse(s, with: data)
+```
+
+The value of `integerCount` is 3. This is a very contrived, borderline silly example, but it demonstrates what can be done.

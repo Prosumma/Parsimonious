@@ -18,3 +18,6 @@ public func surround<C, T, S>(_ parser: @escaping Parser<C, T>, with surrounding
     return surroundings *> parser <* surroundings
 }
 
+public func <*><C, T, S>(parser: @escaping Parser<C, T>, surroundings: @escaping Parser<C, S>) -> Parser<C, T> {
+    return surround(parser, with: surroundings)
+}

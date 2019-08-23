@@ -8,6 +8,36 @@
 
 import Foundation
 
+/**
+ An error that occurs as a result of parser failure.
+ 
+ Parsers begin parsing at a certain position in the underlying collection.
+ When a parser fails, it rewinds to the position at which it started and
+ then throws a `ParseError`.
+ 
+ Some combinators swallow `ParseError`s. For instance, the `optional` combinator
+ swallows any underlying `ParseError` and returns an optional, e.g.,
+ 
+ ```
+ let s: String? = try context <- optionalS(string("ok"))
+ ```
+ 
+ If the string "ok" is not matched, then `s` will be `nil`. The `|` combinator
+ swallows the `ParseError` thrown by the left-hand side but not by the right-hand
+ side:
+ 
+ ```
+ char("a") | char("e")
+ ```
+ 
+ If the character "a" fails to match, then `|` will attempt to match "e", if that fails then
+ the `ParseError` will be allowed to propagate. Very often it is best to use the `fail` combinator
+ in this situation to make the error clearer:
+ 
+ ```
+ char("a") | char("e") | fail("Tried and failed to match a or e.")
+ ```
+ */
 public struct ParseError<Contents: Collection>: Error {
     public let message: String
     public let contents: Contents

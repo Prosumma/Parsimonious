@@ -73,12 +73,20 @@ public func many<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C
     return count(0..., parser)
 }
 
+public postfix func *<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+    return many(parser)
+}
+
 public func many<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
     return optional(parser) & many(separator *> parser)
 }
 
 public func many1<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(1..., parser)
+}
+
+public postfix func +<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+    return many1(parser)
 }
 
 public func many1<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
@@ -158,12 +166,12 @@ public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Par
     return sequence(lhs, rhs)
 }
 
-public func <*><C: Collection, I, O>(lhs: @escaping (I) -> O, rhs: @escaping Parser<C, I>) -> Parser<C, O> {
+public func <%><C: Collection, I, O>(lhs: @escaping (I) -> O, rhs: @escaping Parser<C, I>) -> Parser<C, O> {
     return lift(lhs, rhs)
 }
 
 public func subst<C: Collection, I, O>(_ value: O, _ parser: @escaping Parser<C, I>) -> Parser<C, O> {
-    return {_ in value} <*> parser
+    return {_ in value} <%> parser
 }
 
 public func <=><C: Collection, I, O>(lhs: O, rhs: @escaping Parser<C, I>) -> Parser<C, O> {
