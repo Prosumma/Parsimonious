@@ -62,7 +62,7 @@ public func count<C: Collection, T>(from: Int, to: Int, _ parser: @escaping Pars
             } catch let error as ParseError<C> {
                 if from == to {
                     throw ParseError(message: "Expected \(to) but got \(values.count).", context: context, inner: error)
-                } else if to == Int.max {
+                } else if to >= Int.max - 1 {
                     throw ParseError(message: "Expected at least \(from) but got \(values.count).", context: context, inner: error)
                 } else {
                     throw ParseError(message: "Expected at least \(from) and at most \(to), but got \(values.count).", context: context, inner: error)
@@ -131,7 +131,7 @@ public func or<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, T> {
  let ows = manyS(\Character.isWhitespace)
  let item = many1S(\Character.isLetter)
  let items = many(item <* (ws | peek(char(")"))))
- let parens = char("(") *> ws *> items <* ws <* char(")")
+ let parens = char("(") *> (items <*> ws) <* char(")")
  ```
 
  - parameter parser: The parser to match.
@@ -282,10 +282,12 @@ public func second<C: Collection, L, R>(_ lparser: @escaping Parser<C, L>, _ rpa
 }
 
 /**
- Matches all `parsers` in order and "returns" the matched values as an array.
+ Matches all `parsers` in order and returns the matched values as an array.
 
  If any of the `parsers` fails, `sequence` backtracks fully and then rethrows the
  error from the failed parser.
+ 
+ - parameter parsers: An array of parsers which must each be matched in sequence.
  */
 public func sequence<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, [T]> {
     return transact { context in

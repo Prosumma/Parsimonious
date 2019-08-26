@@ -25,87 +25,32 @@ public func countS(from: Int, to: Int, _ parser: @escaping ParserS) -> ParserS {
     return joined <%> count(from: from, to: to, parser)
 }
 
-public func countS(_ range: ClosedRange<Int>, _ parser: @escaping ParserS) -> ParserS {
-    return countS(from: range.lowerBound, to: range.upperBound, parser)
+
+public func countS<R: RangeExpression>(_ range: R, _ parser: @escaping ParserS) -> ParserS where R.Bound == Int {
+    return joined <%> count(range, parser)
 }
 
-public func countS(_ range: ClosedRange<Int>, _ test: @escaping (Character) -> Bool) -> ParserS {
+public func countS<R: RangeExpression>(_ range: R, _ test: @escaping (Character) -> Bool) -> ParserS where R.Bound == Int {
     return countS(range, char(test))
 }
 
-public func countS(_ range: ClosedRange<Int>, _ test: CharacterTest) -> ParserS {
+public func countS<R: RangeExpression>(_ range: R, _ test: CharacterTest) -> ParserS where R.Bound == Int {
     return countS(range, char(test))
 }
 
-public func countS(_ range: ClosedRange<Int>, any tests: [CharacterTest]) -> ParserS {
+public func countS<R: RangeExpression>(_ range: R, any tests: [CharacterTest]) -> ParserS where R.Bound == Int {
     return countS(range, char(any: tests))
 }
 
-public func countS(_ range: ClosedRange<Int>, any tests: CharacterTest...) -> ParserS {
+public func countS<R: RangeExpression>(_ range: R, any tests: CharacterTest...) -> ParserS where R.Bound == Int {
     return countS(range, char(any: tests))
 }
 
-public func countS(_ range: ClosedRange<Int>, all tests: [CharacterTest]) -> ParserS {
+public func countS<R: RangeExpression>(_ range: R, all tests: [CharacterTest]) -> ParserS where R.Bound == Int {
     return countS(range, char(all: tests))
 }
 
-public func countS(_ range: ClosedRange<Int>, all tests: CharacterTest...) -> ParserS {
-    return countS(range, char(all: tests))
-}
-
-public func countS(_ range: Range<Int>, _ parser: @escaping ParserS) -> ParserS {
-    return countS(from: range.lowerBound, to: range.upperBound - 1, parser)
-}
-
-public func countS(_ range: Range<Int>, _ test: @escaping (Character) -> Bool) -> ParserS {
-    return countS(range, char(test))
-}
-
-public func countS(_ range: Range<Int>, _ test: CharacterTest) -> ParserS {
-    return countS(range, char(test))
-}
-
-public func countS(_ range: Range<Int>, any tests: [CharacterTest]) -> ParserS {
-    return countS(range, char(any: tests))
-}
-
-public func countS(_ range: Range<Int>, any tests: CharacterTest...) -> ParserS {
-    return countS(range, char(any: tests))
-}
-
-public func countS(_ range: Range<Int>, all tests: [CharacterTest]) -> ParserS {
-    return countS(range, char(all: tests))
-}
-
-public func countS(_ range: Range<Int>, all tests: CharacterTest...) -> ParserS {
-    return countS(range, char(all: tests))
-}
-
-public func countS(_ range: PartialRangeFrom<Int>, _ parser: @escaping ParserS) -> ParserS {
-    return countS(from: range.lowerBound, to: Int.max, parser)
-}
-
-public func countS(_ range: PartialRangeFrom<Int>, _ test: @escaping (Character) -> Bool) -> ParserS {
-    return countS(range, char(test))
-}
-
-public func countS(_ range: PartialRangeFrom<Int>, _ test: CharacterTest) -> ParserS {
-    return countS(range, char(test))
-}
-
-public func countS(_ range: PartialRangeFrom<Int>, any tests: [CharacterTest]) -> ParserS {
-    return countS(range, char(any: tests))
-}
-
-public func countS(_ range: PartialRangeFrom<Int>, any tests: CharacterTest...) -> ParserS {
-    return countS(range, char(any: tests))
-}
-
-public func countS(_ range: PartialRangeFrom<Int>, all tests: [CharacterTest]) -> ParserS {
-    return countS(range, char(all: tests))
-}
-
-public func countS(_ range: PartialRangeFrom<Int>, all tests: CharacterTest...) -> ParserS {
+public func countS<R: RangeExpression>(_ range: R, all tests: CharacterTest...) -> ParserS where R.Bound == Int {
     return countS(range, char(all: tests))
 }
 

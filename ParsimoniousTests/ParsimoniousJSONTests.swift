@@ -29,7 +29,7 @@ func jnumber(_ context: Context<String>) throws -> JSON {
     guard let n = formatter.number(from: ns) else {
         throw ParseError(message: "Expected a number, but got \(ns).", context: context)
     }
-    return JSON.number(n)
+    return .number(n)
 }
 
 func toBool(_ s: String) -> JSON {
@@ -40,7 +40,7 @@ let jbool = toBool <%> string("true") | string("false")
 let ws = manyS(\Character.isWhitespace)
 
 func jarray(_ context: Context<String>) throws -> JSON {
-    return try context <- JSON.array <%> char("[") *> ws *> many(json <* ws, sepBy: ws + char(",") + ws) <* char("]")
+    return try context <- JSON.array <%> char("[") *> ws *> many(json <* ws, sepBy: char(",") <*> ws) <* char("]")
 }
 
 func jpair(_ context: Context<String>) throws -> (key: String, value: JSON) {
@@ -61,7 +61,7 @@ func jobject(_ context: Context<String>) throws -> JSON {
         for pair in pairs {
             object[pair.key] = pair.value
         }
-        return JSON.object(object)
+        return .object(object)
     }
 }
 

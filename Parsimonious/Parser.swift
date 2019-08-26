@@ -24,6 +24,18 @@ import Foundation
  */
 public typealias Parser<C: Collection, T> = (Context<C>) throws -> T
 
+/**
+ Parses `input` with the given `parser`.
+ 
+ ```
+ let word = many1(all: !\Character.isWhitespace, !",")
+ let sep = many1(any: \Character.isWhitespace, ",")
+ 
+ let s = "abc,def ghi\nok"
+ let words = try parse(s, with: many(word, sepBy: eofS | sep) <* eof)
+ // words should contain ["abc", "def", "ghi", "ok"]
+ ```
+ */
 public func parse<C: Collection, T>(_ input: C, with parser: Parser<C, T>) throws -> T {
     return try Context(contents: input) <- parser
 }

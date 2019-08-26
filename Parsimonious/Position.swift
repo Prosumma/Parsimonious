@@ -8,6 +8,9 @@
 
 import Foundation
 
+/**
+ 
+ */
 public struct Position<C: Collection, T> {
     public let startIndex: C.Index
     public let endIndex: C.Index

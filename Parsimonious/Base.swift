@@ -20,41 +20,20 @@ public func satisfy<C: Collection, E: Equatable>(type: C.Type = C.self, _ model:
 
 /**
  Expects `parser` to succeed `range` times. In other words, if `range` is `1...7`, then `parser` must match
- at least one and at most seven times.
+ at least one and at most seven times. If `range` is `0..<3`, then `parser` must match at least zero and at
+ most two times.
  
- - parameter range: A closed range giving an inclusive range of times `parser` must match.
+ - precondition: `range.lowerBound >= 0 && range.lowerBound <= range.upperBound && range.upperBound > 0`
+ 
+ - parameter range: A range expression.
  - parameter parser: The parser to match.
  
  - returns: A parser giving an array of matches.
  */
-public func count<C: Collection, T>(_ range: ClosedRange<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return count(from: range.lowerBound, to: range.upperBound, parser)
-}
-
-/**
- Expects `parser` to match `range` times. In other words, if `range` is `1..<8`, then `parser` must match
- at least one and at most seven times.
- 
- - parameter range: An open range (excluding the upper bound) of times `parser` must match.
- - parameter parser: The parser to match.
- 
- - returns: A parser giving an array of matches.
- */
-public func count<C: Collection, T>(_ range: Range<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+public func count<R: RangeExpression, C: Collection, T>(_ range: R, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> where R.Bound == Int {
+    var range = range.relative(to: 0..<Int.max)
+    if range.lowerBound == 0 { range = 0..<range.upperBound }
     return count(from: range.lowerBound, to: range.upperBound - 1, parser)
-}
-
-/**
- Uses a partial range to match `parser` a minimum number of times. In other words, if range is `4...`, then `parser`
- must match at least 4 times.
- 
- - parameter range: A partial range of times `parser` must match.
- - parameter parser: The parser to match.
- 
- - returns: A parser giving an array of matches.
- */
-public func count<C: Collection, T>(_ range: PartialRangeFrom<Int>, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return count(from: range.lowerBound, to: Int.max, parser)
 }
 
 /**
@@ -69,26 +48,78 @@ public func count<C: Collection, T>(_ number: Int, _ parser: @escaping Parser<C,
     return count(from: number, to: number, parser)
 }
 
+/**
+ Matches `parser` 0 or more times and returns the matches in an array.
+ 
+ This parser cannot fail. If no matches are present, it simply matches an empty array.
+ 
+ - parameter parser: The parser to match.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public func many<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(0..., parser)
 }
 
+/**
+ Matches `parser` 0 or more times and returns the matches in an array.
+ 
+ This parser cannot fail. If no matches are present, it simply matches an empty array.
+ 
+ - parameter parser: The parser to match.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public postfix func *<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return many(parser)
 }
 
+/**
+ Matches `parser` 0 or more times separated by `separator` and returns the matches in an array.
+ 
+ This parser cannot fail. If no matches are present, it simply matches an empty array.
+ 
+ - parameter parser: The parser to match.
+ - parameter separator: A parser matching a separator between each instance of `parser`.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public func many<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
     return optional(parser) & many(separator *> parser)
 }
 
+/**
+ Matches `parser` at least one time and returns the matches in an array.
+ 
+ This parser fails if there is not at least 1 match.
+ */
 public func many1<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(1..., parser)
 }
 
+/**
+ Matches `parser` at least one time and returns the matches in an array.
+ 
+ This parser fails if there is not at least 1 match.
+ 
+ - parameter parser: The parser to match.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public postfix func +<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return many1(parser)
 }
 
+/**
+ Matches `parser` at least one time separated by `separator` and returns the matches in an array.
+ 
+ This parser fails if there is not at least 1 match.
+ 
+ - parameter parser: The parser to match.
+ - parameter separator: A parser matching a separator between each instance of `parser`.
+ 
+ - returns: A parser giving an array of matches.
+ */
 public func many1<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
     return parser & many(separator *> parser)
 }
@@ -134,65 +165,192 @@ public func |<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Pars
     return or(lhs, rhs)
 }
 
+/**
+ Matches all `parsers` in order and returns the matched values as an array.
+ 
+ If any of the `parsers` fails, `sequence` backtracks fully and then rethrows the
+ error from the failed parser.
+ 
+ - parameter parsers: An array of parsers which must be matched in sequence.
+ */
 public func sequence<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, [T]> {
     return sequence(parsers)
 }
 
+/// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return sequence(lhs, rhs)
 }
 
+/// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, [T]>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return sequence(lhs, rhs)
 }
 
+/// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
     return sequence(lhs, rhs)
 }
 
+/// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, T?>) -> Parser<C, [T]> {
     return sequence(lhs, rhs)
 }
 
+/// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return sequence(lhs, rhs)
 }
 
+/// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, [T]>, rhs: @escaping Parser<C, T?>) -> Parser<C, [T]> {
     return sequence(lhs, rhs)
 }
 
+/// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
     return sequence(lhs, rhs)
 }
+
+/**
+ Transforms a `Parser<C, I>` into a `Parser<C, O>` by applying `transform` to it.
+ 
+ This is often called `fmap` or `lift` in functional languages and makes `Parser` a functor.
+ 
+ `lift` is represented by the `<%>` operator and in general this is what should be used. The use of `lift`
+ is very common. For example, the `char` combinator is simply a lifted version of the `satisfy` combinator:
+ 
+ ```
+ func char(_ test: (Character) -> Bool) -> ParserS {
+    return String.init <%> satisfy(test)
+ }
+ ```
+ 
+ `satisfy(test)` returns a `Parser<String, Character>`, but we want to turn this into `ParserS` (`Parser<String, String>`), so
+ we use `lift` to accomplish this.
+ 
+ - parameter transform: The transform to apply.
+ - parameter parser: The parser to match in order to apply the transform.
+ 
+ - returns: A `Parser<C, O>`, where `O` is the result type of `transform`.
+ */
 
 public func <%><C: Collection, I, O>(lhs: @escaping (I) -> O, rhs: @escaping Parser<C, I>) -> Parser<C, O> {
     return lift(lhs, rhs)
 }
 
+/**
+ After `parser` is matched, its value is discarded in favor of `value`.
+ 
+ `subst` is represented by the `<=>` operator and in general this is what should be used.
+ 
+ ```
+ let t = true <=> char("t") // If this succeeds, gives true instead of "t".
+ let f = false <=> char("f") // If this succeeds, gives false instead of "f".
+ let bool = t | f | fail("Expected a boolean")
+ ```
+ 
+ - parameter value: The substitution value.
+ - parameter parser: The parser to match.
+ */
 public func subst<C: Collection, I, O>(_ value: O, _ parser: @escaping Parser<C, I>) -> Parser<C, O> {
     return {_ in value} <%> parser
 }
 
+/**
+ After `parser` is matched, its value is discarded in favor of `value`.
+ 
+ `subst` is represented by the `<=>` operator and in general this is what should be used.
+ 
+ ```
+ let t = true <=> char("t") // If this succeeds, gives true instead of "t".
+ let f = false <=> char("f") // If this succeeds, gives false instead of "f".
+ let bool = t | f | fail("Expected a boolean")
+ ```
+ 
+ - parameter value: The substitution value.
+ - parameter parser: The parser to match.
+ */
 public func <=><C: Collection, I, O>(lhs: O, rhs: @escaping Parser<C, I>) -> Parser<C, O> {
     return subst(lhs, rhs)
 }
 
-public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Void> {
+/**
+ Attempts to match `parser`. If `parser` succeeds, `not` throws an error.
+ 
+ The prefix operator `!` represents `not` and this is what should in general be used.
+ 
+ ```
+ char("s") <* !char("i")
+ ```
+ 
+ Matches the character "s" unless followed by "i".
+ 
+ This parser never consumes any of the underlying collection, whether it succeeds or fails.
+ 
+ - parameter parser: The `parser` to match.
+ - parameter error: An optional error to throw. If omitted, a `ParseError` with the message "Negative match failed." is thrown.
+ */
+public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>, error: ParseError<C>? = nil) -> Parser<C, Void> {
     return { context in
         try context <- peek(parser)
-        throw ParseError(message: "Negative lookahead failed.", context: context)
+        throw error ?? ParseError(message: "Negative match failed.", context: context)
     }
 }
+
+/**
+ Attempts to match `parser`. If `parser` succeeds, `not` throws an error.
+ 
+ The prefix operator `!` represents `not` and this is what should in general be used.
+ 
+ ```
+ char("s") <* !char("i")
+ ```
+ 
+ Matches the character "s" unless followed by "i".
+ 
+ This parser never consumes any of the underlying collection, whether it succeeds or fails.
+ 
+ - parameter parser: The `parser` to match.
+ - parameter error: An optional error to throw. If omitted, a `ParseError` with the message "Negative match failed." is thrown.
+ */
 
 public prefix func !<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, Void> {
     return not(parser)
 }
 
+/**
+ Matches both `lparser` and `rparser`, but "returns" only the value matched by the former. The two parsers
+ do not need to be of the same type.
+ 
+ This parser is chiefly used when one match must be followed by another, but we are only interested
+ in the value of the first match. `first` is typically used as an operator, `<*`.
+ 
+ ```
+ let item = many1S(\Character.isLetter) <* many1(\Character.isWhitespace)
+ ```
+ 
+ When `item` is applied, we'll get back only the letters in the item. At least one whitespace character
+ _must_ occur after `item`. Without it, the `item` parser will fail. But the whitespace is discarded.
+ */
 public func <*<C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @escaping Parser<C, R>) -> Parser<C, L> {
     return first(lparser, rparser)
 }
 
+/**
+ Matches both `lparser` and `rparser`, but "returns" only the value matched by the latter. The two parsers
+ do not need to be of the same type.
+ 
+ This parser is chiefly used when one match must be followed by another, but we are only
+ interested in the value of the second match. `second` is typically used as an operator, `*>`.
+ 
+ ```
+ let item = many1(\Character.isWhitespace) *> many1S(\Character.isLetter)
+ ```
+ 
+ When `item` is applied, we'll get back only the letters in the item. At least one whitespace character _must_
+ occur before `item`. Without it, the `item` parser will fail. But the whitespace is discarded.
+ */
 public func *><C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @escaping Parser<C, R>) -> Parser<C, R> {
     return second(lparser, rparser)
 }

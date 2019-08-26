@@ -262,7 +262,7 @@ let foobar = (string("foo") | string("bar")) <*> manyS(\Character.isWhitespace)
 foobar+
 ```
 
-Given a parse input of "foofoo barfoo bar bar  " the match of `foobar+` would be `["foo", "foo", "bar", "foo", "bar", "bar"]`.
+Given a parse input of "foofoo barfoo bar bar " the match of `foobar+` would be `["foo", "foo", "bar", "foo", "bar", "bar"]`.
 
 ### Arbitrary State
 
