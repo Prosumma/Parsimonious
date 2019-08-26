@@ -30,9 +30,8 @@ public func satisfy<C: Collection, E: Equatable>(type: C.Type = C.self, _ model:
  
  - returns: A parser giving an array of matches.
  */
-public func count<R: RangeExpression, C: Collection, T>(_ range: R, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> where R.Bound == Int {
-    var range = range.relative(to: 0..<Int.max)
-    if range.lowerBound == 0 { range = 0..<range.upperBound }
+public func count<R: RangeExpression, C: Collection, T>(_ range: R, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> where R.Bound == UInt {
+    let range = range.relative(to: 0..<UInt.max)
     return count(from: range.lowerBound, to: range.upperBound - 1, parser)
 }
 
@@ -44,7 +43,7 @@ public func count<R: RangeExpression, C: Collection, T>(_ range: R, _ parser: @e
  
  - returns: A parser giving an array of matches.
  */
-public func count<C: Collection, T>(_ number: Int, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+public func count<C: Collection, T>(_ number: UInt, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
     return count(from: number, to: number, parser)
 }
 

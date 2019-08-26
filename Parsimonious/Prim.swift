@@ -52,7 +52,7 @@ public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (
  
  - returns: A parser of type `Parser<C, [T]>` which matches an array of the matched type.
  */
-public func count<C: Collection, T>(from: Int, to: Int, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {    
+public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {    
     assert(from >= 0 && from <= to && to > 0, "Invalid range for count. Valid for from and to are: from >= 0 && from <= to && to > 0.")
     return transact { context in
         var values: [T] = []
