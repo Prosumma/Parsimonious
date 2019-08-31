@@ -42,7 +42,7 @@ func match(_ test: String, options: String.CompareOptions = []) -> ParserS {
  has reasonably good performance.
  */
 public func string(_ test: String, ignoringCase: Bool = false) -> ParserS {
-    let parsers = ignoringCase ? test.map(char << i) : test.map(char)
+    let parsers = ignoringCase ? test.map(char << ichar) : test.map(char)
     return concat(parsers) | fail("Expected to match \"\(test)\".")
 }
 

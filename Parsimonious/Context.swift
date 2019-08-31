@@ -25,7 +25,7 @@ public class Context<Contents: Collection> {
     }
     
     public var rest: Contents.SubSequence? {
-        if index == contents.endIndex {
+        if atEnd {
             return nil
         }
         return contents[index...]

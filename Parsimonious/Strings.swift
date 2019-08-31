@@ -50,7 +50,7 @@ public func +(lparser: @escaping ParserS, rparser: @escaping ParserS) -> ParserS
  Matches EOF.
  
  The difference between this and plain `eof` is that `eofS` is useful in
- contexts where one needs a `ParserS`, e.g.,
+ contexts where the type system demands a `ParserS`, e.g.,
  
  ```
  let ws = manyS(\Character.isWhitespace)

@@ -62,7 +62,7 @@ public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Pa
             } catch let error as ParseError<C> {
                 if from == to {
                     throw ParseError(message: "Expected \(to) but got \(values.count).", context: context, inner: error)
-                } else if to >= Int.max - 1 {
+                } else if to >= UInt.max - 1 {
                     throw ParseError(message: "Expected at least \(from) but got \(values.count).", context: context, inner: error)
                 } else {
                     throw ParseError(message: "Expected at least \(from) and at most \(to), but got \(values.count).", context: context, inner: error)
