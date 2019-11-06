@@ -4,7 +4,7 @@ Parsers and parser combinators are means of parsing a stream of some type into s
 
 I can&rsquo;t do justice to this topic here. [Wikipedia](https://en.wikipedia.org/wiki/Parser_combinator) has the canonical article and your favorite search engine will have lots more information. 
 
-For those that already know a bit, a Parsimonious parser is a function with the following type signature:
+For those that already know a bit about parser combinators, a Parsimonious parser is a function with the following type signature:
 
 ```swift
 typealias Parser<C: Collection, T> = (Context<C>) throws -> T
