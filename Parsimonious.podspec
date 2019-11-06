@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author             = { "Gregory Higley" => "code@revolucent.net" }
   s.ios.deployment_target = "10.0"
   s.osx.deployment_target = "10.12"
-  s.source       = { :git => "https://github.com/Prosumma/Parsimonious.git", :tag => s.version }
+  s.source       = { :git => "https://github.com/Prosumma/Parsimonious.git", :tag => "v#{s.version}" }
   s.source_files  = "Parsimonious"
   s.requires_arc = true
   s.swift_versions = ['5.0', '5.1'] 
