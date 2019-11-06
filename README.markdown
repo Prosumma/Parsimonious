@@ -1,3 +1,9 @@
+<!-- [![Build Status](https://travis-ci.org/Prosumma/Guise.svg)](https://travis-ci.org/Prosumma/Guise) -->
+[![CocoaPods compatible](https://img.shields.io/cocoapods/v/Parsimonious.svg)](https://cocoapods.org)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+![Platforms](https://img.shields.io/cocoapods/p/Parsimonious)
+![License](https://img.shields.io/cocoapods/l/Parsimonious)
+
 ## Parsers And Parser Combinators? What?
 
 Parsers and parser combinators are means of parsing a stream of some type into some other type. For example, one might start with a string whose contents are a mathematical expression such as `2 + 3`. We want to get from this string to an array of tokens which can then be further processed to evaluate the expression itself or display it with syntax highlighting or for some other purpose.
