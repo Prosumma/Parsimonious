@@ -94,7 +94,7 @@ public class Context<Contents: Collection> {
             let result = try fn()
             commitIndex()
             return result
-        } catch let error as ParseError<Contents> {
+        } catch let error as ParsingError {
             restoreIndex()
             throw error
         }

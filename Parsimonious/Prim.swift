@@ -26,13 +26,13 @@ import Foundation
 public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (E) -> Bool) -> Parser<C, E> where E == C.Element {
     return { context in
         guard let e = context.next else {
-            throw ParseError(message: "Unexpected end of input.", context: context)
+            throw ParseError(message: "Unexpected end of input.", context: context, inner: ErrorCode.eof)
         }
         if test(e) {
             context.offset(by: 1)
             return e
         } else {
-            throw ParseError(message: "Unexpected \(e).", context: context)
+            throw ParseError(message: "Unexpected \(e).", context: context, inner: ErrorCode.unexpected)
         }
     }
 }
@@ -59,13 +59,13 @@ public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Pa
         while values.count < from {
             do {
                 try values.append(parser(context))
-            } catch let error as ParseError<C> {
+            } catch _ as ParsingError {
                 if from == to {
-                    throw ParseError(message: "Expected \(to) but got \(values.count).", context: context, inner: error)
+                    throw ParseError(message: "Expected \(to) but got \(values.count).", context: context, inner: ErrorCode.tooFew)
                 } else if to >= UInt.max - 1 {
-                    throw ParseError(message: "Expected at least \(from) but got \(values.count).", context: context, inner: error)
+                    throw ParseError(message: "Expected at least \(from) but got \(values.count).", context: context, inner: ErrorCode.tooFew)
                 } else {
-                    throw ParseError(message: "Expected at least \(from) and at most \(to), but got \(values.count).", context: context, inner: error)
+                    throw ParseError(message: "Expected at least \(from) and at most \(to), but got \(values.count).", context: context, inner: ErrorCode.tooFew)
                 }
             }
         }
@@ -73,7 +73,7 @@ public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Pa
             do {
                 let value = try parser(context)
                 values.append(value)
-            } catch _ as ParseError<C> {
+            } catch _ as ParsingError {
                 break
             }
         }
@@ -104,11 +104,11 @@ public func or<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, T> {
         if (parsers.count == 1) {
             return try parsers[0](context)
         } else {
-            var lastError: Error!
+            var lastError: ParsingError!
             for parser in parsers {
                 do {
                     return try parser(context)
-                } catch let error as ParseError<C> {
+                } catch let error as ParsingError {
                     lastError = error
                 }
             }
@@ -216,7 +216,7 @@ public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Pars
     return { context in
         do {
             return try parser(context)
-        } catch _ as ParseError<C> {
+        } catch _ as ParsingError {
             return nil
         }
     }
@@ -232,7 +232,7 @@ public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>, default
     return { context in
         do {
             return try parser(context)
-        } catch _ as ParseError<C> {
+        } catch _ as ParsingError {
             return defaultValue()
         }
     }
@@ -383,7 +383,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rpa
 public func eof<C: Collection>(_ context: Context<C>) throws {
     if !context.atEnd {
         let next = context.next!
-        throw ParseError(message: "Expected EOF, but got \(next).", context: context)
+        throw ParseError(message: "Expected EOF, but got \(next).", context: context, inner: ErrorCode.unexpected)
     }
 }
 

@@ -9,6 +9,20 @@
 import Foundation
 
 /**
+ A marker protocol indicates a parsing error.
+ Combinators such as `|` look for this marker
+ protocol when deciding whether to handle the
+ error or rethrow it.
+ */
+public protocol ParsingError: Error {}
+
+public enum ErrorCode: ParsingError {
+    case eof
+    case unexpected
+    case tooFew
+}
+
+/**
  An error that occurs as a result of parser failure.
  
  Parsers begin parsing at a certain position in the underlying collection.
@@ -38,7 +52,7 @@ import Foundation
  char("a") | char("e") | fail("Tried and failed to match a or e.")
  ```
  */
-public struct ParseError<Contents: Collection>: Error {
+public struct ParseError<Contents: Collection>: ParsingError {
     public let message: String
     public let contents: Contents
     public let index: Contents.Index
