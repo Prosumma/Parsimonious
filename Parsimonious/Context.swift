@@ -35,6 +35,14 @@ public class Context<Contents: Collection> {
         return rest?.first
     }
     
+    public func advance() -> Contents.Element? {
+        guard let next = self.next else {
+            return nil
+        }
+        defer { offset(by: 1) }
+        return next
+    }
+    
     public var atStart: Bool {
         return index == contents.startIndex
     }
