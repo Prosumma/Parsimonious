@@ -13,8 +13,8 @@ public class Context<Contents: Collection>: Collection {
     public typealias Index = Contents.Index
     
     public let contents: Contents
-    public var index: Contents.Index
-    private var savedIndices: [Contents.Index] = []
+    public var index: Index
+    private var savedIndices: [Index] = []
     private var state: [String: Any] = [:]
 
     init(contents: Contents) {
@@ -50,11 +50,11 @@ public class Context<Contents: Collection>: Collection {
         return contents[index...]
     }
     
-    public var next: Contents.Element? {
+    public var next: Element? {
         return rest?.first
     }
     
-    public func advance() -> Contents.Element? {
+    public func advance() -> Element? {
         guard let next = self.next else {
             return nil
         }
