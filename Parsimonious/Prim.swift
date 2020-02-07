@@ -26,13 +26,13 @@ import Foundation
 public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (E) -> Bool) -> Parser<C, E> where E == C.Element {
     return { context in
         guard let e = context.next else {
-            throw ParseError(message: "Unexpected end of input.", context: context, inner: ErrorCode.eof)
+            throw context.error()
         }
         if test(e) {
             context.offset(by: 1)
             return e
         } else {
-            throw ParseError(message: "Unexpected \(e).", context: context, inner: ErrorCode.unexpected)
+            throw context.error()
         }
     }
 }
@@ -61,11 +61,11 @@ public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Pa
                 try values.append(parser(context))
             } catch _ as ParsingError {
                 if from == to {
-                    throw ParseError(message: "Expected \(to) but got \(values.count).", context: context, inner: ErrorCode.tooFew)
+                    throw context.error("Expected \(to) but got \(values.count).")
                 } else if to >= UInt.max - 1 {
-                    throw ParseError(message: "Expected at least \(from) but got \(values.count).", context: context, inner: ErrorCode.tooFew)
+                    throw context.error("Expected at least \(from) but got \(values.count).")
                 } else {
-                    throw ParseError(message: "Expected at least \(from) and at most \(to), but got \(values.count).", context: context, inner: ErrorCode.tooFew)
+                    throw context.error("Expected at least \(from) and at most \(to), but got \(values.count).")
                 }
             }
         }
@@ -192,14 +192,14 @@ public func lift<C: Collection, I, O>(_ transform: @escaping (I) -> O, _ parser:
  */
 public func fail<C: Collection, T>(_ message: @escaping @autoclosure () -> String, type: C.Type = C.self) -> Parser<C, T> {
     return { context in
-        throw ParseError(message: message(), context: context)
+        throw context.error(message())
     }
 }
 
 public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> String, type: C.Type = C.self) -> Parser<C, T> {
     return { context in
         let message = makeMessage(context.rest)
-        throw ParseError(message: message, context: context)
+        throw context.error(message)
     }
 }
 
@@ -382,8 +382,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rpa
  */
 public func eof<C: Collection>(_ context: Context<C>) throws {
     if !context.atEnd {
-        let next = context.next!
-        throw ParseError(message: "Expected EOF, but got \(next).", context: context, inner: ErrorCode.unexpected)
+        throw context.error("Expected EOF.")
     }
 }
 

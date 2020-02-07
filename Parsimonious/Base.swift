@@ -84,7 +84,16 @@ public postfix func *<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parse
  - returns: A parser giving an array of matches.
  */
 public func many<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
-    return optional(parser) & many(separator *> parser)
+    return transact { context in
+        var values: [T] = []
+        do {
+            try values.append(context <- parser)
+        } catch _ as ParsingError {
+            return values
+        }
+        try values.append(contentsOf: context <- many(separator *> parser))
+        return values
+    }
 }
 
 /**

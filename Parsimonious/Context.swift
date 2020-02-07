@@ -99,6 +99,10 @@ public class Context<Contents: Collection> {
             throw error
         }
     }
+    
+    public func error(_ message: String? = nil, inner: Error? = nil) -> ParseError<Contents> {
+        return ParseError(message: message, context: self, inner: inner)
+    }
 }
 
 /**
@@ -143,8 +147,11 @@ public func <-<C: Collection, T>(_ context: Context<C>, _ parser: Parser<C, T>) 
 }
 
 public extension ParseError {
-    init(message: String, context: Context<Contents>, inner: Error? = nil) {
+    init(message: String?, context: Context<Contents>, inner: Error? = nil) {
         self.init(message: message, contents: context.contents, index: context.index, inner: inner)
+    }
+    init(context: Context<Contents>, inner: Error? = nil) {
+        self.init(message: nil, context: context, inner: inner)
     }
 }
 
