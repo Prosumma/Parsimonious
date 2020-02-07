@@ -8,7 +8,10 @@
 
 import Foundation
 
-public class Context<Contents: Collection> {
+public class Context<Contents: Collection>: Collection {
+    public typealias Element = Contents.Element
+    public typealias Index = Contents.Index
+    
     public let contents: Contents
     public var index: Contents.Index
     private var savedIndices: [Contents.Index] = []
@@ -19,9 +22,25 @@ public class Context<Contents: Collection> {
         self.index = self.contents.startIndex
     }
     
+    public var startIndex: Index {
+        return contents.startIndex
+    }
+    
+    public var endIndex: Index {
+        return contents.endIndex
+    }
+    
+    public subscript(position: Index) -> Element {
+        return contents[position]
+    }
+    
     public subscript(_ key: String) -> Any? {
         get { return state[key] }
         set { state[key] = newValue }
+    }
+    
+    public func index(after i: Index) -> Index {
+        return contents.index(after: i)
     }
     
     public var rest: Contents.SubSequence? {
@@ -44,11 +63,11 @@ public class Context<Contents: Collection> {
     }
     
     public var atStart: Bool {
-        return index == contents.startIndex
+        return index == startIndex
     }
     
     public var atEnd: Bool {
-        return index == contents.endIndex
+        return index == endIndex
     }
     
     public func offset(by offset: Int) {
