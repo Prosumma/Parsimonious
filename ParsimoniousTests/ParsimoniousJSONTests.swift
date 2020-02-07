@@ -27,7 +27,7 @@ func jnumber(_ context: Context<String>) throws -> JSON {
     formatter.numberStyle = .decimal
     let ns = try context <- num
     guard let n = formatter.number(from: ns) else {
-        throw context.error()
+        throw context.fail()
     }
     return .number(n)
 }
