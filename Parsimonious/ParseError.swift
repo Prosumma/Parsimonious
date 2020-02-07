@@ -13,6 +13,13 @@ import Foundation
  Combinators such as `|` look for this marker
  protocol when deciding whether to handle the
  error or rethrow it.
+ 
+ Parsimonious has only one class that implements
+ this protocol: `ParseError`.
+ 
+ See the documentation for `ParseError` on
+ the philosophy behind errors and error handling
+ in Parsimonious.
  */
 public protocol ParsingError: Error {}
 
@@ -78,27 +85,30 @@ public protocol ParsingError: Error {}
  ```
  char("a") | char("e") | fail("Tried and failed to match a or e.")
  ```
+ 
+ - note: In most cases, `ParseError`s should be thrown by using the `fail` method
+ of `Context`, e.g., `throw context.fail()`.
  */
 public struct ParseError<Contents: Collection>: ParsingError {
+    /// An optional, purely informational message.
     public let message: String?
-    public let contents: Contents
+    /**
+     The index in the collection at which some parser failed
+     to match.
+     */
     public let index: Contents.Index
-    public let inner: Error?
 
-    public var atEnd: Bool {
-        return contents.endIndex == index
-    }
-    
-    public init(message: String?, contents: Contents, index: Contents.Index, inner: Error? = nil) {
+    /**
+     Initializes a `ParseError`.
+     
+     - parameter index: The index at which some parser failed to match.
+     - parameter message: An optional, purely informational message.
+     */
+    public init(index: Contents.Index, message: String? = nil) {
         self.message = message
-        self.contents = contents
         self.index = index
-        self.inner = inner
     }
     
-    public init(contents: Contents, index: Contents.Index, inner: Error? = nil) {
-        self.init(message: nil, contents: contents, index: index, inner: inner)
-    }
 }
 
 public func <?><C: Collection, T>(parser: @escaping Parser<C, T>, error: String) -> Parser<C, T> {

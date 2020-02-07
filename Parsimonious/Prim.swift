@@ -26,13 +26,13 @@ import Foundation
 public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (E) -> Bool) -> Parser<C, E> where E == C.Element {
     return { context in
         guard let e = context.next else {
-            throw context.error()
+            throw context.fail()
         }
         if test(e) {
             context.offset(by: 1)
             return e
         } else {
-            throw context.error()
+            throw context.fail()
         }
     }
 }
@@ -61,11 +61,11 @@ public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Pa
                 try values.append(parser(context))
             } catch _ as ParsingError {
                 if from == to {
-                    throw context.error("Expected \(to) but got \(values.count).")
+                    throw context.fail("Expected \(to) but got \(values.count).")
                 } else if to >= UInt.max - 1 {
-                    throw context.error("Expected at least \(from) but got \(values.count).")
+                    throw context.fail("Expected at least \(from) but got \(values.count).")
                 } else {
-                    throw context.error("Expected at least \(from) and at most \(to), but got \(values.count).")
+                    throw context.fail("Expected at least \(from) and at most \(to), but got \(values.count).")
                 }
             }
         }
@@ -192,14 +192,14 @@ public func lift<C: Collection, I, O>(_ transform: @escaping (I) -> O, _ parser:
  */
 public func fail<C: Collection, T>(_ message: @escaping @autoclosure () -> String, type: C.Type = C.self) -> Parser<C, T> {
     return { context in
-        throw context.error(message())
+        throw context.fail(message())
     }
 }
 
 public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> String, type: C.Type = C.self) -> Parser<C, T> {
     return { context in
         let message = makeMessage(context.rest)
-        throw context.error(message)
+        throw context.fail(message)
     }
 }
 
@@ -382,7 +382,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rpa
  */
 public func eof<C: Collection>(_ context: Context<C>) throws {
     if !context.atEnd {
-        throw context.error("Expected EOF.")
+        throw context.fail("Expected EOF.")
     }
 }
 

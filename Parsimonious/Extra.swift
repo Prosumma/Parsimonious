@@ -12,7 +12,7 @@ import Foundation
  A combinator that returns a parser that matches when the content of `parser` is surrounded by
  `surroundings`.
  
- For example, instead of `manyS(\Character.isWhitespace) *> many1S(!\Character.isWhitespace) <* manyS(\Character.isWhitespace)` we can say `surround(many1S(!\Character.isWhitespace), manyS(\Character.isWhitespace))`.
+ For example, instead of `manyS(\Character.isWhitespace) *> many1S(!\Character.isWhitespace) <* manyS(\Character.isWhitespace)` we can say `surround(many1S(!\Character.isWhitespace), with: manyS(\Character.isWhitespace))`.
  */
 public func surround<C, T, S>(_ parser: @escaping Parser<C, T>, with surroundings: @escaping Parser<C, S>) -> Parser<C, T> {
     return surroundings *> parser <* surroundings

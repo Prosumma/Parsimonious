@@ -24,10 +24,10 @@ func match(_ test: String, options: String.CompareOptions = []) -> ParserS {
     options.insert(.anchored)
     return { context in
         guard let rest = context.rest else {
-            throw context.error("Expected to match a string against '\(test)', but got EOF.")
+            throw context.fail("Expected to match a string against '\(test)', but got EOF.")
         }
         guard let range = rest.range(of: test, options: options, range: nil, locale: nil) else {
-            throw context.error("Expected to match a string against '\(test)', but the match failed.")
+            throw context.fail("Expected to match a string against '\(test)', but the match failed.")
         }
         let matched = rest[range]
         context.offset(by: matched)

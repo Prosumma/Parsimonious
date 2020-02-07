@@ -297,12 +297,11 @@ public func <=><C: Collection, I, O>(lhs: O, rhs: @escaping Parser<C, I>) -> Par
  This parser never consumes any of the underlying collection, whether it succeeds or fails.
  
  - parameter parser: The `parser` to match.
- - parameter error: An optional error to throw. If omitted, a `ParseError` with the message "Negative match failed." is thrown.
  */
-public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>, error: ParseError<C>? = nil) -> Parser<C, Void> {
+public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Void> {
     return { context in
         try context <- peek(parser)
-        throw error ?? ParseError(message: "Negative match failed.", context: context)
+        throw context.fail("Negative match failed.")
     }
 }
 
