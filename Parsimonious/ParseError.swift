@@ -85,9 +85,6 @@ public protocol ParsingError: Error {}
  ```
  char("a") | char("e") | fail("Tried and failed to match a or e.")
  ```
- 
- - note: In most cases, `ParseError`s should be thrown by using the `fail` method
- of `Context`, e.g., `throw context.fail()`.
  */
 public struct ParseError<Contents: Collection>: ParsingError {
     /// An optional, purely informational message.
@@ -98,15 +95,19 @@ public struct ParseError<Contents: Collection>: ParsingError {
      */
     public let index: Contents.Index
 
+    /// An inner error, if any.
+    public let inner: Error?
+
     /**
      Initializes a `ParseError`.
      
      - parameter index: The index at which some parser failed to match.
      - parameter message: An optional, purely informational message.
      */
-    public init(index: Contents.Index, message: String? = nil) {
-        self.message = message
+    public init(_ index: Contents.Index, message: String? = nil, inner: Error? = nil) {
         self.index = index
+        self.message = message
+        self.inner = inner
     }
     
 }

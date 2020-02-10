@@ -26,13 +26,13 @@ import Foundation
 public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (E) -> Bool) -> Parser<C, E> where E == C.Element {
     return { context in
         guard let e = context.next else {
-            throw context.fail()
+            throw ParseError(context)
         }
         if test(e) {
             context.offset(by: 1)
             return e
         } else {
-            throw context.fail()
+            throw ParseError(context)
         }
     }
 }
@@ -59,13 +59,13 @@ public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Pa
         while values.count < from {
             do {
                 try values.append(parser(context))
-            } catch _ as ParsingError {
+            } catch let e as ParsingError {
                 if from == to {
-                    throw context.fail("Expected \(to) but got \(values.count).")
+                    throw ParseError(context, message: "Expected \(to) but got \(values.count).", inner: e)
                 } else if to >= UInt.max - 1 {
-                    throw context.fail("Expected at least \(from) but got \(values.count).")
+                    throw ParseError(context, message: "Expected at least \(from) but got \(values.count).", inner: e)
                 } else {
-                    throw context.fail("Expected at least \(from) and at most \(to), but got \(values.count).")
+                    throw ParseError(context, message: "Expected at least \(from) and at most \(to), but got \(values.count).", inner: e)
                 }
             }
         }
@@ -130,7 +130,7 @@ public func or<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, T> {
  let ws = many1S(\Character.isWhitespace)
  let ows = manyS(\Character.isWhitespace)
  let item = many1S(\Character.isLetter)
- let items = many(item <* (ws | peek(char(")"))))
+ let items = many(item <* (ws | peek(char(")")))) // This is where we peek.
  let parens = char("(") *> (items <*> ws) <* char(")")
  ```
 
@@ -192,14 +192,14 @@ public func lift<C: Collection, I, O>(_ transform: @escaping (I) -> O, _ parser:
  */
 public func fail<C: Collection, T>(_ message: @escaping @autoclosure () -> String, type: C.Type = C.self) -> Parser<C, T> {
     return { context in
-        throw context.fail(message())
+        throw ParseError(context, message: message())
     }
 }
 
 public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> String, type: C.Type = C.self) -> Parser<C, T> {
     return { context in
         let message = makeMessage(context.rest)
-        throw context.fail(message)
+        throw ParseError(context, message: message)
     }
 }
 
@@ -382,7 +382,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rpa
  */
 public func eof<C: Collection>(_ context: Context<C>) throws {
     if !context.atEnd {
-        throw context.fail("Expected EOF.")
+        throw ParseError(context, message: "Expected EOF.")
     }
 }
 

@@ -301,7 +301,7 @@ public func <=><C: Collection, I, O>(lhs: O, rhs: @escaping Parser<C, I>) -> Par
 public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Void> {
     return { context in
         try context <- peek(parser)
-        throw context.fail("Negative match failed.")
+        throw ParseError(context, message: "Negative match failed.")
     }
 }
 

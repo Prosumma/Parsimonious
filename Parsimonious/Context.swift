@@ -117,19 +117,7 @@ public class Context<Contents: Collection>: Collection {
             restoreIndex()
             throw error
         }
-    }
-    
-    /**
-     The most convenient way to create a `ParseError`.
-     
-     ```
-     throw context.fail()
-     throw context.fail("Failed to match the string 'watusi'.")
-     ```
-     */
-    public func fail(_ message: String? = nil) -> ParseError<Contents> {
-        return ParseError(context: self, message: message)
-    }
+    }    
 }
 
 /**
@@ -174,8 +162,8 @@ public func <-<C: Collection, T>(_ context: Context<C>, _ parser: Parser<C, T>) 
 }
 
 public extension ParseError {
-    init(context: Context<Contents>, message: String? = nil) {
-        self.init(index: context.index, message: message)
+    init(_ context: Context<Contents>, message: String? = nil, inner: Error? = nil) {
+        self.init(context.index, message: message, inner: inner)
     }
 }
 
