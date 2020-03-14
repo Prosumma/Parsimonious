@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1020"
+   LastUpgradeVersion = "9999"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3EF49652269762C00023CB3"
+               BlueprintIdentifier = "Parsimonious::Parsimonious"
                BuildableName = "Parsimonious.framework"
-               BlueprintName = "Parsimonious macOS"
+               BlueprintName = "Parsimonious"
                ReferencedContainer = "container:Parsimonious.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,24 +32,13 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F3EF496D2269762C00023CB3"
+               BlueprintIdentifier = "Parsimonious::ParsimoniousTests"
                BuildableName = "ParsimoniousTests.xctest"
-               BlueprintName = "ParsimoniousTests macOS"
+               BlueprintName = "ParsimoniousTests"
                ReferencedContainer = "container:Parsimonious.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F3EF49652269762C00023CB3"
-            BuildableName = "Parsimonious.framework"
-            BlueprintName = "Parsimonious macOS"
-            ReferencedContainer = "container:Parsimonious.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -61,17 +50,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F3EF49652269762C00023CB3"
-            BuildableName = "Parsimonious.framework"
-            BlueprintName = "Parsimonious macOS"
-            ReferencedContainer = "container:Parsimonious.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -79,15 +57,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F3EF49652269762C00023CB3"
-            BuildableName = "Parsimonious.framework"
-            BlueprintName = "Parsimonious macOS"
-            ReferencedContainer = "container:Parsimonious.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

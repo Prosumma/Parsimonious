@@ -19,7 +19,7 @@ func datum(_ context: Context<String>) throws -> Datum {
         return try context.transact {
             let s = try context <- many1S("0123456789")
             guard let i = Int(s) else {
-                throw context.fail()
+                throw ParseError(context)
             }
             context["integers"] = (context["integers"]! as! Int) + 1
             return .integer(i)

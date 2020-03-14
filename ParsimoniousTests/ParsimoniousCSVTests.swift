@@ -49,18 +49,9 @@ let row = empty | many(item, sepBy: char(sep))
 let csv = many(row, sepBy: eol) <* eof
 
 class ParsimoniousCSVTests: XCTestCase {
-    
-    static var rawCSV: String = "--NOTCSV--"
-    
-    override class func setUp() {
-        super.setUp()
-        let bundle = Bundle(for: ParsimoniousCSVTests.self)
-        let path = bundle.path(forResource: "Random", ofType: "csv")!
-        rawCSV = try! String(contentsOfFile: path)
-    }
-    
+
     func testCSV() {
-        let rows = try! parse(ParsimoniousCSVTests.rawCSV, with: csv)
+        let rows = try! parse(rawCSV, with: csv)
         // 1002 includes the header row and the empty row at the end.
         // If I were writing a full CSV parser, I would exclude the blank
         // line at the end and do something more useful with the headers,
@@ -76,7 +67,7 @@ class ParsimoniousCSVTests: XCTestCase {
     
     func testCSVParserPerformance() {
         measure {
-            _ = try! parse(ParsimoniousCSVTests.rawCSV, with: csv)
+            _ = try! parse(rawCSV, with: csv)
         }
     }
     

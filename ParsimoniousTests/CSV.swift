@@ -1,3 +1,13 @@
+//
+//  CSV.swift
+//  ParsimoniousTests
+//
+//  Created by Gregory Higley on 3/12/20.
+//
+
+import Foundation
+
+let rawCSV = """
 id,first_name,last_name,email,gender,digits,ip_address
 1,Ulrikaumeko,Nevet,unevet0@feedburner.com,Female,5582,235.180.95.226
 2,Reinaldo,Sargerson,rsargerson1@miibeian.gov.cn,Male,8502,90.162.34.54
@@ -999,3 +1009,4 @@ id,first_name,last_name,email,gender,digits,ip_address
 998,Kacie,Standley,kstandleyrp@ca.gov,Female,9290,17.223.66.254
 999,Sanderson,Coggles,scogglesrq@mapquest.com,Male,1608,110.3.132.133
 1000,Warde,Cereceres,wcereceresrr@zimbio.com,Male,6909,205.65.123.196
+"""

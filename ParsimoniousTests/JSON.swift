@@ -1,3 +1,13 @@
+//
+//  File.swift
+//  
+//
+//  Created by Gregory Higley on 3/12/20.
+//
+
+import Foundation
+
+let rawJSON = """
 [
     {
         "_id": "5cb1ac59a0b5bb0bda2e020f",
@@ -457,4 +467,4 @@
         "favoriteFruit": "banana"
     }
 ]
-
+"""

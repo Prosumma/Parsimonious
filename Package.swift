@@ -23,7 +23,11 @@ let package = Package(
     targets: [
         .target(
             name: "Parsimonious",
-            path: "Parsimonious")
+            path: "Parsimonious"),
+        .testTarget(
+            name: "ParsimoniousTests",
+            dependencies: ["Parsimonious"],
+            path: "ParsimoniousTests")
     ],
     swiftLanguageVersions: [.v5]
 )
