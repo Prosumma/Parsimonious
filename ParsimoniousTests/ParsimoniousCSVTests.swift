@@ -52,13 +52,13 @@ class ParsimoniousCSVTests: XCTestCase {
 
     func testCSV() {
         let rows = try! parse(rawCSV, with: csv)
-        // 1002 includes the header row and the empty row at the end.
+        // 1001 includes the header row and the empty row at the end.
         // If I were writing a full CSV parser, I would exclude the blank
         // line at the end and do something more useful with the headers,
         // if present. But that's not what we're about here. Parser
         // combinators are not the place to do these things. Instead,
         // it should be done in a post-processing step.
-        XCTAssertEqual(1002, rows.count)
+        XCTAssertEqual(1001, rows.count)
         guard case .string(let name) = rows[934][1], name == "Elset" else {
             XCTFail("The value at rows[934][1] should be \"Elset\".")
             return
