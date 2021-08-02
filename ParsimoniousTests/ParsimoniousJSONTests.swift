@@ -18,6 +18,7 @@ indirect enum JSON {
     case null
 }
 
+// This does not handle escape sequences
 let jstring = JSON.string <%> quotation
 
 func jnumber(_ context: Context<String>) throws -> JSON {
@@ -35,6 +36,7 @@ func jnumber(_ context: Context<String>) throws -> JSON {
 func toBool(_ s: String) -> JSON {
     return .boolean(s == "true")
 }
+
 let jbool = toBool <%> string("true") | string("false")
 
 let ws = manyS(\Character.isWhitespace)

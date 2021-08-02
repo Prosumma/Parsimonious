@@ -8,12 +8,15 @@
 
 import Foundation
 
+/**
+ This parser succeeds if `test` succeeds.
+ */
 public func char(_ test: @escaping (Character) -> Bool) -> ParserS {
     return String.init <%> satisfy(test)
 }
 
 public func char(_ test: CharacterTest) -> ParserS {
-    return char{ test.testCharacter($0) }
+    return char(test.testCharacter)
 }
 
 public func char(any tests: [CharacterTest]) -> ParserS {

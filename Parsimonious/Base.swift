@@ -157,9 +157,6 @@ public func or<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, T> {
  Attempts to match at least one of the `parsers`. If none of the `parsers` succeeds,
  rethrows the last error.
  
- - note: It is usually more convenient to use the `|` combinator instead of this one. To have
- control over the error message, pass the `fail` combinator as the last parser. For example:
- 
  ```
  let p = string("good") |
          string("bad") |

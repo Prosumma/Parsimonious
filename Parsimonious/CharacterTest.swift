@@ -12,6 +12,14 @@ public protocol CharacterTest {
     func testCharacter(_ c: Character) -> Bool
 }
 
+public func | (lhs: CharacterTest, rhs: CharacterTest) -> CharacterTest {
+  test(any: lhs, rhs)
+}
+
+public func & (lhs: CharacterTest, rhs: CharacterTest) -> CharacterTest {
+  test(all: lhs, rhs)
+}
+
 public struct ExplicitCharacterTest: CharacterTest {
     private let _test: (Character) -> Bool
     

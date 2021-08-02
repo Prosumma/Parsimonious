@@ -204,7 +204,7 @@ public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> 
 }
 
 /**
- Attempts to match using `parser`, but matches `nil` if `parser` fails.
+ Attempts to match using `parser`, but returns `nil` if `parser` fails.
  
  - note: If attempting to match zero or more times, it is best to use the `many`
  combinator instead, which returns a `Parser<C, [T]>`. If an array is more convenient,
@@ -385,4 +385,3 @@ public func eof<C: Collection>(_ context: Context<C>) throws {
         throw ParseError(context, message: "Expected EOF.")
     }
 }
-

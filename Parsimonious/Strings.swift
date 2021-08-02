@@ -78,6 +78,7 @@ public func acceptChar(_ context: Context<String>) throws -> String {
 }
 
 public func quote(_ delimiter: Character, _ escape: Character = "\\") -> ParserS {
+    assert(delimiter != escape, "The quote combinator does not support using the same delimiter and escape character.")
     return manyS(char(all: !escape, !delimiter) | (char(escape) *> char(any: escape, delimiter))) <*> char(delimiter)
 }
 

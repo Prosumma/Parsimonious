@@ -8,6 +8,11 @@
 
 import Foundation
 
+/**
+ The `Context` type holds the collection over which parsing
+ occurs as well as the index into that collection at which parsing
+ begins. As parsing proceeds, the index is moved forward.
+ */
 public class Context<Contents: Collection>: Collection {
     public typealias Element = Contents.Element
     public typealias Index = Contents.Index
