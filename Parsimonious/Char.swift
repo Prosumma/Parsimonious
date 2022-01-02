@@ -12,26 +12,26 @@ import Foundation
  This parser succeeds if `test` succeeds.
  */
 public func char(_ test: @escaping (Character) -> Bool) -> ParserS {
-    return String.init <%> satisfy(test)
+  String.init <%> satisfy(test)
 }
 
 public func char(_ test: CharacterTest) -> ParserS {
-    return char(test.testCharacter)
+  char(test.testCharacter)
 }
 
 public func char(any tests: [CharacterTest]) -> ParserS {
-    return char { c in tests.first(where: { $0.testCharacter(c) }) != nil }
+  char { c in tests.first(where: { $0.testCharacter(c) }) != nil }
 }
 
 public func char(any tests: CharacterTest...) -> ParserS {
-    return char(any: tests)
+  char(any: tests)
 }
 
 public func char(all tests: [CharacterTest]) -> ParserS {
-    return char { c in tests.allSatisfy{ $0.testCharacter(c) } }
+  char { c in tests.allSatisfy{ $0.testCharacter(c) } }
 }
 
 public func char(all tests: CharacterTest...) -> ParserS {
-    return char(all: tests)
+  char(all: tests)
 }
 

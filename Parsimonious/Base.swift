@@ -15,7 +15,7 @@ import Foundation
  - parameter model: The model element with which to compare the current element in the parsed collection.
  */
 public func satisfy<C: Collection, E: Equatable>(type: C.Type = C.self, _ model: E) -> Parser<C, E> where E == C.Element {
-    return satisfy(type: type, { $0 == model })
+  satisfy(type: type, { $0 == model })
 }
 
 /**
@@ -31,8 +31,8 @@ public func satisfy<C: Collection, E: Equatable>(type: C.Type = C.self, _ model:
  - returns: A parser giving an array of matches.
  */
 public func count<R: RangeExpression, C: Collection, T>(_ range: R, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> where R.Bound == UInt {
-    let range = range.relative(to: 0..<UInt.max)
-    return count(from: range.lowerBound, to: range.upperBound - 1, parser)
+  let range = range.relative(to: 0..<UInt.max)
+  return count(from: range.lowerBound, to: range.upperBound - 1, parser)
 }
 
 /**
@@ -44,7 +44,7 @@ public func count<R: RangeExpression, C: Collection, T>(_ range: R, _ parser: @e
  - returns: A parser giving an array of matches.
  */
 public func count<C: Collection, T>(_ number: UInt, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return count(from: number, to: number, parser)
+  count(from: number, to: number, parser)
 }
 
 /**
@@ -57,7 +57,7 @@ public func count<C: Collection, T>(_ number: UInt, _ parser: @escaping Parser<C
  - returns: A parser giving an array of matches.
  */
 public func many<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return count(0..., parser)
+  count(0..., parser)
 }
 
 /**
@@ -69,8 +69,8 @@ public func many<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C
  
  - returns: A parser giving an array of matches.
  */
-public postfix func *<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return many(parser)
+public postfix func * <C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+  many(parser)
 }
 
 /**
@@ -84,16 +84,16 @@ public postfix func *<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parse
  - returns: A parser giving an array of matches.
  */
 public func many<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
-    return transact { context in
-        var values: [T] = []
-        do {
-            try values.append(context <- parser)
-        } catch _ as ParsingError {
-            return values
-        }
-        try values.append(contentsOf: context <- many(separator *> parser))
-        return values
+  return transact { context in
+    var values: [T] = []
+    do {
+      try values.append(context <- parser)
+    } catch _ as ParsingError {
+      return values
     }
+    try values.append(contentsOf: context <- many(separator *> parser))
+    return values
+  }
 }
 
 /**
@@ -102,7 +102,7 @@ public func many<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy se
  This parser fails if there is not at least 1 match.
  */
 public func many1<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return count(1..., parser)
+  count(1..., parser)
 }
 
 /**
@@ -114,8 +114,8 @@ public func many1<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<
  
  - returns: A parser giving an array of matches.
  */
-public postfix func +<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return many1(parser)
+public postfix func + <C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, [T]> {
+  many1(parser)
 }
 
 /**
@@ -129,7 +129,7 @@ public postfix func +<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parse
  - returns: A parser giving an array of matches.
  */
 public func many1<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
-    return parser & many(separator *> parser)
+  parser & many(separator *> parser)
 }
 
 /**
@@ -150,7 +150,7 @@ public func many1<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy s
  - returns: A parser which matches at least one of the `parsers` or dies trying.
  */
 public func or<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, T> {
-    return or(parsers)
+  or(parsers)
 }
 
 /**
@@ -167,7 +167,7 @@ public func or<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, T> {
  - returns: A parser which matches at least one of the `parsers` or dies trying.
  */
 public func |<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, T>) -> Parser<C, T> {
-    return or(lhs, rhs)
+  or(lhs, rhs)
 }
 
 /**
@@ -179,42 +179,42 @@ public func |<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Pars
  - parameter parsers: An array of parsers which must be matched in sequence.
  */
 public func sequence<C: Collection, T>(_ parsers: Parser<C, T>...) -> Parser<C, [T]> {
-    return sequence(parsers)
+  sequence(parsers)
 }
 
 /// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return sequence(lhs, rhs)
+  sequence(lhs, rhs)
 }
 
 /// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, [T]>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return sequence(lhs, rhs)
+  sequence(lhs, rhs)
 }
 
 /// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
-    return sequence(lhs, rhs)
+  sequence(lhs, rhs)
 }
 
 /// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T>, rhs: @escaping Parser<C, T?>) -> Parser<C, [T]> {
-    return sequence(lhs, rhs)
+  sequence(lhs, rhs)
 }
 
 /// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return sequence(lhs, rhs)
+  sequence(lhs, rhs)
 }
 
 /// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, [T]>, rhs: @escaping Parser<C, T?>) -> Parser<C, [T]> {
-    return sequence(lhs, rhs)
+  sequence(lhs, rhs)
 }
 
 /// Matches the parser on the left-hand side and then that on the right, returning the matches as an array.
 public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
-    return sequence(lhs, rhs)
+  sequence(lhs, rhs)
 }
 
 /**
@@ -227,7 +227,7 @@ public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Par
  
  ```
  func char(_ test: (Character) -> Bool) -> ParserS {
-    return String.init <%> satisfy(test)
+   String.init <%> satisfy(test)
  }
  ```
  
@@ -241,7 +241,7 @@ public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Par
  */
 
 public func <%><C: Collection, I, O>(lhs: @escaping (I) -> O, rhs: @escaping Parser<C, I>) -> Parser<C, O> {
-    return lift(lhs, rhs)
+  lift(lhs, rhs)
 }
 
 /**
@@ -259,7 +259,7 @@ public func <%><C: Collection, I, O>(lhs: @escaping (I) -> O, rhs: @escaping Par
  - parameter parser: The parser to match.
  */
 public func subst<C: Collection, I, O>(_ value: O, _ parser: @escaping Parser<C, I>) -> Parser<C, O> {
-    return {_ in value} <%> parser
+  { _ in value } <%> parser
 }
 
 /**
@@ -277,7 +277,7 @@ public func subst<C: Collection, I, O>(_ value: O, _ parser: @escaping Parser<C,
  - parameter parser: The parser to match.
  */
 public func <=><C: Collection, I, O>(lhs: O, rhs: @escaping Parser<C, I>) -> Parser<C, O> {
-    return subst(lhs, rhs)
+  subst(lhs, rhs)
 }
 
 /**
@@ -296,10 +296,10 @@ public func <=><C: Collection, I, O>(lhs: O, rhs: @escaping Parser<C, I>) -> Par
  - parameter parser: The `parser` to match.
  */
 public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, Void> {
-    return { context in
-        try context <- peek(parser)
-        throw ParseError(context, message: "Negative match failed.")
-    }
+  return { context in
+    try context <- peek(parser)
+    throw ParseError(context, message: "Negative match failed.")
+  }
 }
 
 /**
@@ -320,7 +320,7 @@ public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C,
  */
 
 public prefix func !<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, Void> {
-    return not(parser)
+  not(parser)
 }
 
 /**
@@ -337,8 +337,8 @@ public prefix func !<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser
  When `item` is applied, we'll get back only the letters in the item. At least one whitespace character
  _must_ occur after `item`. Without it, the `item` parser will fail. But the whitespace is discarded.
  */
-public func <*<C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @escaping Parser<C, R>) -> Parser<C, L> {
-    return first(lparser, rparser)
+public func <* <C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @escaping Parser<C, R>) -> Parser<C, L> {
+  first(lparser, rparser)
 }
 
 /**
@@ -355,8 +355,8 @@ public func <*<C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @e
  When `item` is applied, we'll get back only the letters in the item. At least one whitespace character _must_
  occur before `item`. Without it, the `item` parser will fail. But the whitespace is discarded.
  */
-public func *><C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @escaping Parser<C, R>) -> Parser<C, R> {
-    return second(lparser, rparser)
+public func *> <C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @escaping Parser<C, R>) -> Parser<C, R> {
+  second(lparser, rparser)
 }
 
 /**
@@ -368,6 +368,5 @@ public func *><C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @e
  - returns: The consumed element.
  */
 public func accept<C: Collection>(_ context: Context<C>) throws -> C.Element {
-    return try context <- satisfy{ _ in true }
+  try context <- satisfy{ _ in true }
 }
-

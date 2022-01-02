@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol CharacterTest {
-    func testCharacter(_ c: Character) -> Bool
+  func testCharacter(_ c: Character) -> Bool
 }
 
 public func | (lhs: CharacterTest, rhs: CharacterTest) -> CharacterTest {
@@ -28,7 +28,7 @@ public struct ExplicitCharacterTest: CharacterTest {
     }
     
     public func testCharacter(_ c: Character) -> Bool {
-        return _test(c)
+        _test(c)
     }
 }
 
@@ -66,18 +66,18 @@ extension Character: CharacterTest {
 
 extension String: CharacterTest {
     public func testCharacter(_ c: Character) -> Bool {
-        return self.contains(c)
+        self.contains(c)
     }
 }
 
 extension KeyPath: CharacterTest where Root == Character, Value == Bool {
     public func testCharacter(_ c: Character) -> Bool {
-        return c[keyPath: self]
+        c[keyPath: self]
     }
 }
 
 public prefix func !(test: CharacterTest) -> CharacterTest {
-    return ExplicitCharacterTest{ !test.testCharacter($0) }
+    ExplicitCharacterTest{ !test.testCharacter($0) }
 }
 
 public func ichar(_ character: Character) -> CharacterTest {

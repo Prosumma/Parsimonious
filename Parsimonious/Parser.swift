@@ -37,6 +37,6 @@ public typealias Parser<C: Collection, T> = (Context<C>) throws -> T
  ```
  */
 public func parse<C: Collection, T>(_ input: C, with parser: Parser<C, T>) throws -> T {
-    return try Context(contents: input) <- parser
+  try Context(contents: input) <- parser
 }
 

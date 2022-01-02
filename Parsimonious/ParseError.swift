@@ -87,31 +87,30 @@ public protocol ParsingError: Error {}
  ```
  */
 public struct ParseError<Contents: Collection>: ParsingError {
-    /// An optional, purely informational message.
-    public let message: String?
-    /**
-     The index in the collection at which some parser failed
-     to match.
-     */
-    public let index: Contents.Index
+  /// An optional, purely informational message.
+  public let message: String?
+  /**
+   The index in the collection at which some parser failed
+   to match.
+   */
+  public let index: Contents.Index
 
-    /// An inner error, if any.
-    public let inner: Error?
+  /// An inner error, if any.
+  public let inner: Error?
 
-    /**
-     Initializes a `ParseError`.
-     
-     - parameter index: The index at which some parser failed to match.
-     - parameter message: An optional, purely informational message.
-     */
-    public init(_ index: Contents.Index, message: String? = nil, inner: Error? = nil) {
-        self.index = index
-        self.message = message
-        self.inner = inner
-    }
-    
+  /**
+   Initializes a `ParseError`.
+   
+   - parameter index: The index at which some parser failed to match.
+   - parameter message: An optional, purely informational message.
+   */
+  public init(_ index: Contents.Index, message: String? = nil, inner: Error? = nil) {
+    self.index = index
+    self.message = message
+    self.inner = inner
+  }
 }
 
 public func <?><C: Collection, T>(parser: @escaping Parser<C, T>, error: String) -> Parser<C, T> {
-    return parser | fail(error)
+  parser | fail(error)
 }

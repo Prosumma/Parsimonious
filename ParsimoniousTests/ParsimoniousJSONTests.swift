@@ -77,7 +77,7 @@ func jsonError(_ rest: Substring?) -> String {
 }
 let json = jnull | jstring | jnumber | jbool | jarray | jobject | fail(jsonError)
 
-class ParsimoniousTests: XCTestCase {
+class ParsimoniousJSONTests: XCTestCase {
     
     static let rawData: Data = rawJSON.data(using: .utf8)!
 
@@ -95,7 +95,7 @@ class ParsimoniousTests: XCTestCase {
     
     func testJSONSerializationPerformance() {
         measure {
-            _ = try! JSONSerialization.jsonObject(with: ParsimoniousTests.rawData, options: [])
+            _ = try! JSONSerialization.jsonObject(with: ParsimoniousJSONTests.rawData, options: [])
         }
     }
     

@@ -8,20 +8,16 @@
 
 import Foundation
 
-infix operator <<: CompositionPrecedence
-
 public func not<T>(_ test: @escaping (T) -> Bool) -> (T) -> Bool {
-    return { !test($0) }
+  { !test($0) }
 }
 
-public prefix func !<T>(test: @escaping (T) -> Bool) -> (T) -> Bool {
-    return not(test)
+public prefix func ! <T>(test: @escaping (T) -> Bool) -> (T) -> Bool {
+  not(test)
 }
 
-/**
- Simple function composition. Works identically to Haskell's . operator.
- */
+/// Simple function composition. Works identically to Haskell's . operator.
 func <<<A, B, C>(lhs: @escaping (B) -> C, rhs: @escaping (A) -> B) -> (A) -> C {
-    return { lhs(rhs($0)) }
+  { lhs(rhs($0)) }
 }
 
