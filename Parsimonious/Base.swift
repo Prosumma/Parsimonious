@@ -14,7 +14,10 @@ import Foundation
  - parameter type: The type of the underlying collection. Can usually be inferred and thus omitted.
  - parameter model: The model element with which to compare the current element in the parsed collection.
  */
-public func satisfy<C: Collection, E: Equatable>(type: C.Type = C.self, _ model: E) -> Parser<C, E> where E == C.Element {
+public func satisfy<C: Collection, E: Equatable>(
+  type: C.Type = C.self,
+  _ model: E
+) -> Parser<C, E> where E == C.Element {
   satisfy(type: type, { $0 == model })
 }
 
@@ -30,13 +33,17 @@ public func satisfy<C: Collection, E: Equatable>(type: C.Type = C.self, _ model:
  
  - returns: A parser giving an array of matches.
  */
-public func count<R: RangeExpression, C: Collection, T>(_ range: R, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> where R.Bound == UInt {
+public func count<R: RangeExpression, C: Collection, T>(
+  _ range: R,
+  _ parser: @escaping Parser<C, T>
+) -> Parser<C, [T]> where R.Bound == UInt {
   let range = range.relative(to: 0..<UInt.max)
   return count(from: range.lowerBound, to: range.upperBound - 1, parser)
 }
 
 /**
- Matches `parser` exactly `number` of times. In other words, `count(7, char("a"))` matches the letter "a" exactly 7 times.
+ Matches `parser` exactly `number` of times. In other words, `count(7, char("a"))` matches
+ the letter "a" exactly 7 times.
  
  - parameter number: The exact number of times `parser` must match.
  - parameter parser: The parser to match.
@@ -83,7 +90,10 @@ public postfix func * <C: Collection, T>(parser: @escaping Parser<C, T>) -> Pars
  
  - returns: A parser giving an array of matches.
  */
-public func many<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
+public func many<C: Collection, T, S>(
+  _ parser: @escaping Parser<C, T>,
+  sepBy separator: @escaping Parser<C, S>
+) -> Parser<C, [T]> {
   return transact { context in
     var values: [T] = []
     do {
@@ -128,7 +138,10 @@ public postfix func + <C: Collection, T>(parser: @escaping Parser<C, T>) -> Pars
  
  - returns: A parser giving an array of matches.
  */
-public func many1<C: Collection, T, S>(_ parser: @escaping Parser<C, T>, sepBy separator: @escaping Parser<C, S>) -> Parser<C, [T]> {
+public func many1<C: Collection, T, S>(
+  _ parser: @escaping Parser<C, T>,
+  sepBy separator: @escaping Parser<C, S>
+) -> Parser<C, [T]> {
   parser & many(separator *> parser)
 }
 
@@ -231,8 +244,8 @@ public func &<C: Collection, T>(lhs: @escaping Parser<C, T?>, rhs: @escaping Par
  }
  ```
  
- `satisfy(test)` returns a `Parser<String, Character>`, but we want to turn this into `ParserS` (`Parser<String, String>`), so
- we use `lift` to accomplish this.
+ `satisfy(test)` returns a `Parser<String, Character>`, but we want to turn this into
+ `ParserS` (`Parser<String, String>`), so we use `lift` to accomplish this.
  
  - parameter transform: The transform to apply.
  - parameter parser: The parser to match in order to apply the transform.
@@ -302,6 +315,7 @@ public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C,
   }
 }
 
+// swiftlint:disable line_length
 /**
  Attempts to match `parser`. If `parser` succeeds, `not` throws an error.
  
@@ -322,6 +336,7 @@ public func not<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C,
 public prefix func !<C: Collection, T>(parser: @escaping Parser<C, T>) -> Parser<C, Void> {
   not(parser)
 }
+// swiftlint:enable line_length
 
 /**
  Matches both `lparser` and `rparser`, but "returns" only the value matched by the former. The two parsers
@@ -368,5 +383,5 @@ public func *> <C: Collection, L, R>(lparser: @escaping Parser<C, L>, rparser: @
  - returns: The consumed element.
  */
 public func accept<C: Collection>(_ context: Context<C>) throws -> C.Element {
-  try context <- satisfy{ _ in true }
+  try context <- satisfy { _ in true }
 }

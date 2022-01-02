@@ -16,7 +16,7 @@ import Foundation
 public class Context<Contents: Collection>: Collection {
   public typealias Element = Contents.Element
   public typealias Index = Contents.Index
-  
+
   public let contents: Contents
   public var index: Index
   private var savedIndices: [Index] = []
@@ -26,39 +26,39 @@ public class Context<Contents: Collection>: Collection {
     self.contents = contents
     self.index = self.contents.startIndex
   }
-  
+
   public var startIndex: Index {
     contents.startIndex
   }
-  
+
   public var endIndex: Index {
     contents.endIndex
   }
-  
+
   public subscript(position: Index) -> Element {
     contents[position]
   }
-  
+
   public subscript(_ key: String) -> Any? {
     get { state[key] }
     set { state[key] = newValue }
   }
-  
+
   public func index(after i: Index) -> Index {
     contents.index(after: i)
   }
-  
+
   public var rest: Contents.SubSequence? {
     if atEnd {
       return nil
     }
     return contents[index...]
   }
-  
+
   public var next: Element? {
     rest?.first
   }
-  
+
   public func advance() -> Element? {
     guard let next = self.next else {
       return nil
@@ -66,39 +66,43 @@ public class Context<Contents: Collection>: Collection {
     defer { offset(by: 1) }
     return next
   }
-  
+
   public var atStart: Bool {
     index == startIndex
   }
-  
+
   public var atEnd: Bool {
     index == endIndex
   }
-  
+
   public func offset(by offset: Int) {
-    self.index = contents.index(self.index, offsetBy: offset, limitedBy: self.contents.endIndex) ?? self.contents.endIndex
+    self.index = contents.index(
+      self.index,
+      offsetBy: offset,
+      limitedBy: self.contents.endIndex
+    ) ?? self.contents.endIndex
   }
 
   public func offset(by contents: Contents) {
     offset(by: contents.count)
   }
-  
+
   public func offset(by contents: Contents.SubSequence) {
     offset(by: contents.count)
   }
-  
+
   public func saveIndex() {
     savedIndices.append(index)
   }
-  
+
   public func commitIndex() {
     savedIndices.removeLast()
   }
-  
+
   public func restoreIndex() {
     self.index = savedIndices.removeLast()
   }
-  
+
   /**
    Starts a transaction against the context's `index`.
    
@@ -140,7 +144,7 @@ public class Context<Contents: Collection>: Collection {
  ```
  */
 public func transact<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, T> {
-  return { context in try context.transact{ try parser(context) } }
+  return { context in try context.transact { try parser(context) } }
 }
 
 /**
@@ -159,7 +163,9 @@ public func transact<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Pars
  }
  ```
  
- The 3rd line of the extremely contrived example above could have been written `return try (many1S("aeiou") | many1S("bcdfg"))(context)` but this leads to an ugly surfeit of parentheses.
+ The 3rd line of the extremely contrived example above could have been written
+ `return try (many1S("aeiou") | many1S("bcdfg"))(context)` but this leads to an
+ ugly surfeit of parentheses.
  */
 @discardableResult
 public func <-<C: Collection, T>(_ context: Context<C>, _ parser: Parser<C, T>) throws -> T {

@@ -15,4 +15,3 @@ public func joined(_ strings: [String]) -> String {
 public func joined(by sep: String) -> ([String]) -> String {
   return { strings in strings.joined(separator: sep) }
 }
-

@@ -11,7 +11,8 @@ import Foundation
 /**
  Attempts to match `parser` at least `from` and at most `to` times. Matches a string.
  
- Direct use of this combinator should be avoided. Instead, use `manyS`, `many1S`, or one of the overloads that takes an `Int` or range type.
+ Direct use of this combinator should be avoided. Instead, use `manyS`, `many1S`, or
+ one of the overloads that takes an `Int` or range type.
  
  - precondition: `from >= 0 && from <= to && to > 0`
  
@@ -25,12 +26,14 @@ public func countS(from: UInt, to: UInt, _ parser: @escaping ParserS) -> ParserS
   joined <%> count(from: from, to: to, parser)
 }
 
-
 public func countS<R: RangeExpression>(_ range: R, _ parser: @escaping ParserS) -> ParserS where R.Bound == UInt {
   joined <%> count(range, parser)
 }
 
-public func countS<R: RangeExpression>(_ range: R, _ test: @escaping (Character) -> Bool) -> ParserS where R.Bound == UInt {
+public func countS<R: RangeExpression>(
+  _ range: R,
+  _ test: @escaping (Character) -> Bool
+) -> ParserS where R.Bound == UInt {
   countS(range, char(test))
 }
 

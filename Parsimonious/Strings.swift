@@ -42,7 +42,7 @@ public func concat(_ parsers: ParserS...) -> ParserS {
  
  The above parser matches a letter followed by zero or more letters or numbers.
  */
-public func +(lparser: @escaping ParserS, rparser: @escaping ParserS) -> ParserS {
+public func + (lparser: @escaping ParserS, rparser: @escaping ParserS) -> ParserS {
   concat(lparser, rparser)
 }
 
@@ -74,7 +74,7 @@ public func eofS(_ context: Context<String>) throws -> String {
  Does not match EOF.
  */
 public func acceptChar(_ context: Context<String>) throws -> String {
-  try context <- char{ _ in true }
+  try context <- char { _ in true }
 }
 
 public func quote(_ delimiter: Character, _ escape: Character = "\\") -> ParserS {
@@ -94,4 +94,3 @@ public func quote(_ delimiter: Character, _ escape: Character = "\\") -> ParserS
 public func quotation(_ context: Context<String>) throws -> String {
   try context <- quote("\"")
 }
-

@@ -1,8 +1,9 @@
+// swiftlint:disable file_length line_length
 //
-//  File.swift
-//  
+//  JSON.swift
+//  ParsimoniousTests
 //
-//  Created by Gregory Higley on 3/12/20.
+//  Created by Gregory Higley on 2020-03-12.
 //
 
 import Foundation

@@ -6,6 +6,8 @@
 //  Copyright © 2019 Prosumma LLC. All rights reserved.
 //
 
+// swiftlint:disable identifier_name
+
 import Foundation
 
 public protocol CharacterTest {
@@ -22,11 +24,11 @@ public func & (lhs: CharacterTest, rhs: CharacterTest) -> CharacterTest {
 
 public struct ExplicitCharacterTest: CharacterTest {
   private let _test: (Character) -> Bool
-  
+
   public init(_ test: @escaping (Character) -> Bool) {
     _test = test
   }
-  
+
   public func testCharacter(_ c: Character) -> Bool {
     _test(c)
   }
@@ -76,8 +78,8 @@ extension KeyPath: CharacterTest where Root == Character, Value == Bool {
   }
 }
 
-public prefix func !(test: CharacterTest) -> CharacterTest {
-  ExplicitCharacterTest{ !test.testCharacter($0) }
+public prefix func ! (test: CharacterTest) -> CharacterTest {
+  ExplicitCharacterTest { !test.testCharacter($0) }
 }
 
 public func ichar(_ character: Character) -> CharacterTest {

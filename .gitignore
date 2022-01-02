@@ -4,3 +4,6 @@ xcuserdata
 Playground.playground/
 .build/
 .swiftpm/
+*.xc*
+swiftlint.txt
+Derived/

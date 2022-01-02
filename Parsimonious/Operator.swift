@@ -21,6 +21,5 @@ infix operator  <?>: DefaultPrecedence // TODO: Change this
 infix operator  <*>: MultiplicationPrecedence
 infix operator   <<: CompositionPrecedence
 
-
 postfix operator *
 postfix operator +

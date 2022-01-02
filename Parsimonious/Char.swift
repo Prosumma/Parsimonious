@@ -6,6 +6,8 @@
 //  Copyright © 2019 Prosumma LLC. All rights reserved.
 //
 
+// swiftlint:disable identifier_name
+
 import Foundation
 
 /**
@@ -28,10 +30,9 @@ public func char(any tests: CharacterTest...) -> ParserS {
 }
 
 public func char(all tests: [CharacterTest]) -> ParserS {
-  char { c in tests.allSatisfy{ $0.testCharacter(c) } }
+  char { c in tests.allSatisfy { $0.testCharacter(c) } }
 }
 
 public func char(all tests: CharacterTest...) -> ParserS {
   char(all: tests)
 }
-

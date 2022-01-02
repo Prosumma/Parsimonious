@@ -37,6 +37,8 @@ public func position<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Pars
   }
 }
 
-public func striposition<Positions: Sequence, C: Collection, T>(_ positions: Positions) -> [T] where Positions.Element == Position<C, T> {
-  positions.map{ $0.value }
+public func striposition<Positions: Sequence, C: Collection, T>(
+  _ positions: Positions
+) -> [T] where Positions.Element == Position<C, T> {
+  positions.map { $0.value }
 }

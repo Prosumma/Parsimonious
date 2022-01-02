@@ -8,7 +8,10 @@
 
 import Foundation
 
-public func optionalS(_ parser: @escaping ParserS, default defaultValue: @escaping @autoclosure () -> String) -> ParserS {
+public func optionalS(
+  _ parser: @escaping ParserS,
+  default defaultValue: @escaping @autoclosure () -> String
+) -> ParserS {
   optional(parser, default: defaultValue())
 }
 
