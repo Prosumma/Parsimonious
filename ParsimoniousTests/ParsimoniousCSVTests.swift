@@ -2,8 +2,12 @@
 //  ParsimoniousCSVTests.swift
 //  Parsimonious
 //
-//  Created by Gregory Higley on 5/9/19.
-//  Copyright © 2019 Prosumma LLC. All rights reserved.
+//  Created by Gregory Higley on 2019-05-09.
+//  Copyright © 2019 Prosumma LLC.
+//
+//  Licensed under the MIT license: https://opensource.org/licenses/MIT
+//  Permission is granted to use, copy, modify, and redistribute the work.
+//  Full license information available in the project LICENSE file.
 //
 
 // swiftlint:disable force_try

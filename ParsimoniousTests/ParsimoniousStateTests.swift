@@ -3,7 +3,11 @@
 //  Parsimonious
 //
 //  Created by Gregory Higley on 8/23/19.
-//  Copyright © 2019 Prosumma LLC. All rights reserved.
+//  Copyright © 2019 Prosumma LLC.
+//
+//  Licensed under the MIT license: https://opensource.org/licenses/MIT
+//  Permission is granted to use, copy, modify, and redistribute the work.
+//  Full license information available in the project LICENSE file.
 //
 
 // swiftlint:disable force_cast force_try

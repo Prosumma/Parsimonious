@@ -5,6 +5,10 @@
 //
 //  Created by Gregory Higley on 3/12/20.
 //
+//  Licensed under the MIT license: https://opensource.org/licenses/MIT
+//  Permission is granted to use, copy, modify, and redistribute the work.
+//  Full license information available in the project LICENSE file.
+//
 
 import Foundation
 

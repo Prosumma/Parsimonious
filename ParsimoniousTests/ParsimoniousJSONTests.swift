@@ -2,8 +2,12 @@
 //  ParsimoniousTests.swift
 //  ParsimoniousTests
 //
-//  Created by Gregory Higley on 2/28/19.
-//  Copyright © 2019 Prosumma LLC. All rights reserved.
+//  Created by Gregory Higley on 2019-02-28.
+//  Copyright © 2019 Prosumma LLC.
+//
+//  Licensed under the MIT license: https://opensource.org/licenses/MIT
+//  Permission is granted to use, copy, modify, and redistribute the work.
+//  Full license information available in the project LICENSE file.
 //
 
 // swiftlint:disable force_try
