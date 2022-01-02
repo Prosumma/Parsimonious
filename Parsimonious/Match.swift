@@ -2,7 +2,7 @@
 //  Match.swift
 //  Parsimonious
 //
-//  Created by Gregory Higley on 4/11/19.
+//  Created by Gregory Higley on 2019-04-11.
 //  Copyright © 2019 Prosumma LLC. All rights reserved.
 //
 
@@ -20,19 +20,19 @@ import Foundation
  - returns: A parser which performs matching according to the passed-in parameters.
  */
 func match(_ test: String, options: String.CompareOptions = []) -> ParserS {
-    var options = options
-    options.insert(.anchored)
-    return { context in
-        guard let rest = context.rest else {
-            throw ParseError(context, message: "Expected to match a string against '\(test)', but got EOF.")
-        }
-        guard let range = rest.range(of: test, options: options, range: nil, locale: nil) else {
-            throw ParseError(context, message: "Expected to match a string against '\(test)', but the match failed.")
-        }
-        let matched = rest[range]
-        context.offset(by: matched)
-        return String(matched)
+  var options = options
+  options.insert(.anchored)
+  return { context in
+    guard let rest = context.rest else {
+      throw ParseError(context, message: "Expected to match a string against '\(test)', but got EOF.")
     }
+    guard let range = rest.range(of: test, options: options, range: nil, locale: nil) else {
+      throw ParseError(context, message: "Expected to match a string against '\(test)', but the match failed.")
+    }
+    let matched = rest[range]
+    context.offset(by: matched)
+    return String(matched)
+  }
 }
 
 /**
@@ -42,8 +42,8 @@ func match(_ test: String, options: String.CompareOptions = []) -> ParserS {
  has reasonably good performance.
  */
 public func string(_ test: String, ignoringCase: Bool = false) -> ParserS {
-    let parsers = ignoringCase ? test.map(char << ichar) : test.map(char)
-    return concat(parsers) | fail("Expected to match \"\(test)\".")
+  let parsers = ignoringCase ? test.map(char << ichar) : test.map(char)
+  return concat(parsers) | fail("Expected to match \"\(test)\".")
 }
 
 /**
@@ -53,6 +53,6 @@ public func string(_ test: String, ignoringCase: Bool = false) -> ParserS {
  for regular expressions and in most cases are faster.
  */
 public func regex(_ test: String, ignoringCase: Bool = false) -> ParserS {
-    let options: String.CompareOptions = ignoringCase ? [.caseInsensitive, .regularExpression] : .regularExpression
-    return match(test, options: options)
+  let options: String.CompareOptions = ignoringCase ? [.caseInsensitive, .regularExpression] : .regularExpression
+  return match(test, options: options)
 }

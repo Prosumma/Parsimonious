@@ -2,7 +2,7 @@
 //  Prim.swift
 //  Parsimonious
 //
-//  Created by Gregory Higley on 4/10/19.
+//  Created by Gregory Higley on 2019-04-10.
 //  Copyright © 2019 Prosumma LLC. All rights reserved.
 //
 
@@ -24,17 +24,17 @@ import Foundation
  - returns: A parser of type `Parser<C, E>`.
  */
 public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (E) -> Bool) -> Parser<C, E> where E == C.Element {
-    return { context in
-        guard let e = context.next else {
-            throw ParseError(context)
-        }
-        if test(e) {
-            context.offset(by: 1)
-            return e
-        } else {
-            throw ParseError(context)
-        }
+  return { context in
+    guard let e = context.next else {
+      throw ParseError(context)
     }
+    if test(e) {
+      context.offset(by: 1)
+      return e
+    } else {
+      throw ParseError(context)
+    }
+  }
 }
 
 /**
@@ -53,32 +53,32 @@ public func satisfy<C: Collection, E>(type: C.Type = C.self, _ test: @escaping (
  - returns: A parser of type `Parser<C, [T]>` which matches an array of the matched type.
  */
 public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Parser<C, T>) -> Parser<C, [T]> {    
-    assert(from >= 0 && from <= to && to > 0, "Invalid range for count. Valid for from and to are: from >= 0 && from <= to && to > 0.")
-    return transact { context in
-        var values: [T] = []
-        while values.count < from {
-            do {
-                try values.append(parser(context))
-            } catch let e as ParsingError {
-                if from == to {
-                    throw ParseError(context, message: "Expected \(to) but got \(values.count).", inner: e)
-                } else if to >= UInt.max - 1 {
-                    throw ParseError(context, message: "Expected at least \(from) but got \(values.count).", inner: e)
-                } else {
-                    throw ParseError(context, message: "Expected at least \(from) and at most \(to), but got \(values.count).", inner: e)
-                }
-            }
+  assert(from >= 0 && from <= to && to > 0, "Invalid range for count. Valid for from and to are: from >= 0 && from <= to && to > 0.")
+  return transact { context in
+    var values: [T] = []
+    while values.count < from {
+      do {
+        try values.append(parser(context))
+      } catch let e as ParsingError {
+        if from == to {
+          throw ParseError(context, message: "Expected \(to) but got \(values.count).", inner: e)
+        } else if to >= UInt.max - 1 {
+          throw ParseError(context, message: "Expected at least \(from) but got \(values.count).", inner: e)
+        } else {
+          throw ParseError(context, message: "Expected at least \(from) and at most \(to), but got \(values.count).", inner: e)
         }
-        while values.count < to {
-            do {
-                let value = try parser(context)
-                values.append(value)
-            } catch _ as ParsingError {
-                break
-            }
-        }
-        return values
+      }
     }
+    while values.count < to {
+      do {
+        let value = try parser(context)
+        values.append(value)
+      } catch _ as ParsingError {
+        break
+      }
+    }
+    return values
+  }
 }
 
 /**
@@ -99,23 +99,23 @@ public func count<C: Collection, T>(from: UInt, to: UInt, _ parser: @escaping Pa
  - returns: A parser which matches at least one of the `parsers` or dies trying.
  */
 public func or<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, T> {
-    assert(parsers.count > 0, "The 'or' combinator requires at least one parser.")
-    return { context in
-        if (parsers.count == 1) {
-            return try parsers[0](context)
-        } else {
-            var lastError: ParsingError!
-            for parser in parsers {
-                do {
-                    return try parser(context)
-                } catch let error as ParsingError {
-                    lastError = error
-                }
-            }
-            // The only way we can get here is if the last parser fails.
-            throw lastError
+  assert(parsers.count > 0, "The 'or' combinator requires at least one parser.")
+  return { context in
+    if (parsers.count == 1) {
+      return try parsers[0](context)
+    } else {
+      var lastError: ParsingError!
+      for parser in parsers {
+        do {
+          return try parser(context)
+        } catch let error as ParsingError {
+          lastError = error
         }
+      }
+      // The only way we can get here is if the last parser fails.
+      throw lastError
     }
+  }
 }
 
 /**
@@ -137,11 +137,11 @@ public func or<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, T> {
  - parameter parser: The parser to match.
  */
 public func peek<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, T> {
-    return { context in
-        context.saveIndex()
-        defer { context.restoreIndex() }
-        return try parser(context)
-    }
+  return { context in
+    context.saveIndex()
+    defer { context.restoreIndex() }
+    return try parser(context)
+  }
 }
 
 /**
@@ -167,9 +167,9 @@ public func peek<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C
  - returns: A `Parser<C, O>`, where `O` is the result type of `transform`.
  */
 public func lift<C: Collection, I, O>(_ transform: @escaping (I) -> O, _ parser: @escaping Parser<C, I>) -> Parser<C, O> {
-    return { context in
-        return try transform(parser(context))
-    }
+  return { context in
+    try transform(parser(context))
+  }
 }
 
 /**
@@ -191,16 +191,16 @@ public func lift<C: Collection, I, O>(_ transform: @escaping (I) -> O, _ parser:
  - parameter type: In the very rare case where type evidence is needed, it can be provided here.
  */
 public func fail<C: Collection, T>(_ message: @escaping @autoclosure () -> String, type: C.Type = C.self) -> Parser<C, T> {
-    return { context in
-        throw ParseError(context, message: message())
-    }
+  return { context in
+    throw ParseError(context, message: message())
+  }
 }
 
 public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> String, type: C.Type = C.self) -> Parser<C, T> {
-    return { context in
-        let message = makeMessage(context.rest)
-        throw ParseError(context, message: message)
-    }
+  return { context in
+    let message = makeMessage(context.rest)
+    throw ParseError(context, message: message)
+  }
 }
 
 /**
@@ -213,13 +213,13 @@ public func fail<C: Collection, T>(_ makeMessage: @escaping (C.SubSequence?) -> 
  - parameter parser: The parser to use for matching.
  */
 public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Parser<C, T?> {
-    return { context in
-        do {
-            return try parser(context)
-        } catch _ as ParsingError {
-            return nil
-        }
+  return { context in
+    do {
+      return try parser(context)
+    } catch _ as ParsingError {
+      return nil
     }
+  }
 }
 
 /**
@@ -229,13 +229,13 @@ public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>) -> Pars
  - parameter defaultValue: The value to use if `parser` does not match.
  */
 public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>, default defaultValue: @escaping @autoclosure () -> T) -> Parser<C, T> {
-    return { context in
-        do {
-            return try parser(context)
-        } catch _ as ParsingError {
-            return defaultValue()
-        }
+  return { context in
+    do {
+      return try parser(context)
+    } catch _ as ParsingError {
+      return defaultValue()
     }
+  }
 }
 
 /**
@@ -253,11 +253,11 @@ public func optional<C: Collection, T>(_ parser: @escaping Parser<C, T>, default
  _must_ occur after `item`. Without it, the `item` parser will fail. But the whitespace is discarded.
  */
 public func first<C: Collection, L, R>(_ lparser: @escaping Parser<C, L>, _ rparser: @escaping Parser<C, R>) -> Parser<C, L> {
-    return transact { context in
-        let value = try lparser(context)
-        _ = try rparser(context)
-        return value
-    }
+  transact { context in
+    let value = try lparser(context)
+    _ = try rparser(context)
+    return value
+  }
 }
 
 /**
@@ -275,10 +275,10 @@ public func first<C: Collection, L, R>(_ lparser: @escaping Parser<C, L>, _ rpar
  occur before `item`. Without it, the `item` parser will fail. But the whitespace is discarded.
  */
 public func second<C: Collection, L, R>(_ lparser: @escaping Parser<C, L>, _ rparser: @escaping Parser<C, R>) -> Parser<C, R> {
-    return { context in
-        _ = try lparser(context)
-        return try rparser(context)
-    }
+  return { context in
+    _ = try lparser(context)
+    return try rparser(context)
+  }
 }
 
 /**
@@ -290,9 +290,9 @@ public func second<C: Collection, L, R>(_ lparser: @escaping Parser<C, L>, _ rpa
  - parameter parsers: An array of parsers which must each be matched in sequence.
  */
 public func sequence<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, [T]> {
-    return transact { context in
-        return try parsers.map{ parser in try parser(context) }
-    }
+  transact { context in
+    try parsers.map{ parser in try parser(context) }
+  }
 }
 
 /**
@@ -301,13 +301,13 @@ public func sequence<C: Collection, T>(_ parsers: [Parser<C, T>]) -> Parser<C, [
  elements.
  */
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T>, _ rparser: @escaping Parser<C, T?>) -> Parser<C, [T]> {
-    return transact { context in
-        var values = [try lparser(context)]
-        if let value = try rparser(context) {
-            values.append(value)
-        }
-        return values
+  transact { context in
+    var values = [try lparser(context)]
+    if let value = try rparser(context) {
+      values.append(value)
     }
+    return values
+  }
 }
 
 /**
@@ -316,56 +316,56 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T>, _ rpar
  elements.
  */
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rparser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return transact { context in
-        var values: [T] = []
-        if let value = try lparser(context) {
-            values.append(value)
-        }
-        try values.append(rparser(context))
-        return values
+   transact { context in
+    var values: [T] = []
+    if let value = try lparser(context) {
+      values.append(value)
     }
+    try values.append(rparser(context))
+    return values
+  }
 }
 
 /// Matches first a `Parser<C, [T]>` and then a `Parser<C, T>`, combining this into a result of `[T]`.
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, [T]>, _ rparser: @escaping Parser<C, T>) -> Parser<C, [T]> {
-    return transact { context in
-        var values = try lparser(context)
-        try values.append(rparser(context))
-        return values
-    }
+  transact { context in
+    var values = try lparser(context)
+    try values.append(rparser(context))
+    return values
+  }
 }
 
 /// Matches first a `Parser<C, T>` and then a `Parser<C, [T]>`, combining this into a result of `[T]`.
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T>, _ rparser: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
-    return transact { context in
-        let value = try lparser(context)
-        var values = try rparser(context)
-        values.insert(value, at: 0)
-        return values
-    }
+  transact { context in
+    let value = try lparser(context)
+    var values = try rparser(context)
+    values.insert(value, at: 0)
+    return values
+  }
 }
 
 /// Matches first a `Parser<C, [T]>` and then a `Parser<C, T?>`, combining this into a result of `[T]`.
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, [T]>, _ rparser: @escaping Parser<C, T?>) -> Parser<C, [T]> {
-    return transact { context in
-        var values = try lparser(context)
-        if let value = try rparser(context) {
-            values.append(value)
-        }
-        return values
+  transact { context in
+    var values = try lparser(context)
+    if let value = try rparser(context) {
+      values.append(value)
     }
+    return values
+  }
 }
 
 /// Matches first a `Parser<C, T?>` and then a `Parser<C, [T]>`, combining this into a result of `[T]`.
 public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rparser: @escaping Parser<C, [T]>) -> Parser<C, [T]> {
-    return transact { context in
-        let value = try lparser(context)
-        var values = try rparser(context)
-        if let value = value {
-            values.insert(value, at: 0)
-        }
-        return values
+  return transact { context in
+    let value = try lparser(context)
+    var values = try rparser(context)
+    if let value = value {
+      values.insert(value, at: 0)
     }
+    return values
+  }
 }
 
 /**
@@ -381,7 +381,7 @@ public func sequence<C: Collection, T>(_ lparser: @escaping Parser<C, T?>, _ rpa
  Never use `eof` in an expression such as `many(eof)` because it may never terminate.
  */
 public func eof<C: Collection>(_ context: Context<C>) throws {
-    if !context.atEnd {
-        throw ParseError(context, message: "Expected EOF.")
-    }
+  if !context.atEnd {
+    throw ParseError(context, message: "Expected EOF.")
+  }
 }

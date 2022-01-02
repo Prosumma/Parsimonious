@@ -2,7 +2,7 @@
 //  Position.swift
 //  Parsimonious
 //
-//  Created by Gregory Higley on 3/31/19.
+//  Created by Gregory Higley on 2019-03-31.
 //  Copyright © 2019 Prosumma LLC. All rights reserved.
 //
 

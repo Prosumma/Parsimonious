@@ -2,7 +2,7 @@
 //  Extra.swift
 //  Parsimonious
 //
-//  Created by Gregory Higley on 5/9/19.
+//  Created by Gregory Higley on 2019-05-09.
 //  Copyright © 2019 Prosumma LLC. All rights reserved.
 //
 
@@ -15,7 +15,7 @@ import Foundation
  For example, instead of `manyS(\Character.isWhitespace) *> many1S(!\Character.isWhitespace) <* manyS(\Character.isWhitespace)` we can say `surround(many1S(!\Character.isWhitespace), with: manyS(\Character.isWhitespace))`.
  */
 public func surround<C, T, S>(_ parser: @escaping Parser<C, T>, with surroundings: @escaping Parser<C, S>) -> Parser<C, T> {
-    return surroundings *> parser <* surroundings
+  surroundings *> parser <* surroundings
 }
 
 /**
@@ -25,5 +25,5 @@ public func surround<C, T, S>(_ parser: @escaping Parser<C, T>, with surrounding
  For example, instead of `manyS(\Character.isWhitespace) *> many1S(!\Character.isWhitespace) <* manyS(\Character.isWhitespace)` we can say `many1S(!\Character.isWhitespace) <*> manyS(\Character.isWhitespace)`.
  */
 public func <*><C, T, S>(parser: @escaping Parser<C, T>, surroundings: @escaping Parser<C, S>) -> Parser<C, T> {
-    return surround(parser, with: surroundings)
+  surround(parser, with: surroundings)
 }

@@ -2,7 +2,7 @@
 //  Strings.swift
 //  Parsimonious
 //
-//  Created by Gregory Higley on 4/11/19.
+//  Created by Gregory Higley on 2019-04-11.
 //  Copyright © 2019 Prosumma LLC. All rights reserved.
 //
 
@@ -14,13 +14,13 @@ import Foundation
  the underlying parsers fails, `concat` fails.
  */
 public func concat<Parsers: Sequence>(_ parsers: Parsers) -> ParserS where Parsers.Element == ParserS {
-    return transact { context in
-        var s = ""
-        for parser in parsers {
-            s += try context <- parser
-        }
-        return s
+  return transact { context in
+    var s = ""
+    for parser in parsers {
+      s += try context <- parser
     }
+    return s
+  }
 }
 
 /**
@@ -29,7 +29,7 @@ public func concat<Parsers: Sequence>(_ parsers: Parsers) -> ParserS where Parse
  the underlying parsers fails, `concat` fails.
  */
 public func concat(_ parsers: ParserS...) -> ParserS {
-    return concat(parsers)
+  concat(parsers)
 }
 
 /**
@@ -43,7 +43,7 @@ public func concat(_ parsers: ParserS...) -> ParserS {
  The above parser matches a letter followed by zero or more letters or numbers.
  */
 public func +(lparser: @escaping ParserS, rparser: @escaping ParserS) -> ParserS {
-    return concat(lparser, rparser)
+  concat(lparser, rparser)
 }
 
 /**
@@ -62,7 +62,7 @@ public func +(lparser: @escaping ParserS, rparser: @escaping ParserS) -> ParserS
  This `parser` would be much harder to write without `eofS`.
  */
 public func eofS(_ context: Context<String>) throws -> String {
-    return try context <- "" <=> eof
+  try context <- "" <=> eof
 }
 
 /**
@@ -74,12 +74,12 @@ public func eofS(_ context: Context<String>) throws -> String {
  Does not match EOF.
  */
 public func acceptChar(_ context: Context<String>) throws -> String {
-    return try context <- char{ _ in true }
+  try context <- char{ _ in true }
 }
 
 public func quote(_ delimiter: Character, _ escape: Character = "\\") -> ParserS {
-    assert(delimiter != escape, "The quote combinator does not support using the same delimiter and escape character.")
-    return manyS(char(all: !escape, !delimiter) | (char(escape) *> char(any: escape, delimiter))) <*> char(delimiter)
+  assert(delimiter != escape, "The quote combinator does not support using the same delimiter and escape character.")
+  return manyS(char(all: !escape, !delimiter) | (char(escape) *> char(any: escape, delimiter))) <*> char(delimiter)
 }
 
 /**
@@ -92,6 +92,6 @@ public func quote(_ delimiter: Character, _ escape: Character = "\\") -> ParserS
  will have to roll your own parser, which is not very difficult algorithmically.
  */
 public func quotation(_ context: Context<String>) throws -> String {
-    return try context <- quote("\"")
+  try context <- quote("\"")
 }
 
