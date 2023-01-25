@@ -7,3 +7,4 @@ Playground.playground/
 *.xc*
 swiftlint.txt
 Derived/
+.vscode/
