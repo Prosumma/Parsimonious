@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  Parser.swift
+//  Parsimonious
 //
-//  Created by Greg Higley on 2023-10-19.
+//  Created by Gregory Higley on 2023-10-19.
 //
 
 public typealias Parse<Source: Collection, Output> = (Source, Source.Index) -> ParseResult<Source, Output>

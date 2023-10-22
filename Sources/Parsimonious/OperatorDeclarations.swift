@@ -1,8 +1,8 @@
 //
-//  File.swift
-//  
+//  OperatorDeclarations.swift
+//  Parsimonious
 //
-//  Created by Greg Higley on 2023-10-19.
+//  Created by Gregory Higley on 2023-10-19.
 //
 
 import Foundation

@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Prosumma/Iatheto",
       "state" : {
-        "revision" : "a8338a6e7f2aeb93cc821b55eeeb8089a1c8306c",
-        "version" : "3.0.3"
+        "revision" : "4487ad593f46ff8cdd3fb30a3d8a1f34a73f55cb",
+        "version" : "3.0.4"
       }
     }
   ],
