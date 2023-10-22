@@ -63,16 +63,12 @@ let jbool: JParser = (string("true") <|> string("false")) >>> { s in s == "true"
 let jnull: JParser = string("null") *>> JSON.null
 
 // Object
-var assignment: Parser<String, (String, JSON)> {
-  tuple(whitespacedWithNewlines(quotedString) <* ":", json)
-}
-let assignments = many(assignment, separator: ",") >>> { Dictionary($0, uniquingKeysWith: { _, v2 in v2 }) }
+var assignment: Parser<String, (String, JSON)> = tuple(whitespacedWithNewlines(quotedString) <* ":", json)
+let assignments = many(`assignment`, separator: ",") >>> { Dictionary($0, uniquingKeysWith: { _, v2 in v2 }) }
 let jobject = braced(assignments) >>> JSON.object
 
 // Array
-var jarray: JParser {
-  bracketed(many(json, separator: ",")) >>> JSON.array
-}
+var jarray: JParser = bracketed(many(json, separator: ",")) >>> JSON.array
 
 // JSON
 let json = whitespacedWithNewlines(jstring <|> jnumber <|> jobject <|> jarray <|> jbool <|> jnull)

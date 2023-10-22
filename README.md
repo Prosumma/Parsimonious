@@ -77,3 +77,62 @@ This is the same as the `optional` combinator:
 ```
 
 The above returns 0 or 1 "a". The returned value must implement the `Defaultable` protocol. In the event of a failed match, the default value is returned. In this case, that's an empty `String`.
+
+`infix operator <|>`
+
+This is the choice operator:
+
+```swift
+string("foo") <|> string("bar")
+```
+
+This first attempts to match the string "foo". If that fails, it attempts to match "bar". If that fails, then parsing fails with the error of the last attempted match. The `fail` combinator can be used to customize errors:
+
+```swift
+string("foo") <|> string("bar") <|> fail(MyError.oops)
+```
+
+`infix operator +`
+
+The built-in `+` operator has been overloaded to join together arrays and strings respectively.
+
+```swift
+string("foo")* + string("bar")
+```
+
+This matches 0 or more of the string "foo" followed by 1 instance of the string "bar", so it would match "bar", "foobar", "foofoobar", etc.
+
+## Laziness
+
+Wherever possible, combinators which take other parsers as arguments use `@escaping @autoclosure` for this.
+
+This is important in a parser combinator library because combinators are often recursive. Consider the following from the unit tests:
+
+```swift
+var jarray: JParser = bracketed(many(json, separator: ",")) >>> JSON.array
+
+let json = whitespacedWithNewlines(jstring <|> jnumber <|> jobject <|> jarray <|> jbool <|> jnull)
+```
+
+Notice that `jarray` refers to `json` and _vice versa_. Without laziness, this wouldn't be possible. The Swift compiler would complain.
+
+If you write your own combinators, I highly recommend this practice.
+
+There are a few places where `@escaping @autoclosure` cannot be used, such as variadic parameters. Most of the time, this should not be a problem, but in the rare circumstance when it is, the `deferred` combinator can be used to make any parser lazy:
+
+```swift
+let bar = chain(deferred(foo), baz)
+let foo = chain(deferred(bar), boo)
+```
+
+Since `chain` uses variadic parameters, they cannot be autoclosures. Using `deferred` here allows the two definitions to reference each other. Since `baz` and `boo` presumably don't reference `bar` and `foo`, using `deferred` with them is not necessary.
+
+An overload of `deferred` allows the definition of an `ad hoc`, lazy parser:
+
+```swift
+let nothing: Parser<String, Void> = deferred { source, index in
+  return .success(State(output: (), range: index..<index>))
+}
+```
+
+This parser consumes nothing and returns `Void`, but illustrates the point.

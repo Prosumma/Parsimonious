@@ -78,10 +78,10 @@ public func match<C: Collection>() -> Parser<C, C.Element> {
   match { _ in true }
 }
 
-public func match<C: Collection, T>(any parsers: [Parser<C, T>]) -> Parser<C, T> {
+public func match<C: Collection, T>(any parsers: @escaping @autoclosure () -> [Parser<C, T>]) -> Parser<C, T> {
   .init { source, index in
     var lastError = ParseError<C>(reason: .nomatch, index: index)
-    PARSE: for parser in parsers {
+    PARSE: for parser in parsers() {
       switch parser(source, at: index) {
       case let .success(state):
         return .success(state)
@@ -217,13 +217,13 @@ public prefix func * <C: Collection, T: Defaultable>(
  a Swiftier name.
  */
 public func chain<C: Collection, T>(
-  _ parsers: [Parser<C, T>]
+  _ parsers: @escaping @autoclosure () -> [Parser<C, T>]
 ) -> Parser<C, [T]> {
   .init { source, index in
     var outputs: [T] = []
     var index = index
     var result: ParseResult<C, [T]> = .success(.init(output: outputs, range: index..<index))
-    PARSE: for parser in parsers {
+    PARSE: for parser in parsers() {
       switch parser(source, at: index) {
       case .success(let state):
         outputs.append(state.output)
@@ -472,9 +472,9 @@ public func not<C: Collection, T>(
 }
 
 public func not<C: Collection, T>(
-  any parsers: [Parser<C, T>]
+  any parsers: @escaping @autoclosure () -> [Parser<C, T>]
 ) -> Parser<C, Void> {
-  not(match(any: parsers))
+  not(match(any: parsers()))
 }
 
 public func not<C: Collection, T>(

@@ -14,11 +14,13 @@ prefix operator *
 precedencegroup ApplicativePrecedence {
   associativity: left
   higherThan: LogicalConjunctionPrecedence
+  lowerThan: ComparisonPrecedence
 }
 
 precedencegroup AlternativePrecedence {
   associativity: left
   higherThan: ApplicativePrecedence
+  lowerThan: ComparisonPrecedence
 }
 
 precedencegroup FunctorPrecedence {
@@ -29,7 +31,7 @@ precedencegroup FunctorPrecedence {
 
 infix operator >>=: ApplicativePrecedence
 infix operator *>=: ApplicativePrecedence
-infix operator  <*: ApplicativePrecedence
+infix operator <* : ApplicativePrecedence
 infix operator  *>: ApplicativePrecedence
 infix operator <|>: AlternativePrecedence
 
