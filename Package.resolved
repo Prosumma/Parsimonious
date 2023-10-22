@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "iatheto",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Prosumma/Iatheto",
+      "state" : {
+        "revision" : "c01cb212766e6c3a0fabfd2b2adf3778f757b944",
+        "version" : "3.0.2"
+      }
+    }
+  ],
+  "version" : 2
+}

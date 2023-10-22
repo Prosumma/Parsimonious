@@ -1,0 +1,39 @@
+{
+  "string": "This is a normal string",
+  "escapedString": "Escaped characters: \" \b \f \n \r \t \u1234",
+  "integer": 42,
+  "negativeInteger": -42,
+  "float": 3.14159,
+  "negativeFloat": -3.14159,
+  "scientificNotation": 1e10,
+  "negativeScientificNotation": -1e-10,
+  "booleanTrue": true,
+  "booleanFalse": false,
+  "nullValue": null,
+  "emptyArray": [],
+  "array": [1, "string", true, null, 3.14],
+  "nestedArray": [1, [2, [3, [4, 5]]]],
+  "emptyObject": {},
+  "object": {
+    "key": "value",
+    "nestedObject": {
+      "nestedKey": "nestedValue"
+    }
+  },
+  "complexObject": {
+    "array": [1, 2, 3],
+    "boolean": true,
+    "null": null
+  },
+  "deepNesting": {
+    "level1": {
+      "level2": {
+        "level3": {
+          "level4": {
+            "level5": "This is deeply nested"
+          }
+        }
+      }
+    }
+  }
+}
