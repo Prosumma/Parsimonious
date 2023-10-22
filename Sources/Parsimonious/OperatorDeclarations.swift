@@ -9,6 +9,7 @@ import Foundation
 
 postfix operator *
 postfix operator +
+prefix operator *
 
 precedencegroup ApplicativePrecedence {
   associativity: left

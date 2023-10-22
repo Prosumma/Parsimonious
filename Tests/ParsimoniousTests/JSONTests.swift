@@ -50,11 +50,11 @@ func decimal(from string: String) throws -> Decimal {
 }
 let natural: SParser = char(any: "123456789")
 let digit: SParser = char(any: "0123456789")
-let sign: SParser = optional(char("-"))
+let sign: SParser = *char("-")
 let integer = "0" <|> (natural + digit*)
 let fraction = "." + natural+
-let exponent = char(any: "eE") + optional(char(any: "+-")) + digit+
-let jnumber = (sign + integer + optional(fraction) + optional(exponent)) >>> decimal(from:) >>> JSON.number
+let exponent = char(any: "eE") + *char(any: "+-") + digit+
+let jnumber = (sign + integer + *fraction + *exponent) >>> decimal(from:) >>> JSON.number
 
 // Bools
 let jbool: JParser = (string("true") <|> string("false")) >>> { s in s == "true" } >>> JSON.bool

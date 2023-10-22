@@ -201,6 +201,12 @@ public func `optional`<C: Collection, T: Defaultable>(
   optional(parser(), default: .defaultValue)
 }
 
+public prefix func * <C: Collection, T: Defaultable>(
+  _ parser: @escaping @autoclosure () -> Parser<C, T>
+) -> Parser<C, T> {
+  optional(parser())
+}
+
 /**
  Aggregates the result of all the parsers into an array.
  
