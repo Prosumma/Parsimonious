@@ -79,16 +79,17 @@ let json = whitespacedWithNewlines(jstring <|> jnumber <|> jobject <|> jarray <|
 
 final class JSONTests: XCTestCase {
   func testJSON() throws {
+    // Given
     guard let path = Bundle.module.path(forResource: "JSON", ofType: "json") else {
       return XCTFail("Couldn't load JSON.json resource.")
     }
     let input = try String(contentsOfFile: path)
-    do {
-      let output = try parse(input, with: json <* eof())
-      print(output)
-    } catch let e as ParseError<String> {
-      print(input[e.index...])
-      throw e
-    }
+
+    // When
+    let output = try parse(input, with: json <* eof())
+
+    // Then
+    XCTAssertEqual(output["complexObject"]?["array"]?[1], 2)
+    XCTAssertEqual(output["array"]?[4], 3.14)
   }
 }
