@@ -482,3 +482,22 @@ public func not<C: Collection, T>(
 ) -> Parser<C, Void> {
   not(any: parsers)
 }
+
+/**
+ This is chiefly useful for extracting a value from an enum case, e.g.,
+ 
+ ```swift
+ extract {
+   guard case .foo(let s) = $0 else { return nil }
+   return s
+ }
+ ```
+ */
+public func extract<C: Collection, T>(_ get: @escaping (C.Element) -> T?) -> Parser<C, T> {
+  match() >>> {
+    guard let value = get($0) else {
+      throw ParseError<C>.Reason.nomatch
+    }
+    return value
+  }
+}

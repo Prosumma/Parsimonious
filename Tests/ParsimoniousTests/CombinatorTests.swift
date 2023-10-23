@@ -13,6 +13,11 @@ enum TestError: Error, Equatable {
   case oops
 }
 
+enum Token {
+  case string(String)
+  case number(Int)
+}
+
 /**
  Coverage for any combinators not already
  covered by other tests.
@@ -241,5 +246,44 @@ class CombinatorTests: XCTestCase {
         return XCTFail("Expected .nomatch, but it matched.")
       }
     }
+  }
+  
+  func testExtract() throws {
+    // Given
+    let parser: Parser<[Token], String> = extract {
+      guard case .string(let s) = $0 else {
+        return nil
+      }
+      return s
+    }
+    let tokens = [Token.string("token")]
+    
+    // When
+    let strings = try parse(tokens, with: many(parser) <* eof())
+    
+    // Then
+    XCTAssertEqual(strings, ["token"])
+  }
+  
+  func testExtractThrows() throws {
+    // Given
+    let parser: Parser<[Token], String> = extract {
+      guard case .string(let s) = $0 else {
+        return nil
+      }
+      return s
+    }
+    let tokens = [Token.number(3)]
+    
+    // When/Then
+    XCTAssertThrowsError(try parse(tokens, with: many(parser) <* eof())) { error in
+      guard
+        let error = error as? ParseError<[Token]>,
+        case .nomatch = error.reason
+      else {
+        return XCTFail("Expected not to match.")
+      }
+    }
+    
   }
 }

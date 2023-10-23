@@ -6,7 +6,7 @@
 //
 
 public struct ParseError<Source: Collection>: Error {
-  public enum Reason {
+  public enum Reason: Error {
     case nomatch, eof, outOfBounds, error(Error)
   }
   
@@ -27,6 +27,8 @@ func throwToResult<Source: Collection, T>(
     return try .success(action())
   } catch let e as ParseError<Source> {
     return .failure(e)
+  } catch let e as ParseError<Source>.Reason {
+    return .failure(.init(reason: e, index: index))
   } catch {
     return .failure(.init(reason: .error(error), index: index))
   }
