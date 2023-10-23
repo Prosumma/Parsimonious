@@ -30,8 +30,8 @@ public struct ParseState<Source: Collection, Output> {
   public func mapWithRange<NewOutput>(
     _ transform: (Output, Range<Source.Index>) throws -> (NewOutput, Range<Source.Index>)
   ) rethrows -> ParseState<Source, NewOutput> {
-    let (NewOutput, targetRange) = try transform(output, range)
-    return .init(output: NewOutput, range: targetRange)
+    let (newOutput, targetRange) = try transform(output, range)
+    return .init(output: newOutput, range: targetRange)
   }
   
   public func flatMap<NewOutput>(
