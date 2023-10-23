@@ -102,6 +102,39 @@ string("foo")* + string("bar")
 
 This matches 0 or more of the string "foo" followed by 1 instance of the string "bar", so it would match "bar", "foobar", "foofoobar", etc.
 
+### Element Predicates
+
+The `match` and `char` combinators have overloads which take _element predicates_. An element predicate matches an element and, if the match is successful, the parser returns that element.
+
+The most fundamental element predicate is `(C.Element) -> Bool`. There are two others. First, a `KeyPath` of type `KeyPath<C.Element, Bool>` and second, a model element of type `C.Element` where `C.Element` is `Equatable`.
+
+Here are some simple examples:
+
+```swift
+char { $0 == "e" } // Matches and returns the character "e"
+char(\Character.isWhitespace) // Matches a whitespace character and returns it
+char("e") // Matches and returns the character "e"
+```
+
+This can be expanded using a small DSL:
+
+```swift
+// Match any character which is not whitespace or a newline.
+char(!any(\.isWhitespace, \.isNewline))
+```
+
+When model elements, keypaths and predicates are mixed, the prefix `^` operator can convert the elements and keypaths to a predicate, e.g.,
+
+```swift
+char(!any(^"e", ^\.isWhitespace))
+```
+
+When negating, `^` is not needed:
+
+```swift
+char(all(!"e", !\.isWhitespace))
+```
+
 ## Laziness
 
 Wherever possible, combinators which take other parsers as arguments use `@escaping @autoclosure` for this.
