@@ -55,7 +55,7 @@ class StringTests: XCTestCase {
   
   func testCharAnyKeyPaths() throws {
     // Given
-    let parser: SParser = many1S(char(any: \Character.isLetter, \Character.isPunctuation)) <* eof()
+    let parser: SParser = char(any(\Character.isLetter, \Character.isPunctuation))+ <* eof()
 
     // When
     let output = try parse("!c?T", with: parser)
@@ -66,7 +66,7 @@ class StringTests: XCTestCase {
   
   func testCharAnyModels() throws {
     // Given
-    let parser: SParser = manyS(char(any: "a", "e", "i")) <* eof()
+    let parser: SParser = char(any("a", "e", "i"))* <* eof()
     
     // When
     let output = try parse("iiiaaaeeeie", with: parser)
@@ -77,7 +77,7 @@ class StringTests: XCTestCase {
   
   func testParenthesizedSingleStraightQuoted() throws {
     // Given
-    let parser: SParser = whitespaced(parenthesized(singleStraightQuoted(manyS(char(any: "foo"))))) <* eof()
+    let parser: SParser = whitespaced(parenthesized(singleStraightQuoted(char(any: "foo")*))) <* eof()
     
     // When
     let output = try parse("  ('foo')  ", with: parser)

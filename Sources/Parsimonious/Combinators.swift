@@ -98,12 +98,12 @@ public func match<C: Collection, T>(any parsers: Parser<C, T>...) -> Parser<C, T
   match(any: parsers)
 }
 
-public func match<C: Collection>(_ test: @escaping (C.Element) -> Bool) -> Parser<C, C.Element> {
+public func match<C: Collection>(_ predicate: @escaping ElementPredicate<C.Element>) -> Parser<C, C.Element> {
   .init { source, index in
     guard index < source.endIndex else { return .failure(.init(reason: .eof, index: index)) }
     let element = source[index]
     let result: ParseResult<C, C.Element>
-    if test(element) {
+    if predicate(element) {
       let range = index..<source.index(after: index)
       result = .success(.init(output: element, range: range))
     } else {
@@ -111,32 +111,6 @@ public func match<C: Collection>(_ test: @escaping (C.Element) -> Bool) -> Parse
     }
     return result
   }
-}
-
-public func match<C: Collection>(any tests: [(C.Element) -> Bool]) -> Parser<C, C.Element> {
-  match(any: tests.map { match($0) })
-}
-
-public func match<C: Collection>(any tests: ((C.Element) -> Bool)...) -> Parser<C, C.Element> {
-  match(any: tests)
-}
-
-public func match<C: Collection>(
-  _ model: @escaping @autoclosure () -> C.Element
-) -> Parser<C, C.Element> where C.Element: Equatable {
-  match { $0 == model() }
-}
-
-public func match<C: Collection>(
-  any models: [C.Element]
-) -> Parser<C, C.Element> where C.Element: Equatable {
-  match(any: models.map { match($0) })
-}
-
-public func match<C: Collection>(
-  any models: C.Element...
-) -> Parser<C, C.Element> where C.Element: Equatable {
-  match(any: models)
 }
 
 public func match<C: Collection, T>(
@@ -179,6 +153,56 @@ public func match<C: Collection, T>(
   _ parser: @escaping @autoclosure () -> Parser<C, T>
 ) -> Parser<C, [T]> {
   match(parser(), from: exactly, to: exactly)
+}
+
+public func match<C: Collection>(
+  _ predicate: @escaping ElementPredicate<C.Element>,
+  from: Int,
+  to: Int
+) -> Parser<C, [C.Element]> {
+  match(match(predicate), from: from, to: to)
+}
+
+public func match<C: Collection>(
+  _ range: Range<Int>,
+  _ predicate: @escaping ElementPredicate<C.Element>
+) -> Parser<C, [C.Element]> {
+  match(range, match(predicate))
+}
+
+public func match<C: Collection>(
+  _ exactly: Int,
+  _ predicate: @escaping ElementPredicate<C.Element>
+) -> Parser<C, [C.Element]> {
+  match(exactly, match(predicate))
+}
+
+public func match<C: Collection>(
+  _ model: @escaping @autoclosure () -> C.Element
+) -> Parser<C, C.Element> where C.Element: Equatable {
+  match(^model())
+}
+
+public func match<C: Collection>(
+  _ model: @escaping @autoclosure () -> C.Element,
+  from: Int,
+  to: Int
+) -> Parser<C, [C.Element]> where C.Element: Equatable {
+  match(^model(), from: from, to: to)
+}
+
+public func match<C: Collection>(
+  _ range: Range<Int>,
+  _ model: @escaping @autoclosure () -> C.Element
+) -> Parser<C, [C.Element]> where C.Element: Equatable {
+  match(range, ^model())
+}
+
+public func match<C: Collection>(
+  _ exactly: Int,
+  _ model: @escaping @autoclosure () -> C.Element
+) -> Parser<C, [C.Element]> where C.Element: Equatable {
+  match(exactly, ^model())
 }
 
 public func <|> <C: Collection, T>(
@@ -414,46 +438,6 @@ public func eof<C: Collection>() -> Parser<C, Void> {
       return .failure(.init(reason: .nomatch, index: index))
     }
   }
-}
-
-public func not<T>(_ test: @escaping (T) -> Bool) -> (T) -> Bool {
-  { !test($0) }
-}
-
-public func not<T>(any tests: [(T) -> Bool]) -> (T) -> Bool {
-  return {
-    for test in tests {
-      if test($0) { return false }
-    }
-    return true
-  }
-}
-
-public func not<T>(any tests: ((T) -> Bool)...) -> (T) -> Bool {
-  not(any: tests)
-}
-
-public func not<T>(any tests: [KeyPath<T, Bool>]) -> (T) -> Bool {
-  let test: (KeyPath<T, Bool>) -> (T) -> Bool = { keyPath in {
-    $0[keyPath: keyPath]
-  }}
-  return not(any: tests.map(test))
-}
-
-public func not<T>(any tests: KeyPath<T, Bool>...) -> (T) -> Bool {
-  not(any: tests)
-}
-
-public func not<T>(_ model: T) -> (T) -> Bool where T: Equatable {
-  { $0 != model }
-}
-
-public func not<T>(any models: [T]) -> (T) -> Bool where T: Equatable {
-  not { models.contains($0) }
-}
-
-public func not<T>(any models: T...) -> (T) -> Bool where T: Equatable {
-  not(any: models)
 }
 
 /**

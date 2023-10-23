@@ -71,7 +71,7 @@ class CombinatorTests: XCTestCase {
     // Given
     let isA: (Character) -> Bool = { $0 == "a" }
     let isB: (Character) -> Bool = { $0 == "b" }
-    let word: SParser = many1S(match(any: isA, isB).joined())
+    let word: SParser = (match(any(isA, isB))+.joined())
     let parser: Parser<String, [String]> = many(word, separator: ",") <* eof()
     
     // When
@@ -83,7 +83,7 @@ class CombinatorTests: XCTestCase {
   
   func testMatchModel() throws {
     // Given
-    let parser: SParser = match("a").joined() <* eof()
+    let parser: SParser = match(^"a").joined() <* eof()
     
     // When
     let output = try parse("a", with: parser)
@@ -93,7 +93,7 @@ class CombinatorTests: XCTestCase {
   }
   
   func testMatchAnyModels() throws {
-    let parser: Parser<[Int], [Int]> = match(any: 1, 7)* <* eof()
+    let parser: Parser<[Int], [Int]> = match(any(1, 7))* <* eof()
     
     // When
     let output = try parse([1, 1, 7, 7, 1], with: parser)
@@ -103,7 +103,7 @@ class CombinatorTests: XCTestCase {
   }
   
   func testAddElementsProducingArray() throws {
-    let parser: Parser<[Int], [Int]> = (match(1) + match(7)) <* eof()
+    let parser: Parser<[Int], [Int]> = (match(^1) + match(^7)) <* eof()
     
     // When
     let output = try parse([1, 7], with: parser)
@@ -113,7 +113,7 @@ class CombinatorTests: XCTestCase {
   }
   
   func testAddArrayAndElementProducingArray() throws {
-    let parser: Parser<[Int], [Int]> = (match(1)+ + match(7)) <* eof()
+    let parser: Parser<[Int], [Int]> = (match(^1)+ + match(^7)) <* eof()
     
     // When
     let output = try parse([1, 1, 1, 7], with: parser)
@@ -124,9 +124,9 @@ class CombinatorTests: XCTestCase {
   
   func testMany1WithSeparator() throws {
     // Given
-    let digit: Parser<[Int], Int> = match(any: 1, 2, 3, 4, 5, 6, 7, 8, 9)
+    let digit: Parser<[Int], Int> = match(any(1, 2, 3, 4, 5, 6, 7, 8, 9))
     let group: Parser<[Int], [Int]> = many1(digit)
-    let sep: Parser<[Int], Int> = match(0)
+    let sep: Parser<[Int], Int> = match(^0)
     let parser: Parser<[Int], [[Int]]> = many1(group, separator: sep) <* eof()
     
     // When
@@ -149,7 +149,7 @@ class CombinatorTests: XCTestCase {
   
   func testPeek() throws {
     // Given
-    let parser: SParser = ((char(not(","))+ <* peek(",")) + char(",")) <* eof()
+    let parser: SParser = ((char(!",")+ <* peek(",")) + char(",")) <* eof()
     
     // When
     let output = try parse("xyz,", with: parser)
@@ -200,7 +200,7 @@ class CombinatorTests: XCTestCase {
     // Given
     let is2: (Int) -> Bool = { $0 == 2 }
     let is3: (Int) -> Bool = { $0 == 3 }
-    let n = not(any: is2, is3)
+    let n = not((any(is2, is3)))
     
     // When/Then
     XCTAssertTrue(n(5))
@@ -208,7 +208,7 @@ class CombinatorTests: XCTestCase {
   
   func testNotAnyKeyPaths() throws {
     // Given
-    let c = not(any: \Character.isSymbol, \Character.isPunctuation)
+    let c = !any(\Character.isSymbol, \Character.isPunctuation)
     
     // When/Then
     XCTAssertTrue(c("a"))
@@ -216,7 +216,7 @@ class CombinatorTests: XCTestCase {
   
   func testNotAnyModels() throws {
     // Given
-    let c = not(any: "x", "y")
+    let c = !any("x", "y")
     
     // When/Then
     XCTAssertTrue(c("a"))

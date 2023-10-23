@@ -28,7 +28,7 @@ typealias SParser = Parser<String, String>
 typealias JParser = Parser<String, JSON>
 
 // Strings
-let escapedString: SParser = manyS((char("\\") + char("\"")) <|> char(not("\"")))
+let escapedString: SParser = ((char("\\") + char("\"")) <|> char(not("\"")))*
 let unescapedString = escapedString >>> JSON.unescape
 let quotedString = doubleStraightQuoted(unescapedString)
 let jstring = quotedString >>> JSON.string

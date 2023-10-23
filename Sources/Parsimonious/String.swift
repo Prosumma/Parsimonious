@@ -30,13 +30,13 @@ extension Parser: ExpressibleByStringLiteral where Source.Element == Character, 
 public postfix func * <C: Collection>(
   _ parser: @escaping @autoclosure () -> Parser<C, String>
 ) -> Parser<C, String> {
-  manyS(parser())
+  parser()*.joined()
 }
 
 public postfix func + <C: Collection>(
   _ parser: @escaping @autoclosure () -> Parser<C, String>
 ) -> Parser<C, String> {
-  many1S(parser())
+  parser()+.joined()
 }
 
 public extension Parser where Output == Character {
@@ -88,78 +88,27 @@ public func char<C: Collection>() -> Parser<C, String> where C.Element == Charac
 }
 
 public func char<C: Collection>(
-  _ test: @escaping (Character) -> Bool
+  _ predicate: @escaping ElementPredicate<Character>
 ) -> Parser<C, String> where C.Element == Character {
-  match(test).joined()
-}
-
-public func char<C: Collection>(
-  any tests: [(Character) -> Bool]
-) -> Parser<C, String> where C.Element == Character {
-  match(any: tests).joined()
-}
-
-public func char<C: Collection>(
-  any tests: ((Character) -> Bool)...
-) -> Parser<C, String> where C.Element == Character {
-  char(any: tests)
-}
-
-public func char<C: Collection>(
-  any tests: [KeyPath<Character, Bool>]
-) -> Parser<C, String> where C.Element == Character {
-  let test: (KeyPath<Character, Bool>) -> (Character) -> Bool = { keyPath in {
-    $0[keyPath: keyPath]
-  }}
-  return char(any: tests.map(test))
-}
-
-public func char<C: Collection>(
-  any tests: KeyPath<Character, Bool>...
-) -> Parser<C, String> where C.Element == Character {
-  char(any: tests)
+  match(predicate).joined()
 }
 
 public func char<C: Collection>(
   _ model: @escaping @autoclosure () -> Character
 ) -> Parser<C, String> where C.Element == Character {
-  char { $0 == model() }
-}
-
-public func char<C: Collection>(
-  any models: [Character]
-) -> Parser<C, String> where C.Element == Character {
-  char { models.contains($0) }
-}
-
-public func char<C: Collection>(
-  any models: Character...
-) -> Parser<C, String> where C.Element == Character {
-  char(any: models)
+  char(^model())
 }
 
 public func char<C: Collection>(
   any string: String
 ) -> Parser<C, String> where C.Element == Character {
-  char(any: Array(string))
+  char(any(string.map { ^$0 }))
 }
 
 public func string<C: Collection>(
   _ model: @escaping @autoclosure () -> String
 ) -> Parser<C, String> where C.Element == Character {
-  chain(model().map { char($0) }).joined()
-}
-
-public func manyS<C: Collection>(
-  _ parser: @escaping @autoclosure () -> Parser<C, String>
-) -> Parser<C, String> {
-  many(parser()).joined()
-}
-
-public func many1S<C: Collection>(
-  _ parser: @escaping @autoclosure () -> Parser<C, String>
-) -> Parser<C, String> {
-  many1(parser()).joined()
+  chain(model().map { char(^$0) }).joined()
 }
 
 public extension Parser where Source.Element == Character {

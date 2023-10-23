@@ -13,7 +13,7 @@ typealias RSParser = Parser<String, (Range<String.Index>, String)>
 class ParserTests: XCTestCase {
   func testWithRange() throws {
     // Given
-    let word: RSParser = char(any: \Character.isLetter)+.withRange()
+    let word: RSParser = char(^\Character.isLetter)+.withRange()
     let sep: SParser = char(",")
     let parser = many1(word, separator: sep) <* eof()
     let input = "aaa,bbb"
