@@ -394,6 +394,18 @@ public func tuple<C: Collection, A, B>(
   }
 }
 
+public func tuple<C: Collection, A, B, D>(
+  _ parserA: @escaping @autoclosure () -> Parser<C, A>,
+  _ parserB: @escaping @autoclosure () -> Parser<C, B>,
+  _ parserD: @escaping @autoclosure () -> Parser<C, D>
+) -> Parser<C, (A, B, D)> {
+  parserA() >>= { a in
+    parserB() >>= { b in
+      parserD() >>> { d in (a, b, d) }
+    }
+  }
+}
+
 public func eof<C: Collection>() -> Parser<C, Void> {
   .init { source, index in
     if index == source.endIndex {
