@@ -110,7 +110,6 @@ This is important in a parser combinator library because combinators are often r
 
 ```swift
 var jarray: JParser = bracketed(many(json, separator: ",")) >>> JSON.array
-
 let json = whitespacedWithNewlines(jstring <|> jnumber <|> jobject <|> jarray <|> jbool <|> jnull)
 ```
 
