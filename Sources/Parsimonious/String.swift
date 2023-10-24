@@ -94,11 +94,19 @@ public func char<C: Collection>(
 }
 
 public func char<C: Collection>(
-  _ model: @escaping @autoclosure () -> Character
+  _ model: Character
 ) -> Parser<C, String> where C.Element == Character {
-  char(^model())
+  char(^model)
 }
 
+/**
+ Matches any of the characters in the given string, but only one.
+
+ ```swift
+ // Matches any of the characters "x", "y", or "z".
+ char(any: "xyz")
+ ```
+ */
 public func char<C: Collection>(
   any string: String
 ) -> Parser<C, String> where C.Element == Character {
@@ -106,9 +114,9 @@ public func char<C: Collection>(
 }
 
 public func string<C: Collection>(
-  _ model: @escaping @autoclosure () -> String
+  _ model: String
 ) -> Parser<C, String> where C.Element == Character {
-  chain(model().map { char(^$0) }).joined()
+  chain(model.map { char(^$0) }).joined()
 }
 
 public extension Parser where Source.Element == Character {
