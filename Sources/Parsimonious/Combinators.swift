@@ -74,6 +74,10 @@ public func deferred<C: Collection, T>(
   parser()
 }
 
+/**
+ Matches any single element of the underlying `Collection`.
+ Does not match EOF.
+ */
 public func match<C: Collection>() -> Parser<C, C.Element> {
   match { _ in true }
 }
@@ -366,7 +370,7 @@ public func many1<C: Collection, T, S>(
  For example:
  
  ```swift
- chain(many1S(char(any: "abc")), skip(eof())).joined()
+ chain(char(any: "abc")+, skip(eof())).joined()
  ```
  
  `eof()` returns `Void`, but embedding it in `skip`,
@@ -375,7 +379,7 @@ public func many1<C: Collection, T, S>(
  It's often easier, however, to use `<*` or `*>`, e.g.,
  
  ```swift
- many1S(char(any: "abc")) <* eof()
+ char(any: "abc")+ <* eof()
  ```
  */
 public func skip<C: Collection, T, S: Defaultable>(
