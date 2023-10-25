@@ -23,20 +23,6 @@ enum Token {
  covered by other tests.
  */
 class CombinatorTests: XCTestCase {
-  /**
-   `*>=` (`>>` in Haskell) is commonly called "then".
-   */
-  func testThen() throws {
-    // Given
-    let parser: SParser = match(3, "a").joined() <* eof()
-    
-    // When
-    let output = try parse("aaa", with: parser *>= just("bbb"))
-    
-    // Then
-    XCTAssertEqual(output, "bbb")
-  }
-  
   func testFail() {
     // Given
     let parser: SParser = char("a") <|> fail(TestError.oops)

@@ -14,18 +14,6 @@ public func >>= <C: Collection, Output, NewOutput>(
 }
 
 /**
- Monadic composition, ignoring the previous argument.
- 
- Same as Haskell's `>>`, but less general.
- */
-public func *>= <C: Collection, Output, NewOutput>(
-  lhs: @escaping @autoclosure () -> Parser<C, Output>,
-  rhs: @escaping @autoclosure () -> Parser<C, NewOutput>
-) -> Parser<C, NewOutput> {
-  lhs().flatMap { _ in rhs() }
-}
-
-/**
  Operator version of `map`.
  
  Equivalent of Haskell's `<&>`, but less general.

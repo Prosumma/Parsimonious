@@ -31,7 +31,6 @@ precedencegroup FunctorPrecedence {
 }
 
 infix operator >>=: ApplicativePrecedence
-infix operator *>=: ApplicativePrecedence
 infix operator <* : ApplicativePrecedence
 infix operator  *>: ApplicativePrecedence
 infix operator <|>: AlternativePrecedence
