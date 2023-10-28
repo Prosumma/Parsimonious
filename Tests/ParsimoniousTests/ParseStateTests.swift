@@ -17,10 +17,10 @@ class ParseStateTests: XCTestCase {
       output: "foo",
       range: range
     )
-    
+
     // When
     let newState = state.flatMap { _, range in .init(output: "bar", range: range) }
-    
+
     // Then
     XCTAssertEqual(newState.output, "bar")
     XCTAssertEqual(newState.range, range)

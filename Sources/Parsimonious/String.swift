@@ -123,7 +123,7 @@ public extension Parser where Source.Element == Character {
   static var whitespace: Parser<Source, String> {
     char(\.isWhitespace)
   }
-  
+
   static var newline: Parser<Source, String> {
     char(\.isNewline)
   }
@@ -131,7 +131,7 @@ public extension Parser where Source.Element == Character {
   static var doubleStraightQuote: Parser<Source, String> {
     char("\"")
   }
-  
+
   static var singleStraightQuote: Parser<Source, String> {
     char("'")
   }

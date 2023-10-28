@@ -1,3 +1,6 @@
 disabled_rules:
   - identifier_name
+  - for_where
+  - large_tuple
   - todo
+  - trailing_comma

@@ -21,7 +21,7 @@ class ParseErrorTests: XCTestCase {
       return XCTFail("Expected failure but succeeded.")
     }
   }
-  
+
   func testThrowErrorToResult() {
     let s = ""
     let result: Result<Void, ParseError<String>> = throwToResult(s.startIndex) {

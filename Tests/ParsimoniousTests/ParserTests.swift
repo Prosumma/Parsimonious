@@ -20,7 +20,7 @@ class ParserTests: XCTestCase {
 
     // When
     let output = try parse(input, with: parser)
-    
+
     // Then
     for (r, s) in output {
       XCTAssertEqual(String(input[r]), s)

@@ -9,10 +9,10 @@ public struct ParseError<Source: Collection>: Error {
   public enum Reason: Error {
     case nomatch, eof, outOfBounds, error(Error)
   }
-  
+
   public let reason: Reason
   public let index: Source.Index
-  
+
   public init(reason: Reason, index: Source.Index) {
     self.reason = reason
     self.index = index
