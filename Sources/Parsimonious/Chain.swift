@@ -44,7 +44,7 @@ public func chain<C: Collection, T>(
  - Note: This is Haskell's `sequence`, but less general, and with
  a Swiftier name.
  */
-func chain<C: Collection, T>(
+public func chain<C: Collection, T>(
   _ parsers: Parser<C, T>...
 ) -> Parser<C, [T]> {
   chain(parsers)
