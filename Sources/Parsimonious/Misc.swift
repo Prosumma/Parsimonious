@@ -97,3 +97,23 @@ public func extract<C: Collection, T>(_ get: @escaping (C.Element) -> T?) -> Par
     return value
   }
 }
+
+public func debug<C: Collection, T>(_ parser: @escaping @autoclosure () -> Parser<C, T>, tag: String, log: @escaping (String) -> Void) -> Parser<C, T> {
+  .init { source, index in
+    let i = source.distance(from: source.startIndex, to: index)
+    log("About to execute parser \(tag) at index distance \(i) from start.")
+    switch parser()(source, at: index) {
+    case let .success(state):
+      let d = source.distance(from: index, to: state.range.upperBound)
+      log("Parser \(tag) suceeded, consuming \(d) indices, with output \(state.output).")
+      return .success(state)
+    case let .failure(failure):
+      log("Parser \(tag) failed with error \(failure).")
+      return .failure(failure)
+    }
+  }
+}
+
+public func debug<C: Collection, T>(_ parser: @escaping @autoclosure () -> Parser<C, T>, tag: String) -> Parser<C, T> {
+  debug(parser(), tag: tag, log: { print($0) })
+}
