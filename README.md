@@ -10,6 +10,14 @@ In most cases, `Source` is a `String`, but it can be any `Collection` type. It's
 
 Parser combinators are large topic which I cannot cover here. If you're already familiar with parser combinators, Parsimonious shouldn't be too difficult. The unit tests contain almost all you need to know, including the implementation of a complete JSON parser.
 
+## Collection Parser vs Stream Parser
+
+Most parser combinators, such as those found in Haskell, are _stream parsers_. Stream parsers are a great way to parse large amounts of data efficiently. For example, if you have a very large file and want to parse it without loading the entire thing into memory at once, a stream parser is a great way to go.
+
+Parsimonious, however, is a `Collection` parser. The primary disadvantage of a `Collection` parser is that the entire collection must be loaded into memory. (Theoretically, a Swift `Collection` does not have this requirement, but in practice it always does.) The advantage of a `Collection` parser is that it is easy to write and easy to use: It supports backtracking out of the box.
+
+Because of this, Parsimonious is great for tokenizing, writing DSLs, and even doing further processing on the tokens to produce an AST. For example, the first collection parsed could be a `String` (a `Collection` of `Character` instances.) These could be parsed into an array of `Token` instances (i.e., a `Collection` of tokens). But because Parsimonious can parse a `Collection` of any type, the tokens can then be parsed to create an AST.
+
 ## Basic Combinators &amp; Operators
 
 The fundamental combinator is `match`, which matches a single element in the underlying collection using a predicate:
