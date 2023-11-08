@@ -19,23 +19,7 @@ import Foundation
 public func chain<C: Collection, T>(
   _ parsers: @escaping @autoclosure () -> [Parser<C, T>]
 ) -> Parser<C, [T]> {
-  .init { source, index in
-    var outputs: [T] = []
-    var index = index
-    var result: ParseResult<C, [T]> = .success(.init(output: outputs, range: index..<index))
-    PARSE: for parser in parsers() {
-      switch parser(source, at: index) {
-      case .success(let state):
-        outputs.append(state.output)
-        result = .success(.init(output: outputs, range: index..<state.range.upperBound))
-        index = state.range.upperBound
-      case .failure(let error):
-        result = .failure(error)
-        break PARSE
-      }
-    }
-    return result
-  }.ranged()
+  fold([], parsers()) { array, item in array + [item] }
 }
 
 /**
@@ -54,7 +38,7 @@ public func + <C: Collection, T>(
   lhs: @escaping @autoclosure () -> Parser<C, [T]>,
   rhs: @escaping @autoclosure () -> Parser<C, [T]>
 ) -> Parser<C, [T]> {
-  chain(lhs(), rhs()) >>> { Array($0.joined()) }
+  zip(lhs(), rhs()) { $0 + $1 }
 }
 
 public func + <C: Collection, T>(

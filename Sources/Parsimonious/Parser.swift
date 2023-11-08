@@ -39,6 +39,50 @@ public func flatten<C: Collection, T>(
   }
 }
 
+public func zip<C: Collection, L, R, T>(
+  _ lhs: @escaping @autoclosure () -> Parser<C, L>,
+  _ rhs: @escaping @autoclosure () -> Parser<C, R>,
+  combine: @escaping (L, R) throws -> T
+) -> Parser<C, T> {
+  let parser = lhs() >>= { lvalue in
+    rhs() >>> { rvalue in try combine(lvalue, rvalue) }
+  }
+  return parser.ranged()
+}
+
+public func fold<C: Collection, T, R>(
+  _ initial: R,
+  _ parsers: @escaping @autoclosure () -> [Parser<C, T>],
+  combine: @escaping (R, T) throws -> R
+) -> Parser<C, R> {
+  .init { source, index in
+    var initial = initial
+    var index = index
+    for parser in parsers() {
+      switch parser(source, at: index) {
+      case let .success(state):
+        do {
+          initial = try combine(initial, state.output)
+          index = state.range.upperBound
+        } catch {
+          return .failure(.init(reason: .error(error), index: index))
+        }
+      case let .failure(error):
+        return .failure(error)
+      }
+    }
+    return .success(.init(output: initial, range: index..<index))
+  }.ranged()
+}
+
+public func fold<C: Collection, T, R>(
+  _ initial: R,
+  _ parsers: Parser<C, T>...,
+  combine: @escaping (R, T) throws -> R
+) -> Parser<C, R> {
+  fold(initial, parsers, combine: combine)
+}
+
 public extension Parser {
   func ranged() -> Parser<Source, Output> {
     .init { source, index in
