@@ -42,18 +42,17 @@ public func flatten<C: Collection, T>(
 public func zip<C: Collection, L, R, T>(
   _ lhs: @escaping @autoclosure () -> Parser<C, L>,
   _ rhs: @escaping @autoclosure () -> Parser<C, R>,
-  combine: @escaping (L, R) throws -> T
+  _ combine: @escaping (L, R) throws -> T
 ) -> Parser<C, T> {
-  let parser = lhs() >>= { lvalue in
-    rhs() >>> { rvalue in try combine(lvalue, rvalue) }
-  }
-  return parser.ranged()
+  lhs().flatMap { lvalue in
+    rhs().map { rvalue in try combine(lvalue, rvalue) }
+  }.ranged()
 }
 
-public func fold<C: Collection, T, R>(
+public func reduce<C: Collection, T, R>(
   _ initial: R,
   _ parsers: @escaping @autoclosure () -> [Parser<C, T>],
-  combine: @escaping (R, T) throws -> R
+  _ combine: @escaping (R, T) throws -> R
 ) -> Parser<C, R> {
   .init { source, index in
     var initial = initial
@@ -75,12 +74,12 @@ public func fold<C: Collection, T, R>(
   }.ranged()
 }
 
-public func fold<C: Collection, T, R>(
+public func reduce<C: Collection, T, R>(
   _ initial: R,
   _ parsers: Parser<C, T>...,
   combine: @escaping (R, T) throws -> R
 ) -> Parser<C, R> {
-  fold(initial, parsers, combine: combine)
+  reduce(initial, parsers, combine)
 }
 
 public extension Parser {
@@ -137,16 +136,14 @@ public func *> <C: Collection, L, R>(
   lhs: @escaping @autoclosure () -> Parser<C, L>,
   rhs: @escaping @autoclosure () -> Parser<C, R>
 ) -> Parser<C, R> {
-  lhs().flatMap { _ in rhs() }
+  zip(lhs(), rhs()) { l, r in r }
 }
 
 public func <* <C: Collection, L, R>(
   lhs: @escaping @autoclosure () -> Parser<C, L>,
   rhs: @escaping @autoclosure () -> Parser<C, R>
 ) -> Parser<C, L> {
-  lhs().flatMap { output in
-    rhs() *>> output
-  }
+  zip(lhs(), rhs()) { l, r in l }
 }
 
 public func >>> <C: Collection, Input, Output>(

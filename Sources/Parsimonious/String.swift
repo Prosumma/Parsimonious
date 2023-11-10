@@ -61,11 +61,7 @@ public func + <C: Collection>(
   lhs: @escaping @autoclosure () -> Parser<C, String>,
   rhs: @escaping @autoclosure () -> Parser<C, String>
 ) -> Parser<C, String> {
-  lhs() >>= { a in
-    rhs() >>> { b in
-      a + b
-    }
-  }
+  zip(lhs(), rhs(), +)
 }
 
 public func + <C: Collection>(

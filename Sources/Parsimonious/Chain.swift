@@ -19,7 +19,7 @@ import Foundation
 public func chain<C: Collection, T>(
   _ parsers: @escaping @autoclosure () -> [Parser<C, T>]
 ) -> Parser<C, [T]> {
-  fold([], parsers()) { array, item in array + [item] }
+  reduce([], parsers()) { array, item in array + [item] }
 }
 
 /**
