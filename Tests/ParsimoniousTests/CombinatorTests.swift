@@ -42,7 +42,7 @@ class CombinatorTests: XCTestCase {
     // Given
     let parser1: SParser = deferred { source, index in
       let output = source[index]
-      return .success(.init(output: output, range: index..<source.index(after: index)))
+      return .success(.init(output: output, index: source.index(after: index)))
     }.joined()
     let parser2: SParser = deferred(char("z"))
 

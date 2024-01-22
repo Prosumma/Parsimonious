@@ -10,7 +10,7 @@ public func peek<C: Collection, T>(
 ) -> Parser<C, Void> {
   .init { source, index in
     parser()(source, at: index).flatMap { _ in
-      .success(.init(output: (), range: index..<index))
+      .success(.init(output: (), index: index))
     }
   }
 }
@@ -33,7 +33,7 @@ public func delimit<C, T, D>(
 public func eof<C: Collection>() -> Parser<C, Void> {
   .init { source, index in
     if index == source.endIndex {
-      return .success(.init(output: (), range: index..<index))
+      return .success(.init(output: (), index: index))
     } else {
       return .failure(.init(reason: .nomatch, index: index))
     }
@@ -62,7 +62,7 @@ public func not<C: Collection, T>(
     case .success:
       return .failure(.init(reason: .nomatch, index: index))
     case .failure:
-      return .success(.init(output: (), range: index..<index))
+      return .success(.init(output: (), index: index))
     }
   }
 }
@@ -104,7 +104,7 @@ public func debug<C: Collection, T>(_ parser: @escaping @autoclosure () -> Parse
     log("About to execute parser \(tag) at index distance \(i) from start.")
     switch parser()(source, at: index) {
     case let .success(state):
-      let d = source.distance(from: index, to: state.range.upperBound)
+      let d = source.distance(from: index, to: state.index)
       log("Parser \(tag) suceeded, consuming \(d) indices, with output \(state.output).")
       return .success(state)
     case let .failure(failure):

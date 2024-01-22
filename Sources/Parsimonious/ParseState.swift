@@ -14,30 +14,30 @@
  */
 public struct ParseState<Source: Collection, Output> {
   public let output: Output
-  public let range: Range<Source.Index>
+  public let index: Source.Index
 
-  public init(output: Output, range: Range<Source.Index>) {
+  public init(output: Output, index: Source.Index) {
     self.output = output
-    self.range = range
+    self.index = index
   }
 
   public func map<NewOutput>(
     _ transform: (Output) throws -> NewOutput
   ) rethrows -> ParseState<Source, NewOutput> {
-    try .init(output: transform(output), range: range)
+    try .init(output: transform(output), index: index)
   }
 
-  public func mapWithRange<NewOutput>(
-    _ transform: (Output, Range<Source.Index>) throws -> (NewOutput, Range<Source.Index>)
+  public func mapWithIndex<NewOutput>(
+    _ transform: (Output, Source.Index) throws -> (NewOutput, Source.Index)
   ) rethrows -> ParseState<Source, NewOutput> {
-    let (newOutput, targetRange) = try transform(output, range)
-    return .init(output: newOutput, range: targetRange)
+    let (newOutput, targetIndex) = try transform(output, index)
+    return .init(output: newOutput, index: targetIndex)
   }
 
   public func flatMap<NewOutput>(
-    _ transform: (Output, Range<Source.Index>) throws -> ParseState<Source, NewOutput>
+    _ transform: (Output, Source.Index) throws -> ParseState<Source, NewOutput>
   ) rethrows -> ParseState<Source, NewOutput> {
-    try transform(output, range)
+    try transform(output, index)
   }
 }
 
@@ -57,7 +57,7 @@ public func *>> <Source: Collection, Output, NewOutput>(
 
 public func >>= <Source: Collection, Output, NewOutput>(
   state: ParseState<Source, Output>,
-  transform: (Output, Range<Source.Index>) throws -> ParseState<Source, NewOutput>
+  transform: (Output, Source.Index) throws -> ParseState<Source, NewOutput>
 ) rethrows -> ParseState<Source, NewOutput> {
   try state.flatMap(transform)
 }

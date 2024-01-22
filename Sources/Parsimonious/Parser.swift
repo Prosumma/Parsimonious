@@ -18,7 +18,7 @@ public struct Parser<Source: Collection, Output> {
     self.init { _, index in
       // In other words, outputs the value but consumes
       // none of the underlying collection.
-      .success(.init(output: value, range: index..<index))
+        .success(.init(output: value, index: index))
     }
   }
 
@@ -35,7 +35,7 @@ public func flatten<C: Collection, T>(
   _ parser: @escaping @autoclosure () -> Parser<C, Parser<C, T>>
 ) -> Parser<C, T> {
   .init { source, index in
-    parser()(source, at: index) >>= { $0.output(source, at: $0.range.upperBound) }
+    parser()(source, at: index) >>= { $0.output(source, at: $0.index) }
   }
 }
 
@@ -62,7 +62,7 @@ public func reduce<C: Collection, T, R>(
       case let .success(state):
         do {
           initial = try combine(initial, state.output)
-          index = state.range.upperBound
+          index = state.index
         } catch {
           return .failure(.init(reason: .error(error), index: index))
         }
@@ -70,7 +70,7 @@ public func reduce<C: Collection, T, R>(
         return .failure(error)
       }
     }
-    return .success(.init(output: initial, range: index..<index))
+    return .success(.init(output: initial, index: index))
   }.ranged()
 }
 
@@ -86,7 +86,7 @@ public extension Parser {
   func ranged() -> Parser<Source, Output> {
     .init { source, index in
       self(source, at: index) >>= {
-        .success(.init(output: $0.output, range: index..<$0.range.upperBound))
+        .success(.init(output: $0.output, index: $0.index))
       }
     }
   }
@@ -114,10 +114,10 @@ public extension Parser {
   }
 
   func withRange() -> Parser<Source, (Range<Source.Index>, Output)> {
-    .init { source, index in
-      self(source, at: index) >>> { state in
-        state.mapWithRange { output, range in
-          ((range, output), range)
+    .init { source, startIndex in
+      self(source, at: startIndex) >>> { state in
+        state.mapWithIndex { output, endIndex in
+          ((startIndex..<endIndex, output), endIndex)
         }
       }
     }

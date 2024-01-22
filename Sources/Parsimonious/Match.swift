@@ -39,8 +39,7 @@ public func match<C: Collection>(_ predicate: @escaping ElementPredicate<C.Eleme
     let element = source[index]
     let result: ParseResult<C, C.Element>
     if predicate(element) {
-      let range = index..<source.index(after: index)
-      result = .success(.init(output: element, range: range))
+      result = .success(.init(output: element, index: source.index(after: index)))
     } else {
       result = .failure(.init(reason: .nomatch, index: index))
     }
@@ -58,13 +57,13 @@ public func match<C: Collection, T>(
     let parser = parser()
     var index = index
     var outputs: [T] = []
-    var result: ParseResult<C, [T]> = .success(.init(output: [], range: index..<index))
+    var result: ParseResult<C, [T]> = .success(.init(output: [], index: index))
     LOOP: while outputs.count < to {
       switch parser(source, at: index) {
       case let .success(state):
-        index = state.range.upperBound
+        index = state.index
         outputs.append(state.output)
-        result = .success(.init(output: outputs, range: state.range))
+        result = .success(.init(output: outputs, index: index))
       case let .failure(error):
         if outputs.count < from {
           result = .failure(error)
@@ -73,7 +72,7 @@ public func match<C: Collection, T>(
       }
     }
     return result
-  }.ranged()
+  }
 }
 
 public func match<C: Collection, T>(

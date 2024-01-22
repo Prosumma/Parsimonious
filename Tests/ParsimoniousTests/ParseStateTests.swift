@@ -12,17 +12,17 @@ class ParseStateTests: XCTestCase {
   func testParseState() {
     // Given
     let string = "foobar"
-    let range = string.startIndex..<string.index(string.startIndex, offsetBy: 3)
+    let index = string.index(string.startIndex, offsetBy: 3)
     let state = ParseState<String, String>(
       output: "foo",
-      range: range
+      index: index
     )
 
     // When
-    let newState = state.flatMap { _, range in .init(output: "bar", range: range) }
+    let newState = state.flatMap { _, range in .init(output: "bar", index: index) }
 
     // Then
     XCTAssertEqual(newState.output, "bar")
-    XCTAssertEqual(newState.range, range)
+    XCTAssertEqual(newState.index, index)
   }
 }

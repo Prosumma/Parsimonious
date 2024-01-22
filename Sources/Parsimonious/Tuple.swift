@@ -10,31 +10,31 @@
 private func tupleHelper<C: Collection, A>(
   _ parser: Parser<C, A>,
   _ source: C,
-  _ range: inout Range<C.Index>
+  _ index: inout C.Index
 ) throws -> A {
-  switch parser(source, at: range.upperBound) {
+  switch parser(source, at: index) {
   case .success(let state):
-    range = state.range
+    index = state.index
     return state.output
   case .failure(let error):
-    range = error.index..<error.index
+    index = error.index
     throw error
   }
 }
 
 public func tuple<C: Collection, each A>(_ parser: repeat Parser<C, each A>) -> Parser<C, (repeat each A)> {
   .init { source, index in
-    var range: Range<C.Index> = index..<index
+    var index = index
     do {
       // Side effects for the win!
-      let result = try (repeat tupleHelper(each parser, source, &range))
-      return .success(.init(output: result, range: index..<range.upperBound))
+      let result = try (repeat tupleHelper(each parser, source, &index))
+      return .success(.init(output: result, index: index))
     } catch let error as ParseError<C> {
       return .failure(error)
     } catch {
       // This is dead code, here strictly for the compiler. No way to hit
       // it or test it ever.
-      return .failure(.init(reason: .error(error), index: range.lowerBound))
+      return .failure(.init(reason: .error(error), index: index))
     }
   }
 }
