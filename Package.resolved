@@ -1,4 +1,5 @@
 {
+  "originHash" : "8488ba94613d1db00c6135e5b2cd8ca60b154b8d79f660387d71d53c427f7c95",
   "pins" : [
     {
       "identity" : "iatheto",
@@ -10,5 +11,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
