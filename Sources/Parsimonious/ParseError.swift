@@ -5,7 +5,7 @@
 //  Created by Gregory Higley on 2023-10-19.
 //
 
-public struct ParseError<Source: Collection>: Error {
+public struct ParseError<Source: Collection>: Error where Source.Index: Sendable {
   public enum Reason: Error {
     case nomatch, eof, outOfBounds, error(Error)
   }

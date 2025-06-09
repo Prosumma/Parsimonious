@@ -7,7 +7,7 @@
 
 public typealias Parse<Source: Collection, Output> = (Source, Source.Index) -> ParseResult<Source, Output>
 
-public struct Parser<Source: Collection, Output> {
+public struct Parser<Source: Collection, Output> where Source.Index: Sendable {
   private let parse: Parse<Source, Output>
 
   public init(parse: @escaping Parse<Source, Output>) {

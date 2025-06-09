@@ -5,13 +5,11 @@
 //  Created by Gregory Higley on 2023-10-25.
 //
 
-#if swift(>=5.9)
-
 private func tupleHelper<C: Collection, A>(
   _ parser: Parser<C, A>,
   _ source: C,
   _ range: inout Range<C.Index>
-) throws -> A {
+) throws -> A where C.Index: Sendable {
   switch parser(source, at: range.upperBound) {
   case .success(let state):
     range = state.range
@@ -22,7 +20,9 @@ private func tupleHelper<C: Collection, A>(
   }
 }
 
-public func tuple<C: Collection, each A>(_ parser: repeat Parser<C, each A>) -> Parser<C, (repeat each A)> {
+public func tuple<C: Collection, each A>(_ parser: repeat Parser<C, each A>) -> Parser<C, (repeat each A)>
+  where C.Index: Sendable
+{
   .init { source, index in
     var range: Range<C.Index> = index..<index
     do {
@@ -38,28 +38,3 @@ public func tuple<C: Collection, each A>(_ parser: repeat Parser<C, each A>) -> 
     }
   }
 }
-
-#else
-
-public func tuple<C: Collection, A, B>(
-  _ parserA: @escaping @autoclosure () -> Parser<C, A>,
-  _ parserB: @escaping @autoclosure () -> Parser<C, B>
-) -> Parser<C, (A, B)> {
-  parserA() >>= { a in
-    parserB() >>> { b in (a, b) }
-  }
-}
-
-public func tuple<C: Collection, A, B, D>(
-  _ parserA: @escaping @autoclosure () -> Parser<C, A>,
-  _ parserB: @escaping @autoclosure () -> Parser<C, B>,
-  _ parserD: @escaping @autoclosure () -> Parser<C, D>
-) -> Parser<C, (A, B, D)> {
-  parserA() >>= { a in
-    parserB() >>= { b in
-      parserD() >>> { d in (a, b, d) }
-    }
-  }
-}
-
-#endif

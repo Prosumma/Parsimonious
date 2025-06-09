@@ -7,7 +7,7 @@
 
 public func peek<C: Collection, T>(
   _ parser: @escaping @autoclosure () -> Parser<C, T>
-) -> Parser<C, Void> {
+) -> Parser<C, Void> where C.Index: Sendable {
   .init { source, index in
     parser()(source, at: index).flatMap { _ in
       .success(.init(output: (), range: index..<index))
@@ -30,7 +30,7 @@ public func delimit<C, T, D>(
   delimit(parser(), by: delimiter(), and: delimiter())
 }
 
-public func eof<C: Collection>() -> Parser<C, Void> {
+public func eof<C: Collection>() -> Parser<C, Void> where C.Index: Sendable {
   .init { source, index in
     if index == source.endIndex {
       return .success(.init(output: (), range: index..<index))
@@ -56,7 +56,7 @@ public func eof<C: Collection>() -> Parser<C, Void> {
  */
 public func not<C: Collection, T>(
   _ parser: @escaping @autoclosure () -> Parser<C, T>
-) -> Parser<C, Void> {
+) -> Parser<C, Void> where C.Index: Sendable {
   .init { source, index in
     switch parser()(source, at: index) {
     case .success:
@@ -69,13 +69,13 @@ public func not<C: Collection, T>(
 
 public func not<C: Collection, T>(
   any parsers: @escaping @autoclosure () -> [Parser<C, T>]
-) -> Parser<C, Void> {
+) -> Parser<C, Void> where C.Index: Sendable {
   not(match(any: parsers()))
 }
 
 public func not<C: Collection, T>(
   any parsers: Parser<C, T>...
-) -> Parser<C, Void> {
+) -> Parser<C, Void> where C.Index: Sendable {
   not(any: parsers)
 }
 
@@ -89,7 +89,9 @@ public func not<C: Collection, T>(
  }
  ```
  */
-public func extract<C: Collection, T>(_ get: @escaping (C.Element) -> T?) -> Parser<C, T> {
+public func extract<C: Collection, T>(_ get: @escaping (C.Element) -> T?) -> Parser<C, T>
+  where C.Index: Sendable
+{
   match() >>> {
     guard let value = get($0) else {
       throw ParseError<C>.Reason.nomatch
@@ -98,7 +100,11 @@ public func extract<C: Collection, T>(_ get: @escaping (C.Element) -> T?) -> Par
   }
 }
 
-public func debug<C: Collection, T>(_ parser: @escaping @autoclosure () -> Parser<C, T>, tag: String, log: @escaping (String) -> Void) -> Parser<C, T> {
+public func debug<C: Collection, T>(
+  _ parser: @escaping @autoclosure () -> Parser<C, T>,
+  tag: String,
+  log: @escaping (String) -> Void
+) -> Parser<C, T> where C.Index: Sendable {
   .init { source, index in
     let i = source.distance(from: source.startIndex, to: index)
     log("About to execute parser \(tag) at index distance \(i) from start.")
@@ -114,6 +120,9 @@ public func debug<C: Collection, T>(_ parser: @escaping @autoclosure () -> Parse
   }
 }
 
-public func debug<C: Collection, T>(_ parser: @escaping @autoclosure () -> Parser<C, T>, tag: String) -> Parser<C, T> {
+public func debug<C: Collection, T>(
+  _ parser: @escaping @autoclosure () -> Parser<C, T>,
+  tag: String
+) -> Parser<C, T> where C.Index: Sendable {
   debug(parser(), tag: tag, log: { print($0) })
 }
