@@ -12,7 +12,7 @@ let package = Package(
     ),
   ],
   dependencies: [
-    .package(url: "https://github.com/Prosumma/Iatheto", from: "3.0.0")
+    .package(url: "https://github.com/Prosumma/Iatheto", from: "3.1.0")
   ],
   targets: [
     .target(name: "Parsimonious"),

@@ -37,7 +37,7 @@ let jstring = quotedString >>> JSON.string
 enum NumberError: Error {
   case invalidNumber(String)
 }
-var decimalNumberFormatter: NumberFormatter = {
+nonisolated(unsafe) var decimalNumberFormatter: NumberFormatter = {
   let formatter = NumberFormatter()
   formatter.numberStyle = .decimal
   return formatter
@@ -63,12 +63,12 @@ let jbool: JParser = (string("true") <|> string("false")) >>> { s in s == "true"
 let jnull: JParser = string("null") *>> JSON.null
 
 // Object
-var assignment: Parser<String, (String, JSON)> = tuple(whitespacedWithNewlines(quotedString) <* ":", json)
+let assignment: Parser<String, (String, JSON)> = tuple(whitespacedWithNewlines(quotedString) <* ":", json)
 let assignments = many(`assignment`, separator: ",") >>> { Dictionary($0, uniquingKeysWith: { _, v2 in v2 }) }
 let jobject = braced(assignments) >>> JSON.object
 
 // Array
-var jarray: JParser = bracketed(many(json, separator: ",")) >>> JSON.array
+let jarray: JParser = bracketed(many(json, separator: ",")) >>> JSON.array
 
 // JSON
 let json = whitespacedWithNewlines(jstring <|> jnumber <|> jobject <|> jarray <|> jbool <|> jnull)

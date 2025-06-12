@@ -1,13 +1,13 @@
 {
-  "originHash" : "8488ba94613d1db00c6135e5b2cd8ca60b154b8d79f660387d71d53c427f7c95",
+  "originHash" : "362ca0b6903e2340aca484ab1e4e336f997f45810c89a0b6517a576899dce3d7",
   "pins" : [
     {
       "identity" : "iatheto",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Prosumma/Iatheto",
       "state" : {
-        "revision" : "4487ad593f46ff8cdd3fb30a3d8a1f34a73f55cb",
-        "version" : "3.0.4"
+        "revision" : "2a00fb94c344910218ff59ef533beab522aef27f",
+        "version" : "3.1.1"
       }
     }
   ],
