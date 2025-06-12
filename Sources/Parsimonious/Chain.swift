@@ -17,7 +17,7 @@ import Foundation
  a Swiftier name.
  */
 public func chain<C: Collection, T>(
-  _ parsers: @escaping @autoclosure () -> [Parser<C, T>]
+  _ parsers: @escaping @Sendable @autoclosure () -> [Parser<C, T>]
 ) -> Parser<C, [T]> {
   reduce([], parsers()) { array, item in array + [item] }
 }
@@ -35,29 +35,29 @@ public func chain<C: Collection, T>(
 }
 
 public func + <C: Collection, T>(
-  lhs: @escaping @autoclosure () -> Parser<C, [T]>,
-  rhs: @escaping @autoclosure () -> Parser<C, [T]>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, [T]>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, [T]>
 ) -> Parser<C, [T]> {
   zip(lhs(), rhs()) { $0 + $1 }
 }
 
 public func + <C: Collection, T>(
-  lhs: @escaping @autoclosure () -> Parser<C, T>,
-  rhs: @escaping @autoclosure () -> Parser<C, T>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, T>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, [T]> {
   chain(lhs(), rhs())
 }
 
 public func + <C: Collection, T>(
-  lhs: @escaping @autoclosure () -> Parser<C, T>,
-  rhs: @escaping @autoclosure () -> Parser<C, [T]>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, T>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, [T]>
 ) -> Parser<C, [T]> {
   lhs().list() + rhs()
 }
 
 public func + <C: Collection, T>(
-  lhs: @escaping @autoclosure () -> Parser<C, [T]>,
-  rhs: @escaping @autoclosure () -> Parser<C, T>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, [T]>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, [T]> {
   lhs() + rhs().list()
 }

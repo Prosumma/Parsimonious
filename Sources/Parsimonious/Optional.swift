@@ -16,20 +16,20 @@ extension Array: Defaultable {
 }
 
 public func `optional`<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>,
-  default defaultValue: @escaping @autoclosure () -> T
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>,
+  default defaultValue: @escaping @Sendable @autoclosure () -> T
 ) -> Parser<C, T> {
   parser() <|> just(defaultValue())
 }
 
 public func `optional`<C: Collection, T: Defaultable>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> {
   optional(parser(), default: .defaultValue)
 }
 
 public prefix func * <C: Collection, T: Defaultable>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> {
   optional(parser())
 }
@@ -56,7 +56,7 @@ public prefix func * <C: Collection, T: Defaultable>(
  ```
  */
 public func skip<C: Collection, T, S: Defaultable>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, S> {
   parser() *>> S.defaultValue
 }

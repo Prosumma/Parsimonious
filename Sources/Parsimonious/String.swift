@@ -28,13 +28,13 @@ extension Parser: ExpressibleByStringLiteral where Source.Element == Character, 
 }
 
 public postfix func * <C: Collection>(
-  _ parser: @escaping @autoclosure () -> Parser<C, String>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, String>
 ) -> Parser<C, String> {
   parser()*.joined()
 }
 
 public postfix func + <C: Collection>(
-  _ parser: @escaping @autoclosure () -> Parser<C, String>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, String>
 ) -> Parser<C, String> {
   parser()+.joined()
 }
@@ -58,22 +58,22 @@ public extension Parser where Output == [String] {
 }
 
 public func + <C: Collection>(
-  lhs: @escaping @autoclosure () -> Parser<C, String>,
-  rhs: @escaping @autoclosure () -> Parser<C, String>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, String>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, String>
 ) -> Parser<C, String> {
-  zip(lhs(), rhs(), +)
+  zip(lhs(), rhs(),  { a, b in a + b })
 }
 
 public func + <C: Collection>(
-  lhs: @escaping @autoclosure () -> Parser<C, Character>,
-  rhs: @escaping @autoclosure () -> Parser<C, String>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, Character>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, String>
 ) -> Parser<C, String> {
   lhs().joined() + rhs()
 }
 
 public func + <C: Collection>(
-  lhs: @escaping @autoclosure () -> Parser<C, String>,
-  rhs: @escaping @autoclosure () -> Parser<C, Character>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, String>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, Character>
 ) -> Parser<C, String> {
   lhs() + rhs().joined()
 }
@@ -134,19 +134,19 @@ public extension Parser where Source.Element == Character {
 }
 
 public func whitespaced<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> where C.Element == Character {
   delimit(parser(), by: many(.whitespace))
 }
 
 public func whitespacedWithNewlines<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> where C.Element == Character {
   delimit(parser(), by: many(.whitespace <|> .newline))
 }
 
 public func parenthesized<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> where C.Element == Character {
   delimit(parser(), by: char("("), and: char(")"))
 }
@@ -156,7 +156,7 @@ public func parenthesized<C: Collection, T>(
  have to do that yourself.
  */
 public func doubleStraightQuoted<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> where C.Element == Character {
   delimit(parser(), by: .doubleStraightQuote)
 }
@@ -166,19 +166,19 @@ public func doubleStraightQuoted<C: Collection, T>(
  have to do that yourself.
  */
 public func singleStraightQuoted<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> where C.Element == Character {
   delimit(parser(), by: .singleStraightQuote)
 }
 
 public func bracketed<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> where C.Element == Character {
   delimit(parser(), by: char("["), and: char("]"))
 }
 
 public func braced<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, T> where C.Element == Character {
   delimit(parser(), by: char("{"), and: char("}"))
 }

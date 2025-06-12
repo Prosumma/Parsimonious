@@ -55,8 +55,8 @@ class CombinatorTests: XCTestCase {
 
   func testMatchAnyTests() throws {
     // Given
-    let isA: (Character) -> Bool = { $0 == "a" }
-    let isB: (Character) -> Bool = { $0 == "b" }
+    let isA: @Sendable (Character) -> Bool = { $0 == "a" }
+    let isB: @Sendable (Character) -> Bool = { $0 == "b" }
     let word: SParser = (match(any(isA, isB))+.joined())
     let parser: Parser<String, [String]> = many(word, separator: ",") <* eof()
 
@@ -184,8 +184,8 @@ class CombinatorTests: XCTestCase {
 
   func testNotAnyTests() throws {
     // Given
-    let is2: (Int) -> Bool = { $0 == 2 }
-    let is3: (Int) -> Bool = { $0 == 3 }
+    let is2: @Sendable (Int) -> Bool = { $0 == 2 }
+    let is3: @Sendable (Int) -> Bool = { $0 == 3 }
     let n = not((any(is2, is3)))
 
     // When/Then
@@ -194,7 +194,7 @@ class CombinatorTests: XCTestCase {
 
   func testNotAnyKeyPaths() throws {
     // Given
-    let c = !any(\Character.isSymbol, \Character.isPunctuation)
+    let c: @Sendable (Character) -> Bool = !any(\Character.isSymbol, \Character.isPunctuation)
 
     // When/Then
     XCTAssertTrue(c("a"))

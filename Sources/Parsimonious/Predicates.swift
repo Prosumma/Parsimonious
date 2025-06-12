@@ -7,14 +7,16 @@
 
 import Foundation
 
-public typealias ElementPredicate<T> = (T) -> Bool
+public typealias ElementPredicate<T> = @Sendable (T) -> Bool
 public typealias KeyPathPredicate<T> = KeyPath<T, Bool>
+typealias SendableKeyPathPredicate<T> = KeyPathPredicate<T> & Sendable
 
 public func only<T>(_ keyPath: KeyPathPredicate<T>) -> ElementPredicate<T> {
+  let keyPath = unsafeBitCast(keyPath, to: SendableKeyPathPredicate<T>.self)  
   return { $0[keyPath: keyPath] }
 }
 
-public func only<T: Equatable>(_ model: T) -> ElementPredicate<T> {
+public func only<T: Equatable & Sendable>(_ model: T) -> ElementPredicate<T> {
   return { $0 == model }
 }
 
@@ -43,11 +45,11 @@ public func `any`<T>(_ predicates: KeyPathPredicate<T>...) -> (T) -> Bool {
   any(predicates)
 }
 
-public func `any`<T: Equatable>(_ models: [T]) -> ElementPredicate<T> {
+public func `any`<T: Equatable & Sendable>(_ models: [T]) -> ElementPredicate<T> {
   any(models.map(only))
 }
 
-public func `any`<T: Equatable>(_ models: T...) -> ElementPredicate<T> {
+public func `any`<T: Equatable & Sendable>(_ models: T...) -> ElementPredicate<T> {
   any(models)
 }
 
@@ -76,7 +78,7 @@ public func not<T>(_ keyPath: KeyPathPredicate<T>) -> ElementPredicate<T> {
   return not(only(keyPath))
 }
 
-public func not<T: Equatable>(_ model: T) -> ElementPredicate<T> {
+public func not<T: Equatable & Sendable>(_ model: T) -> ElementPredicate<T> {
   { $0 != model }
 }
 
@@ -92,7 +94,7 @@ public prefix func ^ <T>(keyPath: KeyPathPredicate<T>) -> ElementPredicate<T> {
   only(keyPath)
 }
 
-public prefix func ^ <T: Equatable>(model: T) -> ElementPredicate<T> {
+public prefix func ^ <T: Equatable & Sendable>(model: T) -> ElementPredicate<T> {
   only(model)
 }
 
@@ -104,6 +106,6 @@ public prefix func ! <T>(keyPath: KeyPathPredicate<T>) -> ElementPredicate<T> {
   not(keyPath)
 }
 
-public prefix func ! <T: Equatable>(model: T) -> ElementPredicate<T> {
+public prefix func ! <T: Equatable & Sendable>(model: T) -> ElementPredicate<T> {
   not(model)
 }

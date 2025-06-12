@@ -6,7 +6,7 @@
 //
 
 public func peek<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, Void> where C.Index: Sendable {
   .init { source, index in
     parser()(source, at: index).flatMap { _ in
@@ -16,16 +16,16 @@ public func peek<C: Collection, T>(
 }
 
 public func delimit<C, T, B, E>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>,
-  by begin: @escaping @autoclosure () -> Parser<C, B>,
-  and end: @escaping @autoclosure () -> Parser<C, E>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>,
+  by begin: @escaping @Sendable @autoclosure () -> Parser<C, B>,
+  and end: @escaping @Sendable @autoclosure () -> Parser<C, E>
 ) -> Parser<C, T> {
   begin() *> parser() <* end()
 }
 
 public func delimit<C, T, D>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>,
-  by delimiter: @escaping @autoclosure () -> Parser<C, D>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>,
+  by delimiter: @escaping @Sendable @autoclosure () -> Parser<C, D>
 ) -> Parser<C, T> {
   delimit(parser(), by: delimiter(), and: delimiter())
 }
@@ -55,7 +55,7 @@ public func eof<C: Collection>() -> Parser<C, Void> where C.Index: Sendable {
  if it's not followed by a comma.
  */
 public func not<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
 ) -> Parser<C, Void> where C.Index: Sendable {
   .init { source, index in
     switch parser()(source, at: index) {
@@ -68,7 +68,7 @@ public func not<C: Collection, T>(
 }
 
 public func not<C: Collection, T>(
-  any parsers: @escaping @autoclosure () -> [Parser<C, T>]
+  any parsers: @escaping @Sendable @autoclosure () -> [Parser<C, T>]
 ) -> Parser<C, Void> where C.Index: Sendable {
   not(match(any: parsers()))
 }
@@ -89,8 +89,8 @@ public func not<C: Collection, T>(
  }
  ```
  */
-public func extract<C: Collection, T>(_ get: @escaping (C.Element) -> T?) -> Parser<C, T>
-  where C.Index: Sendable
+public func extract<C: Collection, T>(_ get: @escaping @Sendable (C.Element) -> T?) -> Parser<C, T>
+  where C.Index: Sendable, C.Element: Sendable
 {
   match() >>> {
     guard let value = get($0) else {
@@ -101,9 +101,9 @@ public func extract<C: Collection, T>(_ get: @escaping (C.Element) -> T?) -> Par
 }
 
 public func debug<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>,
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>,
   tag: String,
-  log: @escaping (String) -> Void
+  log: @escaping @Sendable (String) -> Void
 ) -> Parser<C, T> where C.Index: Sendable {
   .init { source, index in
     let i = source.distance(from: source.startIndex, to: index)
@@ -121,7 +121,7 @@ public func debug<C: Collection, T>(
 }
 
 public func debug<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, T>,
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>,
   tag: String
 ) -> Parser<C, T> where C.Index: Sendable {
   debug(parser(), tag: tag, log: { print($0) })

@@ -5,9 +5,9 @@
 //  Created by Gregory Higley on 2023-10-19.
 //
 
-public typealias Parse<Source: Collection, Output> = (Source, Source.Index) -> ParseResult<Source, Output>
+public typealias Parse<Source: Collection, Output> = @Sendable (Source, Source.Index) -> ParseResult<Source, Output>
 
-public struct Parser<Source: Collection, Output> where Source.Index: Sendable {
+public struct Parser<Source: Collection & Sendable, Output: Sendable>: Sendable where Source.Index: Sendable {
   private let parse: Parse<Source, Output>
 
   public init(parse: @escaping Parse<Source, Output>) {
@@ -32,7 +32,7 @@ public struct Parser<Source: Collection, Output> where Source.Index: Sendable {
 }
 
 public func flatten<C: Collection, T>(
-  _ parser: @escaping @autoclosure () -> Parser<C, Parser<C, T>>
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, Parser<C, T>>
 ) -> Parser<C, T> {
   .init { source, index in
     parser()(source, at: index) >>= { $0.output(source, at: $0.range.upperBound) }
@@ -40,9 +40,9 @@ public func flatten<C: Collection, T>(
 }
 
 public func zip<C: Collection, L, R, T>(
-  _ lhs: @escaping @autoclosure () -> Parser<C, L>,
-  _ rhs: @escaping @autoclosure () -> Parser<C, R>,
-  _ combine: @escaping (L, R) throws -> T
+  _ lhs: @escaping @Sendable @autoclosure () -> Parser<C, L>,
+  _ rhs: @escaping @Sendable @autoclosure () -> Parser<C, R>,
+  _ combine: @escaping @Sendable (L, R) throws -> T
 ) -> Parser<C, T> {
   lhs().flatMap { lvalue in
     rhs().map { rvalue in try combine(lvalue, rvalue) }
@@ -51,8 +51,8 @@ public func zip<C: Collection, L, R, T>(
 
 public func reduce<C: Collection, T, R>(
   _ initial: R,
-  _ parsers: @escaping @autoclosure () -> [Parser<C, T>],
-  _ combine: @escaping (R, T) throws -> R
+  _ parsers: @escaping @Sendable @autoclosure () -> [Parser<C, T>],
+  _ combine: @escaping @Sendable (R, T) throws -> R
 ) -> Parser<C, R> {
   .init { source, index in
     var initial = initial
@@ -77,7 +77,7 @@ public func reduce<C: Collection, T, R>(
 public func reduce<C: Collection, T, R>(
   _ initial: R,
   _ parsers: Parser<C, T>...,
-  combine: @escaping (R, T) throws -> R
+  combine: @escaping @Sendable (R, T) throws -> R
 ) -> Parser<C, R> {
   reduce(initial, parsers, combine)
 }
@@ -92,7 +92,7 @@ public extension Parser {
   }
 
   func map<NewOutput>(
-    _ transform: @escaping (Output) throws -> NewOutput
+    _ transform: @escaping @Sendable (Output) throws -> NewOutput
   ) -> Parser<Source, NewOutput> {
     .init { source, index in
       self(source, at: index) >>= { state in
@@ -104,7 +104,7 @@ public extension Parser {
   }
 
   func flatMap<NewOutput>(
-    _ transform: @escaping (Output) -> Parser<Source, NewOutput>
+    _ transform: @escaping @Sendable (Output) -> Parser<Source, NewOutput>
   ) -> Parser<Source, NewOutput> {
     flatten(map(transform)).ranged()
   }
@@ -126,42 +126,42 @@ public extension Parser {
 
 /// Monadic composition
 public func >>= <C: Collection, Output, NewOutput>(
-  lhs: @escaping @autoclosure () -> Parser<C, Output>,
-  rhs: @escaping (Output) -> Parser<C, NewOutput>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, Output>,
+  rhs: @escaping @Sendable (Output) -> Parser<C, NewOutput>
 ) -> Parser<C, NewOutput> {
   lhs().flatMap(rhs)
 }
 
 public func *> <C: Collection, L, R>(
-  lhs: @escaping @autoclosure () -> Parser<C, L>,
-  rhs: @escaping @autoclosure () -> Parser<C, R>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, L>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, R>
 ) -> Parser<C, R> {
   zip(lhs(), rhs()) { l, r in r }
 }
 
 public func <* <C: Collection, L, R>(
-  lhs: @escaping @autoclosure () -> Parser<C, L>,
-  rhs: @escaping @autoclosure () -> Parser<C, R>
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, L>,
+  rhs: @escaping @Sendable @autoclosure () -> Parser<C, R>
 ) -> Parser<C, L> {
   zip(lhs(), rhs()) { l, r in l }
 }
 
 public func >>> <C: Collection, Input, Output>(
-  lhs: @escaping @autoclosure () -> Parser<C, Input>,
-  rhs: @escaping (Input) throws -> Output
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, Input>,
+  rhs: @escaping @Sendable (Input) throws -> Output
 ) -> Parser<C, Output> {
   lhs().map(rhs)
 }
 
 public func *>> <C: Collection, Input, Output>(
-  lhs: @escaping @autoclosure () -> Parser<C, Input>,
-  rhs: @escaping @autoclosure () -> Output
+  lhs: @escaping @Sendable @autoclosure () -> Parser<C, Input>,
+  rhs: @escaping @Sendable @autoclosure () -> Output
 ) -> Parser<C, Output> {
   lhs().map { _ in rhs() }
 }
 
 public func just<C: Collection, T>(
-  _ value: @escaping @autoclosure () -> T
+  _ value: @escaping @Sendable @autoclosure () -> T
 ) -> Parser<C, T> {
   .init(value: value())
 }
