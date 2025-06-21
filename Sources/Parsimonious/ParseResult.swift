@@ -7,20 +7,23 @@
 
 public typealias ParseResult<Source: Collection, Output> = Result<ParseState<Source, Output>, ParseError<Source>>
 
+@inlinable
 func >>> <Success, NewSuccess, Failure: Error>(
   result: Result<Success, Failure>,
-  transform: (Success) -> (NewSuccess)
+  transform: @Sendable (Success) -> (NewSuccess)
 ) -> Result<NewSuccess, Failure> {
   result.map(transform)
 }
 
+@inlinable
 func *>> <Success, NewSuccess, Failure: Error>(
   result: Result<Success, Failure>,
-  value: @escaping @autoclosure () -> NewSuccess
+  value: @escaping @Sendable @autoclosure () -> NewSuccess
 ) -> Result<NewSuccess, Failure> {
   result.map { _ in value() }
 }
 
+@usableFromInline
 func flatten<Success, Failure: Error>(
   _ result: Result<Result<Success, Failure>, Failure>
 ) -> Result<Success, Failure> {
@@ -32,9 +35,10 @@ func flatten<Success, Failure: Error>(
   }
 }
 
+@inlinable
 func >>= <Success, NewSuccess, Failure: Error>(
   result: Result<Success, Failure>,
-  transform: (Success) -> Result<NewSuccess, Failure>
+  transform: @Sendable (Success) -> Result<NewSuccess, Failure>
 ) -> Result<NewSuccess, Failure> {
   flatten(result.map(transform))
 }

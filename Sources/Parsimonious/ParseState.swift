@@ -22,42 +22,45 @@ public struct ParseState<Source: Collection, Output> {
   }
 
   public func map<NewOutput>(
-    _ transform: (Output) throws -> NewOutput
+    _ transform: @Sendable (Output) throws -> NewOutput
   ) rethrows -> ParseState<Source, NewOutput> {
     try .init(output: transform(output), range: range)
   }
 
   public func mapWithRange<NewOutput>(
-    _ transform: (Output, Range<Source.Index>) throws -> (NewOutput, Range<Source.Index>)
+    _ transform: @Sendable (Output, Range<Source.Index>) throws -> (NewOutput, Range<Source.Index>)
   ) rethrows -> ParseState<Source, NewOutput> {
     let (newOutput, targetRange) = try transform(output, range)
     return .init(output: newOutput, range: targetRange)
   }
 
   public func flatMap<NewOutput>(
-    _ transform: (Output, Range<Source.Index>) throws -> ParseState<Source, NewOutput>
+    _ transform: @Sendable (Output, Range<Source.Index>) throws -> ParseState<Source, NewOutput>
   ) rethrows -> ParseState<Source, NewOutput> {
     try transform(output, range)
   }
 }
 
+@inlinable
 public func >>> <Source: Collection, Output, NewOutput>(
   state: ParseState<Source, Output>,
-  transform: (Output) throws -> NewOutput
+  transform: @Sendable (Output) throws -> NewOutput
 ) rethrows -> ParseState<Source, NewOutput> {
   try state.map(transform)
 }
 
+@inlinable
 public func *>> <Source: Collection, Output, NewOutput>(
   state: ParseState<Source, Output>,
-  newOutput: @escaping @autoclosure () -> NewOutput
+  newOutput: @escaping @Sendable @autoclosure () -> NewOutput
 ) -> ParseState<Source, NewOutput> {
   state.map { _ in newOutput() }
 }
 
+@inlinable
 public func >>= <Source: Collection, Output, NewOutput>(
   state: ParseState<Source, Output>,
-  transform: (Output, Range<Source.Index>) throws -> ParseState<Source, NewOutput>
+  transform: @Sendable (Output, Range<Source.Index>) throws -> ParseState<Source, NewOutput>
 ) rethrows -> ParseState<Source, NewOutput> {
   try state.flatMap(transform)
 }
