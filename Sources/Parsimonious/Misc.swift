@@ -30,6 +30,12 @@ public func delimit<C, T, D>(
   delimit(parser(), by: delimiter(), and: delimiter())
 }
 
+public func void<C: Collection, T>(
+  _ parser: @escaping @Sendable @autoclosure () -> Parser<C, T>
+) -> Parser<C, Void> {
+  parser().map { _ in () }
+}
+
 public func eof<C: Collection>() -> Parser<C, Void> where C.Index: Sendable {
   .init { source, index in
     if index == source.endIndex {
