@@ -2,38 +2,24 @@
 //  OperatorDeclarations.swift
 //  Parsimonious
 //
-//  Created by Gregory Higley on 2023-10-19.
+//  Created by Gregory Higley on 2026-10-05.
 //
-
-import Foundation
 
 postfix operator *
 postfix operator +
-prefix operator *
-prefix operator ^
 
-precedencegroup ApplicativePrecedence {
+precedencegroup AlternativePrecedence {
   associativity: left
   higherThan: LogicalConjunctionPrecedence
   lowerThan: ComparisonPrecedence
 }
 
-precedencegroup AlternativePrecedence {
-  associativity: left
-  higherThan: ApplicativePrecedence
-  lowerThan: ComparisonPrecedence
-}
-
-precedencegroup FunctorPrecedence {
+precedencegroup ApplicativePrecedence {
   associativity: left
   higherThan: AlternativePrecedence
   lowerThan: ComparisonPrecedence
 }
 
-infix operator >>=: ApplicativePrecedence
 infix operator <* : ApplicativePrecedence
 infix operator  *>: ApplicativePrecedence
 infix operator <|>: AlternativePrecedence
-
-infix operator >>>: FunctorPrecedence
-infix operator *>>: FunctorPrecedence
