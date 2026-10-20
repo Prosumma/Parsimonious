@@ -1,0 +1,6 @@
+[tools]
+"spm:swiftlang/swift-format" = "604.0.0"
+
+[tasks.format]
+description = "Format all Swift files in place (swift-format)"
+run = "swift-format -i -r -p ."
