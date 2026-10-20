@@ -5,28 +5,33 @@
 //  Created by Gregory Higley on 2026-10-05.
 //
 
-public extension Parsing {
-  func map<NextOutput>(_ transform: @Sendable @escaping (Output) throws -> NextOutput) -> Parser<Input, NextOutput> {
+extension Parsing {
+  public func map<NextOutput>(_ transform: @Sendable @escaping (Output) throws -> NextOutput)
+    -> Parser<Input, NextOutput>
+  {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       let output = try parser.parse(input)
       do {
         return try output.map(transform)
       } catch {
-        throw ParseError(reason: .nomatch, slice: input[input.startIndex..<output.input.startIndex], error: error)
+        throw ParseError(
+          reason: .nomatch, slice: input[input.startIndex..<output.input.startIndex], error: error)
       }
     }
   }
 
-  func map<NextOutput>(_ transform: @Sendable @escaping () throws -> NextOutput) -> Parser<Input, NextOutput> {
+  public func map<NextOutput>(_ transform: @Sendable @escaping () throws -> NextOutput) -> Parser<
+    Input, NextOutput
+  > {
     map { _ in try transform() }
   }
 
-  func array() -> Parser<Input, [Output]> {
+  public func array() -> Parser<Input, [Output]> {
     map { [$0] }
   }
 
-  func many() -> Parser<Input, [Output]> {
+  public func many() -> Parser<Input, [Output]> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       var outputs: [Output] = []
@@ -52,15 +57,19 @@ public extension Parsing {
     }
   }
 
-  func many1() -> Parser<Input, [Output]> {
+  public func many1() -> Parser<Input, [Output]> {
     join(array(), many())
   }
 
-  func many<SepOutput>(separatedBy sep: some Parsing<Input, SepOutput>) -> Parser<Input, [Output]> {
+  public func many<SepOutput>(separatedBy sep: some Parsing<Input, SepOutput>) -> Parser<
+    Input, [Output]
+  > {
     many1(separatedBy: sep) <|> just([])
   }
 
-  func many1<SepOutput>(separatedBy sep: some Parsing<Input, SepOutput>) -> Parser<Input, [Output]> {
+  public func many1<SepOutput>(separatedBy sep: some Parsing<Input, SepOutput>) -> Parser<
+    Input, [Output]
+  > {
     join(array(), (sep *> self)*)
   }
 
@@ -68,7 +77,7 @@ public extension Parsing {
   ///
   /// Unlike `many()`, this doesn't stop when a repetition consumes nothing: the loop is
   /// bounded by `limit`, so `just("z").count(3)` outputs `["z", "z", "z"]`.
-  func count(_ limit: Int) -> Parser<Input, [Output]> {
+  public func count(_ limit: Int) -> Parser<Input, [Output]> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       var outputs: [Output] = []
@@ -84,7 +93,7 @@ public extension Parsing {
 
   /// Matches up to `limit` repetitions, stopping early as `many()` does: at the first
   /// failure that isn't committed, or when a repetition consumes nothing.
-  func count(upTo limit: Int) -> Parser<Input, [Output]> {
+  public func count(upTo limit: Int) -> Parser<Input, [Output]> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       var outputs: [Output] = []
@@ -116,7 +125,7 @@ public extension Parsing {
   ///  ```swift
   ///   join(char(anyOf: "+-").optional(), integer).toString().map(toInteger)
   ///  ```
-  func optional() -> Parser<Input, [Output]> {
+  public func optional() -> Parser<Input, [Output]> {
     array() <|> just([])
   }
 
@@ -125,7 +134,7 @@ public extension Parsing {
   ///
   /// Useful for choosing what to parse next, as in
   /// `char(anyOf: "{[").peek().flatMap { $0 == "{" ? object : array }`.
-  func peek() -> Parser<Input, Output> {
+  public func peek() -> Parser<Input, Output> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       let output = try parser.parse(input)
@@ -142,7 +151,7 @@ public extension Parsing {
   /// `self.uncommit().not()`.
   ///
   /// When `self` succeeds, the error has no message; add one with `expecting(_:)`.
-  func not() -> Parser<Input, ()> {
+  public func not() -> Parser<Input, ()> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       do throws(ParseError<Input>) {
@@ -157,7 +166,9 @@ public extension Parsing {
     }
   }
 
-  func followed<FollowingOutput>(by follower: some Parsing<Input, FollowingOutput>) -> Parser<Input, Output> {
+  public func followed<FollowingOutput>(by follower: some Parsing<Input, FollowingOutput>)
+    -> Parser<Input, Output>
+  {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       let output = try parser.parse(input)
@@ -166,7 +177,9 @@ public extension Parsing {
     }
   }
 
-  func preceded<PrecedingOutput>(by preceder: some Parsing<Input, PrecedingOutput>) -> Parser<Input, Output> {
+  public func preceded<PrecedingOutput>(by preceder: some Parsing<Input, PrecedingOutput>)
+    -> Parser<Input, Output>
+  {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       let precedingOutput = try preceder.parse(input)
@@ -174,11 +187,13 @@ public extension Parsing {
     }
   }
 
-  func delimited<DelimiterOutput>(by delimiter: some Parsing<Input, DelimiterOutput>) -> Parser<Input, Output> {
+  public func delimited<DelimiterOutput>(by delimiter: some Parsing<Input, DelimiterOutput>)
+    -> Parser<Input, Output>
+  {
     preceded(by: delimiter).followed(by: delimiter)
   }
 
-  func delimited<FirstDelimiterOutput, SecondDelimiterOutput>(
+  public func delimited<FirstDelimiterOutput, SecondDelimiterOutput>(
     by firstDelimiter: some Parsing<Input, FirstDelimiterOutput>,
     and secondDelimiter: some Parsing<Input, SecondDelimiterOutput>,
   ) -> Parser<Input, Output> {
@@ -186,19 +201,19 @@ public extension Parsing {
   }
 
   /// Returns the output along with the subsequence that was parsed.
-  func captured() -> Parser<Input, (Output, Input.SubSequence)> {
+  public func captured() -> Parser<Input, (Output, Input.SubSequence)> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       let output = try parser.parse(input)
       return .init(input: output.input, output: (output.output, input[..<output.input.startIndex]))
     }
   }
-  
-  func end() -> Parser<Input, Output> {
+
+  public func end() -> Parser<Input, Output> {
     followed(by: Parsers.end)
   }
 
-  func uncommit() -> Parser<Input, Output> {
+  public func uncommit() -> Parser<Input, Output> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       do throws(ParseError<Input>) {
@@ -211,7 +226,9 @@ public extension Parsing {
     }
   }
 
-  func mapError(_ transform: @Sendable @escaping (Input.SubSequence, inout ParseError<Input>) -> Void) -> Parser<Input, Output> {
+  public func mapError(
+    _ transform: @Sendable @escaping (Input.SubSequence, inout ParseError<Input>) -> Void
+  ) -> Parser<Input, Output> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       do throws(ParseError<Input>) {
@@ -224,17 +241,19 @@ public extension Parsing {
     }
   }
 
-  func mapError(_ transform: @Sendable @escaping (inout ParseError<Input>) -> Void) -> Parser<Input, Output> {
+  public func mapError(_ transform: @Sendable @escaping (inout ParseError<Input>) -> Void)
+    -> Parser<Input, Output>
+  {
     mapError { _, error in transform(&error) }
   }
 
-  func commit() -> Parser<Input, Output> {
+  public func commit() -> Parser<Input, Output> {
     mapError { error in
       error.committed = true
     }
   }
 
-  func commit(after distance: Int) -> Parser<Input, Output> {
+  public func commit(after distance: Int) -> Parser<Input, Output> {
     mapError { input, error in
       if input.distance(from: input.startIndex, to: error.slice.endIndex) >= distance {
         error.committed = true
@@ -242,7 +261,7 @@ public extension Parsing {
     }
   }
 
-  func commit1() -> Parser<Input, Output> {
+  public func commit1() -> Parser<Input, Output> {
     mapError { input, error in
       if error.consumed(relativeTo: input) {
         error.committed = true
@@ -257,7 +276,7 @@ public extension Parsing {
   /// Any other error keeps its own message, since it's already more specific than this one.
   /// That includes a token that consumed part of the input: `string("blah").expecting("Expected blah.")`
   /// on `"blab"` keeps `Expected "blah".`. To change the message regardless, use `mapError`.
-  func expecting(_ message: String) -> Parser<Input, Output> {
+  public func expecting(_ message: String) -> Parser<Input, Output> {
     mapError { input, error in
       if !error.committed && !error.consumed(relativeTo: input) {
         error.message = message
@@ -285,12 +304,13 @@ public func satisfy<Input: Collection & Sendable>(
 public func eq<Input: Collection & Sendable>(
   _ model: Input.Element
 ) -> Parser<Input, Input.Element>
-  where Input.Element: Sendable & Equatable, Input.SubSequence: Sendable
-{
-  satisfy{ $0 == model }
+where Input.Element: Sendable & Equatable, Input.SubSequence: Sendable {
+  satisfy { $0 == model }
 }
 
-public func or<Input: Collection & Sendable, Output>(_ parsers: [any Parsing<Input, Output>]) -> Parser<Input, Output> {
+public func or<Input: Collection & Sendable, Output>(_ parsers: [any Parsing<Input, Output>])
+  -> Parser<Input, Output>
+{
   Parser { (input) throws(ParseError<Input>) in
     for parser in parsers {
       do throws(ParseError<Input>) {
@@ -300,15 +320,20 @@ public func or<Input: Collection & Sendable, Output>(_ parsers: [any Parsing<Inp
         throw error
       }
     }
-    throw ParseError(reason: .nomatch, slice: input[..<input.startIndex], message: "No alternative matched.")
+    throw ParseError(
+      reason: .nomatch, slice: input[..<input.startIndex], message: "No alternative matched.")
   }
 }
 
-public func or<Input: Collection & Sendable, Output>(_ parsers: any Parsing<Input, Output>...) -> Parser<Input, Output> {
+public func or<Input: Collection & Sendable, Output>(_ parsers: any Parsing<Input, Output>...)
+  -> Parser<Input, Output>
+{
   or(parsers)
 }
 
-public func <|> <Input: Collection & Sendable, Output>(lhs: some Parsing<Input, Output>, rhs: some Parsing<Input, Output>) -> Parser<Input, Output> {
+public func <|> <Input: Collection & Sendable, Output>(
+  lhs: some Parsing<Input, Output>, rhs: some Parsing<Input, Output>
+) -> Parser<Input, Output> {
   or(lhs, rhs)
 }
 
@@ -326,13 +351,17 @@ public func <* <Input: Collection & Sendable, Output, FollowingOutput>(
   lhs.followed(by: rhs)
 }
 
-public func just<Input: Collection & Sendable, Output>(_ value: @autoclosure @escaping @Sendable () -> Output) -> Parser<Input, Output> {
+public func just<Input: Collection & Sendable, Output>(
+  _ value: @autoclosure @escaping @Sendable () -> Output
+) -> Parser<Input, Output> {
   Parser { input in
     .init(input: input, output: value())
   }
 }
 
-public func chain<Input: Collection & Sendable, Output>(_ parsers: any Parsing<Input, Output>...) -> Parser<Input, [Output]> {
+public func chain<Input: Collection & Sendable, Output>(_ parsers: any Parsing<Input, Output>...)
+  -> Parser<Input, [Output]>
+{
   Parser { (input) throws(ParseError<Input>) in
     var outputs: [Output] = []
     var nextInput = input
@@ -345,7 +374,9 @@ public func chain<Input: Collection & Sendable, Output>(_ parsers: any Parsing<I
   }
 }
 
-public func join<Input: Collection & Sendable, Output>(_ parsers: any Parsing<Input, [Output]>...) -> Parser<Input, [Output]> {
+public func join<Input: Collection & Sendable, Output>(_ parsers: any Parsing<Input, [Output]>...)
+  -> Parser<Input, [Output]>
+{
   Parser { (input) throws(ParseError<Input>) in
     var outputs: [Output] = []
     var nextInput = input
@@ -379,19 +410,24 @@ public func tuple<Input: Collection & Sendable, each Output>(
   }
 }
 
-public postfix func + <Input: Collection & Sendable, Output>(parser: some Parsing<Input, Output>) -> Parser<Input, [Output]> {
+public postfix func + <Input: Collection & Sendable, Output>(parser: some Parsing<Input, Output>)
+  -> Parser<Input, [Output]>
+{
   parser.many1()
 }
 
-public postfix func * <Input: Collection & Sendable, Output>(parser: some Parsing<Input, Output>) -> Parser<Input, [Output]> {
+public postfix func * <Input: Collection & Sendable, Output>(parser: some Parsing<Input, Output>)
+  -> Parser<Input, [Output]>
+{
   parser.many()
 }
 
-public extension Parsers {
-  static var end: Parser<Input, Void> {
+extension Parsers {
+  public static var end: Parser<Input, Void> {
     Parser { (input) throws(ParseError<Input>) in
       guard input.isEmpty else {
-        throw ParseError(reason: .nomatch, slice: input[..<input.startIndex], message: "Expected end of input")
+        throw ParseError(
+          reason: .nomatch, slice: input[..<input.startIndex], message: "Expected end of input")
       }
       return .init(input: input, output: ())
     }

@@ -52,7 +52,8 @@ struct ScalarTests {
       }
       return error?.message
     }
-    #expect(messages == ["Expected U+0301.", "Expected U+0020.", "Expected U+0009.", "Expected U+200B."])
+    #expect(
+      messages == ["Expected U+0301.", "Expected U+0020.", "Expected U+0009.", "Expected U+200B."])
   }
 
   @Test func notCanonicallyEquivalent() throws {

@@ -21,5 +21,5 @@ precedencegroup ApplicativePrecedence {
 }
 
 infix operator <* : ApplicativePrecedence
-infix operator  *>: ApplicativePrecedence
-infix operator <|>: AlternativePrecedence
+infix operator *> : ApplicativePrecedence
+infix operator <|> : AlternativePrecedence

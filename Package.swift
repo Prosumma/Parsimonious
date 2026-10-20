@@ -10,13 +10,13 @@ let package = Package(
     .library(
       name: "Parsimonious",
       targets: ["Parsimonious"]
-    ),
+    )
   ],
   targets: [
     .target(name: "Parsimonious"),
     .testTarget(
-        name: "ParsimoniousTests",
-        dependencies: ["Parsimonious"],
+      name: "ParsimoniousTests",
+      dependencies: ["Parsimonious"],
     ),
   ]
 )

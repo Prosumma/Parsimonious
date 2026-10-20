@@ -90,7 +90,8 @@ func list<Output>(of element: Parser<String, Output>) -> Parser<String, [Output]
 let jnull = string("null").commit1().map { JSON.null }
 // Each alternative commits separately: `or` discards uncommitted errors, so committing the
 // `or` as a whole would never fire.
-let jbool = string("true").commit1().map { JSON.bool(true) }
+let jbool =
+  string("true").commit1().map { JSON.bool(true) }
   <|> string("false").commit1().map { JSON.bool(false) }
 
 // MARK: - Strings
@@ -99,7 +100,8 @@ let backslash = scalar("\\")
 let hexDigit = scalar(anyOf: "0123456789abcdefABCDEF").expecting("Expected a hex digit.")
 // Only the digits are committed: `\n` also starts with a backslash, so failing on the `u`
 // has to backtrack.
-let codeUnit = backslash *> scalar("u") *> hexDigit.count(4).toString().map { UInt16($0, radix: 16)! }.commit()
+let codeUnit =
+  backslash *> scalar("u") *> hexDigit.count(4).toString().map { UInt16($0, radix: 16)! }.commit()
 // Consecutive escapes are decoded together, so a surrogate pair becomes one scalar. A lone
 // surrogate can't be stored in a String, so it becomes U+FFFD.
 let unicodeEscapes = codeUnit+.map { String(decoding: $0, as: UTF16.self) }
@@ -329,7 +331,8 @@ struct JSONTests {
     #expect(try parse("[1]", with: json) == [1])
     #expect(try parse("[1,2,3]", with: json) == [1, 2, 3])
     #expect(try parse(" [ 1 , 2 , 3 ] ", with: json) == [1, 2, 3])
-    #expect(try parse(#"[null, true, "x", 1, [], {}]"#, with: json) == [nil, true, "x", 1, [], [:]])
+    #expect(
+      try parse(#"[null, true, "x", 1, [], {}]"#, with: json) == [nil, true, "x", 1, [], [:]])
   }
 
   @Test func nestedArrays() throws {
@@ -383,12 +386,12 @@ struct JSONTests {
   }
 
   @Test(arguments: [
-    "\u{A0}",   // no-break space
-    "\u{B}",    // vertical tab
-    "\u{C}",    // form feed
-    "\u{85}",   // next line
-    "\u{2028}", // line separator
-    "\u{3000}", // ideographic space
+    "\u{A0}",  // no-break space
+    "\u{B}",  // vertical tab
+    "\u{C}",  // form feed
+    "\u{85}",  // next line
+    "\u{2028}",  // line separator
+    "\u{3000}",  // ideographic space
   ])
   func otherWhitespaceIsRejected(_ ws: String) {
     _ = error(parsing: "[1,\(ws)2]")

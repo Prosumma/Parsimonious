@@ -15,7 +15,8 @@
 // match `e` followed by U+0301. Normalize the input first if that matters.
 
 /// Matches the single scalar `s` at the start of the input.
-public func scalar<Input>(_ s: Unicode.Scalar) -> Parser<Input, Unicode.Scalar> where Input.SubSequence == Substring {
+public func scalar<Input>(_ s: Unicode.Scalar) -> Parser<Input, Unicode.Scalar>
+where Input.SubSequence == Substring {
   Parsers<Input>.scalar(s)
 }
 
@@ -27,7 +28,8 @@ public func scalar(_ s: Unicode.Scalar) -> Parser<String, Unicode.Scalar> {
 
 /// Matches any one of the scalars in `choices` at the start of the input.
 /// If `choices` is empty, this never matches.
-public func scalar<Input>(anyOf choices: String) -> Parser<Input, Unicode.Scalar> where Input.SubSequence == Substring {
+public func scalar<Input>(anyOf choices: String) -> Parser<Input, Unicode.Scalar>
+where Input.SubSequence == Substring {
   Parsers<Input>.scalar(anyOf: choices)
 }
 
@@ -38,7 +40,8 @@ public func scalar(anyOf choices: String) -> Parser<String, Unicode.Scalar> {
 }
 
 /// Matches any single scalar at the start of the input except `s`. Fails at the end of the input.
-public func scalar<Input>(not s: Unicode.Scalar) -> Parser<Input, Unicode.Scalar> where Input.SubSequence == Substring {
+public func scalar<Input>(not s: Unicode.Scalar) -> Parser<Input, Unicode.Scalar>
+where Input.SubSequence == Substring {
   Parsers<Input>.scalar(not: s)
 }
 
@@ -51,26 +54,34 @@ public func scalar(not s: Unicode.Scalar) -> Parser<String, Unicode.Scalar> {
 /// Matches a single scalar for which `keyPath` is `true`, as in `scalar(\.properties.isDiacritic)`.
 ///
 /// Has no message of its own; add one with `expecting(_:)`.
-public func scalar<Input>(_ keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) -> Parser<Input, Unicode.Scalar> where Input.SubSequence == Substring {
+public func scalar<Input>(_ keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) -> Parser<
+  Input, Unicode.Scalar
+> where Input.SubSequence == Substring {
   Parsers<Input>.scalar(where: { $0[keyPath: keyPath] })
 }
 
 /// The `String` specialization of `scalar(_:)`, which lets `Input` be inferred
 /// when there is no other context, as in `let mark = scalar(\.properties.isDiacritic)`.
-public func scalar(_ keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) -> Parser<String, Unicode.Scalar> {
+public func scalar(_ keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) -> Parser<
+  String, Unicode.Scalar
+> {
   Parsers<String>.scalar(where: { $0[keyPath: keyPath] })
 }
 
 /// Matches a single scalar for which `keyPath` is `false`, as in `scalar(not: \.properties.isWhitespace)`.
 ///
 /// Has no message of its own; add one with `expecting(_:)`.
-public func scalar<Input>(not keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) -> Parser<Input, Unicode.Scalar> where Input.SubSequence == Substring {
+public func scalar<Input>(not keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) -> Parser<
+  Input, Unicode.Scalar
+> where Input.SubSequence == Substring {
   Parsers<Input>.scalar(where: { !$0[keyPath: keyPath] })
 }
 
 /// The `String` specialization of `scalar(not:)`, which lets `Input` be inferred
 /// when there is no other context, as in `let visible = scalar(not: \.properties.isWhitespace)`.
-public func scalar(not keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) -> Parser<String, Unicode.Scalar> {
+public func scalar(not keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) -> Parser<
+  String, Unicode.Scalar
+> {
   Parsers<String>.scalar(where: { !$0[keyPath: keyPath] })
 }
 
@@ -78,13 +89,17 @@ public func scalar(not keyPath: any KeyPath<Unicode.Scalar, Bool> & Sendable) ->
 /// `satisfy` sees a `String` as `Character`s.
 ///
 /// Has no message of its own; add one with `expecting(_:)`.
-public func scalar<Input>(where test: @Sendable @escaping (Unicode.Scalar) -> Bool) -> Parser<Input, Unicode.Scalar> where Input.SubSequence == Substring {
+public func scalar<Input>(where test: @Sendable @escaping (Unicode.Scalar) -> Bool) -> Parser<
+  Input, Unicode.Scalar
+> where Input.SubSequence == Substring {
   Parsers<Input>.scalar(where: test)
 }
 
 /// The `String` specialization of `scalar(where:)`, which lets `Input` be inferred
 /// when there is no other context, as in `let ascii = scalar(where: \.isASCII)`.
-public func scalar(where test: @Sendable @escaping (Unicode.Scalar) -> Bool) -> Parser<String, Unicode.Scalar> {
+public func scalar(where test: @Sendable @escaping (Unicode.Scalar) -> Bool) -> Parser<
+  String, Unicode.Scalar
+> {
   Parsers<String>.scalar(where: test)
 }
 
@@ -93,8 +108,8 @@ public func scalar(where test: @Sendable @escaping (Unicode.Scalar) -> Bool) -> 
 private func describe(_ s: Unicode.Scalar) -> String {
   switch s.properties.generalCategory {
   case .control, .format, .surrogate, .privateUse, .unassigned,
-       .spaceSeparator, .lineSeparator, .paragraphSeparator,
-       .nonspacingMark, .spacingMark, .enclosingMark:
+    .spaceSeparator, .lineSeparator, .paragraphSeparator,
+    .nonspacingMark, .spacingMark, .enclosingMark:
     let hex = String(s.value, radix: 16, uppercase: true)
     return "U+" + String(repeating: "0", count: max(0, 4 - hex.count)) + hex
   default:
@@ -104,22 +119,22 @@ private func describe(_ s: Unicode.Scalar) -> String {
 
 // The `String` overloads can't call the generic ones directly, because overload resolution
 // would pick themselves.
-private extension Parsers where Input.SubSequence == Substring {
-  static func scalar(_ s: Unicode.Scalar) -> Parser<Input, Unicode.Scalar> {
+extension Parsers where Input.SubSequence == Substring {
+  fileprivate static func scalar(_ s: Unicode.Scalar) -> Parser<Input, Unicode.Scalar> {
     scalar(where: { $0 == s }, message: "Expected \(describe(s)).")
   }
 
-  static func scalar(anyOf choices: String) -> Parser<Input, Unicode.Scalar> {
+  fileprivate static func scalar(anyOf choices: String) -> Parser<Input, Unicode.Scalar> {
     let set = Set(choices.unicodeScalars)
     let names = choices.unicodeScalars.map(describe).joined(separator: ", ")
     return scalar(where: { set.contains($0) }, message: "Expected one of \(names).")
   }
 
-  static func scalar(not s: Unicode.Scalar) -> Parser<Input, Unicode.Scalar> {
+  fileprivate static func scalar(not s: Unicode.Scalar) -> Parser<Input, Unicode.Scalar> {
     scalar(where: { $0 != s }, message: "Expected any scalar except \(describe(s)).")
   }
 
-  static func scalar(
+  fileprivate static func scalar(
     where matches: @Sendable @escaping (Unicode.Scalar) -> Bool,
     message: String? = nil
   ) -> Parser<Input, Unicode.Scalar> {
@@ -136,14 +151,14 @@ private extension Parsers where Input.SubSequence == Substring {
   }
 }
 
-public extension Parsing where Output == Unicode.Scalar {
-  func toString() -> Parser<Input, String> {
+extension Parsing where Output == Unicode.Scalar {
+  public func toString() -> Parser<Input, String> {
     array().toString()
   }
 }
 
-public extension Parsing where Output == [Unicode.Scalar] {
-  func toString() -> Parser<Input, String> {
+extension Parsing where Output == [Unicode.Scalar] {
+  public func toString() -> Parser<Input, String> {
     map { String(String.UnicodeScalarView($0)) }
   }
 }

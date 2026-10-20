@@ -41,14 +41,14 @@ public struct ParseError<Input: Collection>: Error {
 
 extension ParseError: Sendable where Input.SubSequence: Sendable {}
 
-public extension ParseError where Input.Element == Character {
+extension ParseError where Input.Element == Character {
   /// The 1-based line and column in `input` where the failing parser stopped, which is
   /// `slice.endIndex`.
   ///
   /// `input` must be the collection that was parsed, since the error's indices refer to it.
   /// Columns count characters, and every newline character starts a new line. That includes
   /// `"\r\n"`, which Swift treats as a single character.
-  func location(in input: Input) -> (line: Int, column: Int) {
+  public func location(in input: Input) -> (line: Int, column: Int) {
     var line = 1
     var column = 1
     for ch in input[..<slice.endIndex] {

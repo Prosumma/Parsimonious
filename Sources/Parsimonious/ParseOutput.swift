@@ -14,7 +14,9 @@ public struct ParseOutput<Input: Collection, Output> {
     self.output = output
   }
 
-  public func map<NextOutput>(_ transform: (Output) throws -> NextOutput) rethrows -> ParseOutput<Input, NextOutput> {
+  public func map<NextOutput>(_ transform: (Output) throws -> NextOutput) rethrows -> ParseOutput<
+    Input, NextOutput
+  > {
     try .init(input: input, output: transform(output))
   }
 }

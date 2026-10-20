@@ -13,18 +13,20 @@ public protocol Parsing<Input, Output>: Sendable {
   func eraseToParser() -> Parser<Input, Output>
 }
 
-public extension Parsing {
-  func eraseToParser() -> Parser<Input, Output> {
+extension Parsing {
+  public func eraseToParser() -> Parser<Input, Output> {
     return .init(parser: self)
   }
 
   /// Parses from the start of `input`. Doesn't require the parser to consume all of it:
   /// the rest is returned in the output. Use `end()` to require the end of the input.
-  func parse(_ input: Input) throws(ParseError<Input>) -> ParseOutput<Input, Output> {
+  public func parse(_ input: Input) throws(ParseError<Input>) -> ParseOutput<Input, Output> {
     try parse(input[...])
   }
 
-  func flatMap<NewOutput>(_ makeNextParser: @Sendable @escaping (Output) -> some Parsing<Input, NewOutput>) -> Parser<Input, NewOutput> {
+  public func flatMap<NewOutput>(
+    _ makeNextParser: @Sendable @escaping (Output) -> some Parsing<Input, NewOutput>
+  ) -> Parser<Input, NewOutput> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       let output = try parser.parse(input)
@@ -33,7 +35,12 @@ public extension Parsing {
     }
   }
 
-  func flatMap<NewOutput>(_ parse: @Sendable @escaping (ParseOutput<Input, Output>) throws(ParseError<Input>) -> ParseOutput<Input, NewOutput>) -> Parser<Input, NewOutput> {
+  public func flatMap<NewOutput>(
+    _ parse:
+      @Sendable @escaping (ParseOutput<Input, Output>) throws(ParseError<Input>) -> ParseOutput<
+        Input, NewOutput
+      >
+  ) -> Parser<Input, NewOutput> {
     let parser = self
     return Parser { (input) throws(ParseError<Input>) in
       let output = try parser.parse(input)

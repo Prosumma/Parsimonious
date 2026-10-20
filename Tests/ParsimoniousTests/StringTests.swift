@@ -40,8 +40,10 @@ struct StringTests {
     Match(pattern: "é", matching: .simple, input: "É", output: "É", rest: ""),
     // Folded
     Match(pattern: "blah", matching: .folded, input: "bLAH!", output: "bLAH", rest: "!"),
-    Match(pattern: "STRASSE", matching: .folded, input: "straße rest", output: "straße", rest: " rest"),
-    Match(pattern: "straße", matching: .folded, input: "STRASSE rest", output: "STRASSE", rest: " rest"),
+    Match(
+      pattern: "STRASSE", matching: .folded, input: "straße rest", output: "straße", rest: " rest"),
+    Match(
+      pattern: "straße", matching: .folded, input: "STRASSE rest", output: "STRASSE", rest: " rest"),
     Match(pattern: "ß", matching: .folded, input: "SS!", output: "SS", rest: "!"),
     // The empty pattern always matches without consuming.
     Match(pattern: "", matching: .exact, input: "abc", output: "", rest: "abc"),
@@ -57,18 +59,21 @@ struct StringTests {
 
   @Test(arguments: [
     // Exact
-    Failure(pattern: "blah", matching: .exact, input: "blab and more", reason: .nomatch, slice: "bla"),
+    Failure(
+      pattern: "blah", matching: .exact, input: "blab and more", reason: .nomatch, slice: "bla"),
     Failure(pattern: "blah", matching: .exact, input: "BLAH", reason: .nomatch, slice: ""),
     Failure(pattern: "blah", matching: .exact, input: "bla", reason: .eof, slice: "bla"),
     Failure(pattern: "blah", matching: .exact, input: "", reason: .eof, slice: ""),
     // Simple
-    Failure(pattern: "STRASSE", matching: .simple, input: "straße", reason: .nomatch, slice: "stra"),
+    Failure(
+      pattern: "STRASSE", matching: .simple, input: "straße", reason: .nomatch, slice: "stra"),
     Failure(pattern: "I", matching: .simple, input: "ı", reason: .nomatch, slice: ""),
     Failure(pattern: "blah", matching: .simple, input: "BLA", reason: .eof, slice: "BLA"),
     // Folded
     Failure(pattern: "STRASSE", matching: .folded, input: "stra", reason: .eof, slice: "stra"),
     Failure(pattern: "STRASSE", matching: .folded, input: "STRAß", reason: .eof, slice: "STRAß"),
-    Failure(pattern: "STRASSE", matching: .folded, input: "strz and more", reason: .nomatch, slice: "str"),
+    Failure(
+      pattern: "STRASSE", matching: .folded, input: "strz and more", reason: .nomatch, slice: "str"),
     Failure(pattern: "I", matching: .folded, input: "ı", reason: .nomatch, slice: ""),
     Failure(pattern: "x", matching: .folded, input: "", reason: .eof, slice: ""),
   ])

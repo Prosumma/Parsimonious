@@ -13,9 +13,9 @@ struct WhitespaceTests {
 
   @Test(arguments: [
     " ", "\t", "\n", "\r", "\r\n",
-    "\u{A0}",   // no-break space
-    "\u{2028}", // line separator
-    "\u{3000}", // ideographic space
+    "\u{A0}",  // no-break space
+    "\u{2028}",  // line separator
+    "\u{3000}",  // ideographic space
   ])
   func matchesWhitespace(_ ws: String) throws {
     let result = try Self.whitespace.parse(ws + "x")
@@ -24,9 +24,9 @@ struct WhitespaceTests {
   }
 
   @Test(arguments: [
-    " \u{303}",        // space + combining tilde
-    "\u{A0}\u{301}",   // no-break space + combining acute
-    "\u{2003}\u{301}", // em space + combining acute
+    " \u{303}",  // space + combining tilde
+    "\u{A0}\u{301}",  // no-break space + combining acute
+    "\u{2003}\u{301}",  // em space + combining acute
   ])
   func rejectsWhitespaceWithCombiningMark(_ input: String) {
     // Each is a single Character whose first scalar is whitespace.

@@ -126,7 +126,8 @@ struct CharTests {
 
   @Test(arguments: [
     AnyOfFailure(choices: "aeiou", matching: .exact, input: "E", reason: .nomatch, slice: ""),
-    AnyOfFailure(choices: "aeiou", matching: .exact, input: "xyz and the rest", reason: .nomatch, slice: ""),
+    AnyOfFailure(
+      choices: "aeiou", matching: .exact, input: "xyz and the rest", reason: .nomatch, slice: ""),
     AnyOfFailure(choices: "ıo", matching: .simple, input: "I", reason: .nomatch, slice: ""),
     AnyOfFailure(choices: "ασ", matching: .simple, input: "ς", reason: .nomatch, slice: ""),
     AnyOfFailure(choices: "aeiou", matching: .exact, input: "", reason: .eof, slice: ""),

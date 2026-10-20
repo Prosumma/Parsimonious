@@ -89,7 +89,8 @@ struct FlatMapTests {
 
   static let shortNetstring = count.flatMap { (output) throws(ParseError<String>) in
     guard output.output <= 3 else {
-      throw ParseError(reason: .nomatch, slice: output.input[..<output.input.startIndex], message: "Too long.")
+      throw ParseError(
+        reason: .nomatch, slice: output.input[..<output.input.startIndex], message: "Too long.")
     }
     return try take(output.output).parse(output.input)
   }

@@ -11,7 +11,9 @@ import Testing
 struct DelimiterTests {
   static let word = char(\.isLetter)+.toString()
   // Content that starts with a lone combining mark, as a Character of its own.
-  static let marked = join(scalar(\.properties.isDiacritic).array(), scalar(\.properties.isAlphabetic)*).toString()
+  static let marked = join(
+    scalar(\.properties.isDiacritic).array(), scalar(\.properties.isAlphabetic)*
+  ).toString()
 
   // MARK: - Scalar overloads
 

@@ -49,7 +49,9 @@ public func char<Input>(
 
 /// The `String` specialization of `char(anyOf:matching:)`, which lets `Input` be inferred
 /// when there is no other context, as in `let vowel = char(anyOf: "aeiou")`.
-public func char(anyOf choices: String, matching: CaseMatching = .exact) -> Parser<String, Character> {
+public func char(anyOf choices: String, matching: CaseMatching = .exact) -> Parser<
+  String, Character
+> {
   Parsers<String>.char(anyOf: choices, matching: matching)
 }
 
@@ -76,7 +78,9 @@ public func char(not ch: Character, matching: CaseMatching = .exact) -> Parser<S
 ///
 /// `Character` properties come from the first scalar, so `\.isWhitespace` is also true for a
 /// space followed by a combining mark. Use `Parsers.whitespace` to match whitespace.
-public func char<Input>(_ keyPath: any KeyPath<Character, Bool> & Sendable) -> Parser<Input, Character> where Input.Element == Character {
+public func char<Input>(_ keyPath: any KeyPath<Character, Bool> & Sendable) -> Parser<
+  Input, Character
+> where Input.Element == Character {
   Parsers<Input>.char(keyPath)
 }
 
@@ -89,13 +93,16 @@ public func char(_ keyPath: any KeyPath<Character, Bool> & Sendable) -> Parser<S
 /// Matches a single character for which `keyPath` is `false`, as in `char(not: \.isWhitespace)`.
 ///
 /// Has no message of its own; add one with `expecting(_:)`.
-public func char<Input>(not keyPath: any KeyPath<Character, Bool> & Sendable) -> Parser<Input, Character> where Input.Element == Character {
+public func char<Input>(not keyPath: any KeyPath<Character, Bool> & Sendable) -> Parser<
+  Input, Character
+> where Input.Element == Character {
   Parsers<Input>.char(not: keyPath)
 }
 
 /// The `String` specialization of `char(not:)`, which lets `Input` be inferred
 /// when there is no other context, as in `let nonSpace = char(not: \.isWhitespace)`.
-public func char(not keyPath: any KeyPath<Character, Bool> & Sendable) -> Parser<String, Character> {
+public func char(not keyPath: any KeyPath<Character, Bool> & Sendable) -> Parser<String, Character>
+{
   Parsers<String>.char(not: keyPath)
 }
 
@@ -127,7 +134,10 @@ public func string(_ s: String, matching: CaseMatching = .exact) -> Parser<Strin
 public func keyword<Input, K>(
   _: K.Type,
   matching: CaseMatching = .exact
-) -> Parser<Input, K> where Input.Element == Character, K: CaseIterable & RawRepresentable & Sendable, K.RawValue == String {
+) -> Parser<Input, K>
+where
+  Input.Element == Character, K: CaseIterable & RawRepresentable & Sendable, K.RawValue == String
+{
   Parsers<Input>.keyword(K.self, matching: matching)
 }
 
@@ -146,12 +156,15 @@ private func expected(_ s: String) -> String {
 
 // The public `char` and `string` overloads both delegate here. The `String` overloads
 // can't call the generic ones directly, because overload resolution would pick themselves.
-private extension Parsers where Input.Element == Character {
-  static func char(_ ch: Character, matching: CaseMatching) -> Parser<Input, Character> {
+extension Parsers where Input.Element == Character {
+  fileprivate static func char(_ ch: Character, matching: CaseMatching) -> Parser<Input, Character>
+  {
     char(where: predicate(for: ch, matching), message: expected(String(ch)))
   }
 
-  static func char(anyOf choices: String, matching: CaseMatching) -> Parser<Input, Character> {
+  fileprivate static func char(anyOf choices: String, matching: CaseMatching) -> Parser<
+    Input, Character
+  > {
     let predicates = choices.map { predicate(for: $0, matching) }
     return char(
       where: { c in predicates.contains { $0(c) } },
@@ -159,12 +172,14 @@ private extension Parsers where Input.Element == Character {
     )
   }
 
-  static func char(not ch: Character, matching: CaseMatching) -> Parser<Input, Character> {
+  fileprivate static func char(not ch: Character, matching: CaseMatching) -> Parser<
+    Input, Character
+  > {
     let matches = predicate(for: ch, matching)
     return char(where: { !matches($0) }, message: "Expected any character except \"\(ch)\".")
   }
 
-  static func char(
+  fileprivate static func char(
     where matches: @Sendable @escaping (Character) -> Bool,
     message: String
   ) -> Parser<Input, Character> {
@@ -180,19 +195,21 @@ private extension Parsers where Input.Element == Character {
     }
   }
 
-  static func char(
+  fileprivate static func char(
     _ keyPath: any KeyPath<Character, Bool> & Sendable
   ) -> Parser<Input, Character> {
     satisfy { $0[keyPath: keyPath] }
   }
 
-  static func char(
+  fileprivate static func char(
     not keyPath: any KeyPath<Character, Bool> & Sendable
   ) -> Parser<Input, Character> {
     satisfy { !$0[keyPath: keyPath] }
   }
 
-  static func predicate(for ch: Character, _ matching: CaseMatching) -> @Sendable (Character) -> Bool {
+  fileprivate static func predicate(for ch: Character, _ matching: CaseMatching)
+    -> @Sendable (Character) -> Bool
+  {
     switch matching {
     case .exact:
       return { $0 == ch }
@@ -205,7 +222,7 @@ private extension Parsers where Input.Element == Character {
     }
   }
 
-  static func keyword<K>(
+  fileprivate static func keyword<K>(
     _: K.Type,
     matching: CaseMatching
   ) -> Parser<Input, K> where K: CaseIterable & RawRepresentable & Sendable, K.RawValue == String {
@@ -215,7 +232,7 @@ private extension Parsers where Input.Element == Character {
     return or(parsers).expecting("Expected one of \(names).")
   }
 
-  static func string(_ s: String, matching: CaseMatching) -> Parser<Input, String> {
+  fileprivate static func string(_ s: String, matching: CaseMatching) -> Parser<Input, String> {
     // `.simple` lowercases the pattern once here rather than on every comparison.
     let lowered = matching == .simple ? s.map { $0.lowercased() } : []
     return Parser { (input) throws(ParseError<Input>) in
@@ -233,7 +250,7 @@ private extension Parsers where Input.Element == Character {
   }
 
   /// Matches `pattern`, one element per input character, and reports failures as failing to match `s`.
-  static func matchEnd<Pattern: Sequence>(
+  fileprivate static func matchEnd<Pattern: Sequence>(
     of s: String,
     as pattern: Pattern,
     in input: Input.SubSequence,
@@ -252,7 +269,9 @@ private extension Parsers where Input.Element == Character {
     return current
   }
 
-  static func foldedMatchEnd(of s: String, in input: Input.SubSequence) throws(ParseError<Input>) -> Input.Index {
+  fileprivate static func foldedMatchEnd(of s: String, in input: Input.SubSequence)
+    throws(ParseError<Input>) -> Input.Index
+  {
     if s.isEmpty {
       return input.startIndex
     }
@@ -278,7 +297,9 @@ private extension Parsers where Input.Element == Character {
       }
     }
     // The input ran out partway through a match, e.g. "stra" against "STRASSE".
-    if window.endIndex == input.endIndex && (window.isEmpty || s.range(of: text, options: options) != nil) {
+    if window.endIndex == input.endIndex
+      && (window.isEmpty || s.range(of: text, options: options) != nil)
+    {
       throw ParseError(reason: .eof, slice: input, message: expected(s))
     }
     // The slice is the longest prefix of the input that still matches a prefix of `s`.
@@ -293,64 +314,65 @@ private extension Parsers where Input.Element == Character {
 // Delimiters are matched as single scalars, not Characters. A delimiter followed by a combining
 // mark is one Character, as with `"` and U+0301 at the start of a quoted string, which `char("\"")`
 // can't match. A scalar leaves the mark for the parser that follows.
-public extension Parsing where Input.SubSequence == Substring {
-  func preceded(by s: Unicode.Scalar) -> Parser<Input, Output> {
+extension Parsing where Input.SubSequence == Substring {
+  public func preceded(by s: Unicode.Scalar) -> Parser<Input, Output> {
     scalar(s) *> self
   }
-  func followed(by s: Unicode.Scalar) -> Parser<Input, Output> {
+  public func followed(by s: Unicode.Scalar) -> Parser<Input, Output> {
     self <* scalar(s)
   }
-  func delimited(by s: Unicode.Scalar) -> Parser<Input, Output> {
+  public func delimited(by s: Unicode.Scalar) -> Parser<Input, Output> {
     delimited(by: scalar(s))
   }
-  func delimited(by first: Unicode.Scalar, and last: Unicode.Scalar) -> Parser<Input, Output> {
+  public func delimited(by first: Unicode.Scalar, and last: Unicode.Scalar) -> Parser<Input, Output>
+  {
     delimited(by: scalar(first), and: scalar(last))
   }
-  func singleStraightQuoted() -> Parser<Input, Output> {
+  public func singleStraightQuoted() -> Parser<Input, Output> {
     delimited(by: "'")
   }
-  func doubleStraightQuoted() -> Parser<Input, Output> {
+  public func doubleStraightQuoted() -> Parser<Input, Output> {
     delimited(by: "\"")
   }
-  func parenthesized() -> Parser<Input, Output> {
+  public func parenthesized() -> Parser<Input, Output> {
     delimited(by: "(", and: ")")
   }
-  func bracketed() -> Parser<Input, Output> {
+  public func bracketed() -> Parser<Input, Output> {
     delimited(by: "[", and: "]")
   }
-  func braced() -> Parser<Input, Output> {
+  public func braced() -> Parser<Input, Output> {
     delimited(by: "{", and: "}")
   }
 }
 
-public extension Parsing where Input.Element == Character {
-  func whitespaced() -> Parser<Input, Output> {
+extension Parsing where Input.Element == Character {
+  public func whitespaced() -> Parser<Input, Output> {
     delimited(by: Parsers.whitespace*)
   }
-  func whitespaced1() -> Parser<Input, Output> {
+  public func whitespaced1() -> Parser<Input, Output> {
     delimited(by: Parsers.whitespace+)
   }
 }
 
-public extension Parsing where Output == Character {
-  func toString() -> Parser<Input, String> {
+extension Parsing where Output == Character {
+  public func toString() -> Parser<Input, String> {
     array().toString()
   }
 }
 
-public extension Parsing where Output == [Character] {
-  func toString() -> Parser<Input, String> {
+extension Parsing where Output == [Character] {
+  public func toString() -> Parser<Input, String> {
     map { String($0) }
   }
 }
 
-public extension Parsers where Input.Element == Character {
+extension Parsers where Input.Element == Character {
   /// Matches a character made up entirely of whitespace, such as a space, a tab or `"\r\n"`.
   ///
   /// This is stricter than `char(\.isWhitespace)`. `Character.isWhitespace` looks only at the
   /// first scalar, so it's also true for a space followed by a combining mark, which is how
   /// Unicode writes a diacritic on its own. Treating that as whitespace would discard the mark.
-  static var whitespace: Parser<Input, Character> {
+  public static var whitespace: Parser<Input, Character> {
     satisfy { $0.unicodeScalars.allSatisfy(\.properties.isWhitespace) }
       .expecting("Expected whitespace.")
   }
