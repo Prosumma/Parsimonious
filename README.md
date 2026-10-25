@@ -280,6 +280,12 @@ check("[1,\n 2")   // Line 2, column 3: Expected "]".
 
 Pass the same input you parsed, since the error's indices refer to it.
 
+Some problems are only found after parsing, such as a name that's used but never defined. To report those, keep the slice from `captured()` and pass its index to `location(of:in:)`, which counts lines and columns the same way:
+
+```swift
+let (line, column) = location(of: slice.startIndex, in: input)
+```
+
 ### Custom messages
 
 `expecting` replaces the message of an error that isn't committed, which is typically the generic one from a failed `<|>`:
@@ -297,6 +303,14 @@ A committed error keeps its own message, because it's already more specific than
 p.mapError { error in error.message = "Something else." }
 p.mapError { input, error in … }   // `input` is what `p` was given.
 ```
+
+When you can recognize a particular mistake, `fail` lets you say so. It always fails with the message you give it, without consuming anything, so it's usually paired with `peek`:
+
+```swift
+let close = char(")") <|> (char(",").peek() *> fail("Trailing commas aren't allowed.").commit())
+```
+
+An uncommitted `fail` is just another failed alternative, so `<|>` moves past it and `expecting` can replace its message. Commit it, as above, to make the message stick.
 
 `error.consumed(relativeTo: input)` tells you whether the failing parser got past the start of `input`. Together with `committed`, it's what `commit1()` and `expecting` use, and it's useful when you write your own error-handling combinators.
 

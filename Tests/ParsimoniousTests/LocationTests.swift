@@ -74,3 +74,40 @@ struct LocationTests {
     #expect(error?.location(in: input) ?? (0, 0) == (2, 2))
   }
 }
+
+struct IndexLocationTests {
+  @Test func startOfInput() {
+    let input = "ab\ncd"
+    #expect(location(of: input.startIndex, in: input) == (1, 1))
+  }
+
+  @Test func endOfInput() {
+    let input = "ab\ncd"
+    #expect(location(of: input.endIndex, in: input) == (2, 3))
+  }
+
+  @Test func capturedSlice() throws {
+    // The pattern this is for: record where something was parsed, report a problem with it later.
+    let input = "a = 1\nb = x"
+    let name = char(\.isLetter).toString().captured()
+    let definition = tuple(name <* string(" = "), name.map { $0.0 } <|> char(\.isNumber).toString())
+    let definitions = try parse(input, with: definition.many(separatedBy: char("\n")).end())
+    let ((_, slice), _) = definitions[1]
+    #expect(location(of: slice.startIndex, in: input) == (2, 1))
+  }
+
+  @Test func agreesWithParseError() {
+    let input = "a\r\nbx"
+    let error = #expect(throws: ParseError<String>.self) {
+      try parse(input, with: string("a\r\nby"))
+    }
+    if let error {
+      #expect(location(of: error.slice.endIndex, in: input) == error.location(in: input))
+    }
+  }
+
+  @Test func characterArrayInput() {
+    let input = Array("ab\ncx")
+    #expect(location(of: 4, in: input) == (2, 2))
+  }
+}

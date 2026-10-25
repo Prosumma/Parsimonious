@@ -49,16 +49,6 @@ extension ParseError where Input.Element == Character {
   /// Columns count characters, and every newline character starts a new line. That includes
   /// `"\r\n"`, which Swift treats as a single character.
   public func location(in input: Input) -> (line: Int, column: Int) {
-    var line = 1
-    var column = 1
-    for ch in input[..<slice.endIndex] {
-      if ch.isNewline {
-        line += 1
-        column = 1
-      } else {
-        column += 1
-      }
-    }
-    return (line, column)
+    Parsimonious.location(of: slice.endIndex, in: input)
   }
 }

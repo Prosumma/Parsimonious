@@ -16,7 +16,10 @@ extension Parsing {
         return try output.map(transform)
       } catch {
         throw ParseError(
-          reason: .nomatch, slice: input[input.startIndex..<output.input.startIndex], error: error)
+          reason: .nomatch,
+          slice: input[input.startIndex..<output.input.startIndex],
+          error: error,
+        )
       }
     }
   }
@@ -356,6 +359,23 @@ public func just<Input: Collection & Sendable, Output>(
 ) -> Parser<Input, Output> {
   Parser { input in
     .init(input: input, output: value())
+  }
+}
+
+/// Always fails with `message`, without consuming anything.
+///
+/// Use it after a lookahead to name a mistake you can recognize, where the generic error
+/// would only say what was expected:
+///
+/// ```swift
+/// let close = char(")") <|> (char(",").peek() *> fail("Trailing commas aren't allowed.").commit())
+/// ```
+///
+/// The error isn't committed, so `<|>` moves on to the next alternative and `expecting(_:)`
+/// can replace the message. Add `commit()` to make the message stick, as above.
+public func fail<Input: Collection & Sendable, Output>(_ message: String) -> Parser<Input, Output> {
+  Parser { (input) throws(ParseError<Input>) in
+    throw ParseError(reason: .nomatch, slice: input[..<input.startIndex], message: message)
   }
 }
 
